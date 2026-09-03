@@ -14,7 +14,7 @@ if (togglePassword && passwordInput) {
     });
 }
 
-document.getElementById("loginForm").addEventListener("submit", function(e) {
+document.getElementById("loginForm").addEventListener("submit", async function(e) {
     e.preventDefault();
 
     const email = document.getElementById("email").value.trim();
@@ -36,23 +36,23 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
         return;
     }
 
-    if (email === "admin@essu.edu.ph" && password === "admin123") {
-        sessionStorage.setItem("loggedIn", "true");
-        sessionStorage.setItem("role", "admin");
-        alert("Admin Login Successful!");
-        window.location.href = "admin.html";
-    } else if (email === "student@gmail.com" && password === "student123") {
-        sessionStorage.setItem("loggedIn", "true");
-        sessionStorage.setItem("role", "student");
-        alert("Student Login Successful!");
-        window.location.href = "student.html";
-    } else if (email.toLowerCase().includes("admin")) {
-        sessionStorage.setItem("loggedIn", "true");
+    const { data, error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password,
+    });
+
+    if (error) {
+        passwordError.textContent = error.message;
+        return;
+    }
+
+    sessionStorage.setItem("loggedIn", "true");
+
+    if (email.toLowerCase().includes("admin") || email === "admin@essu.edu.ph") {
         sessionStorage.setItem("role", "admin");
         alert("Admin Login Successful!");
         window.location.href = "admin.html";
     } else {
-        sessionStorage.setItem("loggedIn", "true");
         sessionStorage.setItem("role", "student");
         alert("Student Login Successful!");
         window.location.href = "student.html";
