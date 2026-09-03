@@ -99,44 +99,156 @@ Login
 
 </div>
 
-<script>
-const studentNumberInput = document.getElementById("studentNumber");
+<script type="module">
 
+import { supabase } from "./supabase.js";
+
+
+const studentNumberInput =
+    document.getElementById("studentNumber");
+
+const registerForm =
+    document.getElementById("registerForm");
+
+const registerButton =
+    document.querySelector("button[type='submit']");
+
+
+// Student number validation
 studentNumberInput.addEventListener("input", function () {
-    const studentNumberVal = studentNumberInput.value.trim();
-    if (/[a-zA-Z]/.test(studentNumberVal)) {
-        studentNumberInput.setCustomValidity("The student number shall only accept numbers not letters.");
+
+    const value = studentNumberInput.value.trim();
+
+    if (/[a-zA-Z]/.test(value)) {
+
+        studentNumberInput.setCustomValidity(
+            "The student number shall only accept numbers and hyphens."
+        );
+
     } else {
+
         studentNumberInput.setCustomValidity("");
+
     }
+
 });
 
-document.getElementById("registerForm").addEventListener("submit", function(e){
+
+// Registration
+registerForm.addEventListener("submit", async function (e) {
 
     e.preventDefault();
 
-    const firstName = document.getElementById("firstName").value.trim();
-    const lastName = document.getElementById("lastName").value.trim();
-    const studentNumber = document.getElementById("studentNumber").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value;
 
-    
-    if(!/^[0-9-]{8,15}$/.test(studentNumber)){
-        alert("Please enter a valid Student Number (8-15 numbers or hyphens).");
+    const firstName =
+        document.getElementById("firstName").value.trim();
+
+    const lastName =
+        document.getElementById("lastName").value.trim();
+
+    const studentNumber =
+        document.getElementById("studentNumber").value.trim();
+
+    const email =
+        document.getElementById("email").value.trim();
+
+    const password =
+        document.getElementById("password").value;
+
+
+    // Validate student number
+    if (!/^[0-9-]{8,15}$/.test(studentNumber)) {
+
+        alert(
+            "Please enter a valid Student Number (8-15 numbers or hyphens)."
+        );
+
         return;
     }
 
-   
-    if(password.length < 8){
+
+    // Validate password
+    if (password.length < 8) {
+
         alert("Password must be at least 8 characters.");
+
         return;
     }
 
-    alert("Registration Successful! (Demo only, no database yet)");
 
-    
+    try {
+
+        registerButton.disabled = true;
+        registerButton.textContent = "Registering...";
+
+
+        // Create the account in Supabase Auth
+        const { data, error } =
+            await supabase.auth.signUp({
+
+                email: email,
+
+                password: password,
+
+                options: {
+
+                    data: {
+
+                        first_name: firstName,
+
+                        last_name: lastName,
+
+                        student_number: studentNumber
+
+                    }
+
+                }
+
+            });
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        if (!data.user) {
+
+            throw new Error(
+                "Registration failed. No user account was created."
+            );
+
+        }
+
+
+        alert(
+            "Registration successful! Please check your email to verify your account."
+        );
+
+
+        registerForm.reset();
+
+
+        window.location.href = "index.html";
+
+
+    } catch (error) {
+
+        console.error("Registration error:", error);
+
+
+        alert(
+            "Registration failed: " + error.message
+        );
+
+
+        registerButton.disabled = false;
+        registerButton.textContent = "Register";
+
+    }
+
 });
+
 </script>
 
 </body>
