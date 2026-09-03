@@ -104,17 +104,14 @@ const studentNumberInput = document.getElementById("studentNumber");
 
 studentNumberInput.addEventListener("input", function () {
     const studentNumberVal = studentNumberInput.value.trim();
-
     if (/[a-zA-Z]/.test(studentNumberVal)) {
-        studentNumberInput.setCustomValidity(
-            "The student number shall only accept numbers not letters."
-        );
+        studentNumberInput.setCustomValidity("The student number shall only accept numbers not letters.");
     } else {
         studentNumberInput.setCustomValidity("");
     }
 });
 
-document.getElementById("registerForm").addEventListener("submit", function(e) {
+document.getElementById("registerForm").addEventListener("submit", function(e){
 
     e.preventDefault();
 
@@ -124,48 +121,21 @@ document.getElementById("registerForm").addEventListener("submit", function(e) {
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value;
 
-    if (!/^[0-9-]{8,15}$/.test(studentNumber)) {
+    
+    if(!/^[0-9-]{8,15}$/.test(studentNumber)){
         alert("Please enter a valid Student Number (8-15 numbers or hyphens).");
         return;
     }
 
-    if (password.length < 8) {
+   
+    if(password.length < 8){
         alert("Password must be at least 8 characters.");
         return;
     }
 
-    const formData = new FormData();
+    alert("Registration Successful! (Demo only, no database yet)");
 
-    formData.append("firstName", firstName);
-    formData.append("lastName", lastName);
-    formData.append("studentNumber", studentNumber);
-    formData.append("email", email);
-    formData.append("password", password);
-
-    // InfinityFree PHP backend
-    fetch("https://essuregistrar.free.nf/register.php", {
-        method: "POST",
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-
-        if (data.status === "success") {
-            alert(data.message);
-            window.location.href = "index.html";
-        } else {
-            alert(data.message);
-        }
-
-    })
-    .catch(error => {
-
-        console.error("Error:", error);
-
-        alert("An error occurred during registration.");
-
-    });
-
+    
 });
 </script>
 
