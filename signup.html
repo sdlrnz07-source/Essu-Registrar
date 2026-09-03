@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Student Registration</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+<body class="bg-gray-100 flex justify-center items-center min-h-screen">
+
+<div class="bg-white w-full max-w-lg rounded-xl shadow-xl p-8">
+
+<h1 class="text-3xl font-bold text-center mb-8">
+Create Account
+</h1>
+
+<form id="registerForm">
+
+<!-- First Name -->
+<div class="mb-4">
+<label class="block mb-1">First Name</label>
+<input
+type="text"
+id="firstName"
+class="border rounded w-full p-3"
+placeholder="Enter your first name"
+required
+minlength="2"
+maxlength="30"
+pattern="[A-Za-z ]+">
+</div>
+
+<!-- Last Name -->
+<div class="mb-4">
+<label class="block mb-1">Last Name</label>
+<input
+type="text"
+id="lastName"
+class="border rounded w-full p-3"
+placeholder="Enter your last name"
+required
+minlength="2"
+maxlength="30"
+pattern="[A-Za-z ]+">
+</div>
+
+<!-- Student Number -->
+<div class="mb-4">
+<label class="block mb-1">Student Number</label>
+<input
+type="text"
+id="studentNumber"
+class="border rounded w-full p-3"
+placeholder="Ex.24-12345"
+required>
+</div>
+
+<!-- Email -->
+<div class="mb-4">
+<label class="block mb-1">Email Address</label>
+<input
+type="email"
+id="email"
+class="border rounded w-full p-3"
+placeholder="student@email.com"
+required>
+</div>
+
+<!-- Password -->
+<div class="mb-6">
+<label class="block mb-1">Password</label>
+<input
+type="password"
+id="password"
+class="border rounded w-full p-3"
+placeholder="Enter password"
+required
+minlength="8">
+</div>
+
+<button
+type="submit"
+class="w-full bg-blue-700 text-white rounded p-3 hover:bg-blue-800">
+Register
+</button>
+
+</form>
+
+<p class="text-center mt-5">
+Already have an account?
+<a href="index.html" class="text-blue-700 hover:underline">
+Login
+</a>
+</p>
+
+</div>
+
+<script>
+const studentNumberInput = document.getElementById("studentNumber");
+
+studentNumberInput.addEventListener("input", function () {
+    const studentNumberVal = studentNumberInput.value.trim();
+    if (/[a-zA-Z]/.test(studentNumberVal)) {
+        studentNumberInput.setCustomValidity("The student number shall only accept numbers not letters.");
+    } else {
+        studentNumberInput.setCustomValidity("");
+    }
+});
+
+document.getElementById("registerForm").addEventListener("submit", function(e){
+
+    e.preventDefault();
+
+    const firstName = document.getElementById("firstName").value.trim();
+    const lastName = document.getElementById("lastName").value.trim();
+    const studentNumber = document.getElementById("studentNumber").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    if(!/^[0-9-]{8,15}$/.test(studentNumber)){
+        alert("Please enter a valid Student Number (8-15 numbers or hyphens).");
+        return;
+    }
+
+    if(password.length < 8){
+        alert("Password must be at least 8 characters.");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("firstName", firstName);
+    formData.append("lastName", lastName);
+    formData.append("studentNumber", studentNumber);
+    formData.append("email", email);
+    formData.append("password", password);
+
+    fetch("register.php", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === "success") {
+            alert(data.message);
+            window.location.href = "index.html";
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("An error occurred during registration.");
+    });
+});
+</script>
+
+</body>
+</html>

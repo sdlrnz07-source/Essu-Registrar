@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Administrator Dashboard</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+
+<script>
+if (
+    sessionStorage.getItem("loggedIn") !== "true" ||
+    sessionStorage.getItem("role") !== "admin"
+) {
+    window.location.replace("index.html");
+}
+</script>
+
+</head>
+
+<body class="bg-gray-100">
+
+<!-- Header -->
+<div class="bg-red-700 text-white p-5 flex justify-between items-center">
+
+    <h1 class="text-2xl font-bold">
+        Administrator Dashboard
+    </h1>
+
+    <button
+        onclick="logout()"
+        class="bg-red-900 hover:bg-red-950 px-5 py-2 rounded-lg font-semibold">
+        Logout
+    </button>
+
+</div>
+
+<!-- Main Content -->
+<div class="flex justify-center items-center h-screen">
+
+    <h1 class="text-6xl font-bold">
+        YEHEY
+    </h1>
+
+</div>
+
+<script>
+function logout() {
+
+    if (confirm("Are you sure you want to logout?")) {
+
+        // Remove the login session
+        sessionStorage.clear();
+
+        // Redirect to the login page
+        window.location.replace("index.html");
+
+    }
+
+}
+</script>
+
+</body>
+
+</html>

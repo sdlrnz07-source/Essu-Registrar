@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    overflow:hidden;
+}
+
+.background{
+    position:fixed;
+    inset:0;
+    background:url("img/ESSU_thumbnail.png") center center/cover no-repeat;
+    animation:zoomBackground 20s ease-in-out infinite alternate;
+    z-index:-3;
+}
+
+.overlay{
+    position:fixed;
+    inset:0;
+    background:linear-gradient(
+        rgba(15,23,42,.70),
+        rgba(15,23,42,.60)
+    );
+    backdrop-filter:blur(4px);
+    z-index:-2;
+}
+
+input::-ms-reveal,
+input::-ms-clear {
+    display: none;
+}
+
+input[type="password"]::-webkit-credentials-auto-fill-button {
+    visibility: hidden !important;
+    display: none !important;
+    pointer-events: none !important;
+}
