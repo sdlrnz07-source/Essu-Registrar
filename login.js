@@ -1,12 +1,18 @@
 const togglePassword = document.getElementById("togglePassword");
-const passwordInput = document.getElementById("password");  
+const passwordInput = document.getElementById("password");
 
+// Show / hide password
 if (togglePassword && passwordInput) {
     togglePassword.addEventListener("click", function () {
-        const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+        const type =
+            passwordInput.getAttribute("type") === "password"
+                ? "text"
+                : "password";
+
         passwordInput.setAttribute("type", type);
-        
+
         const icon = this.querySelector("i");
+
         if (icon) {
             icon.classList.toggle("fa-eye");
             icon.classList.toggle("fa-eye-slash");
@@ -14,7 +20,9 @@ if (togglePassword && passwordInput) {
     });
 }
 
-document.getElementById("loginForm").addEventListener("submit", function(e) {
+
+// LOGIN
+document.getElementById("loginForm").addEventListener("submit", async function (e) {
     e.preventDefault();
 
     const email = document.getElementById("email").value.trim();
@@ -23,11 +31,18 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
     const emailError = document.getElementById("emailError");
     const passwordError = document.getElementById("passwordError");
 
+    // Clear previous errors
     emailError.textContent = "";
     passwordError.textContent = "";
 
+    // Basic validation
     if (email === "") {
         emailError.textContent = "Email is required.";
+        return;
+    }
+
+    if (password === "") {
+        passwordError.textContent = "Password is required.";
         return;
     }
 
@@ -36,25 +51,37 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
         return;
     }
 
-    if (email === "admin@essu.edu.ph" && password === "admin123") {
-        sessionStorage.setItem("loggedIn", "true");
-        sessionStorage.setItem("role", "admin");
-        alert("Admin Login Successful!");
-        window.location.href = "admin.html";
-    } else if (email === "student@gmail.com" && password === "student123") {
-        sessionStorage.setItem("loggedIn", "true");
-        sessionStorage.setItem("role", "student");
-        alert("Student Login Successful!");
-        window.location.href = "student.html";
-    } else if (email.toLowerCase().includes("admin")) {
-        sessionStorage.setItem("loggedIn", "true");
-        sessionStorage.setItem("role", "admin");
-        alert("Admin Login Successful!");
-        window.location.href = "admin.html";
-    } else {
-        sessionStorage.setItem("loggedIn", "true");
-        sessionStorage.setItem("role", "student");
-        alert("Student Login Successful!");
-        window.location.href = "student.html";
+    // Sign in using Supabase
+    const { data, error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password
+    });
+
+    // Login failed
+    if (error) {
+        passwordError.textContent = "Invalid email or password.";
+        console.error("Login error:", error);
+        return;
     }
+
+    // Login successful
+    const user = data.user;
+
+    sessionStorage.setItem("loggedIn", "true");
+    sessionStorage.setItem("userEmail", user.email);
+
+    // Admin account
+    if (user.email.toLowerCase() === "admin@essu.edu.ph") {
+        sessionStorage.setItem("role", "admin");
+
+        alert("Admin Login Successful!");
+        window.location.href = "admin.html";
+        return;
+    }
+
+    // Student account
+    sessionStorage.setItem("role", "student");
+
+    alert("Student Login Successful!");
+    window.location.href = "student.html";
 });
