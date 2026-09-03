@@ -1,3 +1,9 @@
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@+esm'
+
+const supabaseUrl = 'https://mpegqtxwbeuwszowkudu.supabase.co'
+const supabaseKey = 'sb_publishable_b6BTvkgb04qpwaRVtAofSg_t5xMQzGE'
+const supabase = createClient(supabaseUrl, supabaseKey)
+
 const togglePassword = document.getElementById("togglePassword");
 const passwordInput = document.getElementById("password");  
 
