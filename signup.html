@@ -22,11 +22,11 @@
     </script>
 </head>
 
-<body class="bg-emerald-950 text-white flex flex-col min-h-screen justify-between bg-cover bg-center bg-no-repeat relative" style="background-image: linear-gradient(to bottom, rgba(6, 78, 59, 0.65), rgba(2, 44, 34, 0.85)), url('img/ESSU_thumbnail.png');">
+<body class="bg-emerald-950 text-white flex flex-col min-h-screen bg-cover bg-center bg-no-repeat relative" style="background-image: linear-gradient(to bottom, rgba(6, 78, 59, 0.65), rgba(2, 44, 34, 0.85)), url('img/ESSU_thumbnail.png');">
 
     <!-- 1. TOP BAR (GWTD Standard) -->
     <div class="bg-emerald-950/90 text-white text-xs border-b border-emerald-900 z-30 backdrop-blur-sm">
-        <div class="max-w-7xl mx-auto px-6 py-2 flex flex-wrap items-center justify-between gap-4">
+        <div class="max-w-7xl mx-auto px-6 py-1.5 flex flex-wrap items-center justify-between gap-4">
             <div class="flex items-center space-x-2">
                 <img src="img/rp_n.webp" alt="Republic Seal" class="w-4 h-4 rounded-full object-cover">
                 <span class="font-semibold tracking-wider uppercase">Republic of the Philippines</span>
@@ -44,12 +44,12 @@
 
     <!-- 2. MASTHEAD / NAVBAR -->
     <header class="bg-emerald-900/80 backdrop-blur-md text-white shadow-lg border-b-4 border-yellow-400 z-20">
-        <div class="max-w-7xl mx-auto px-6 py-3.5 flex items-center justify-between">
+        <div class="max-w-7xl mx-auto px-6 py-2.5 flex items-center justify-between">
             
             <!-- Left Logo & Title -->
             <a href="index.html" class="flex items-center space-x-3">
-                <img src="img/OIP.webp" alt="ESSU Logo" class="w-10 h-10 rounded-full bg-white p-0.5 border border-yellow-400 object-contain shadow">
-                <span class="text-lg font-bold tracking-tight uppercase">ESSU REGISTRAR PORTAL</span>
+                <img src="img/OIP.webp" alt="ESSU Logo" class="w-9 h-9 rounded-full bg-white p-0.5 border border-yellow-400 object-contain shadow">
+                <span class="text-base font-bold tracking-tight uppercase">ESSU REGISTRAR PORTAL</span>
             </a>
 
             <!-- Right Nav Items -->
@@ -75,63 +75,77 @@
     </header>
 
     <!-- 3. SIGNUP FORM CONTAINER -->
-    <main class="flex-grow flex items-center justify-center px-4 py-12 z-10">
-        <div class="w-full max-w-xl bg-white text-slate-800 rounded-xl shadow-2xl border border-emerald-900/20 overflow-hidden">
+    <main class="flex-grow flex items-center justify-center px-4 py-4 z-10">
+        <div class="w-full max-w-md bg-white text-slate-800 rounded-xl shadow-2xl border border-emerald-900/20 overflow-hidden">
             
             <!-- Card Header -->
-            <div class="bg-emerald-900 text-white text-center py-5 px-6 border-b-4 border-yellow-400">
-                <h2 class="text-lg font-extrabold uppercase tracking-wider">Create Portal Account</h2>
-                <p class="text-xs text-emerald-200 mt-1">Fill in your details to register for an appointment account</p>
+            <div class="bg-emerald-900 text-white text-center py-3 px-6 border-b-4 border-yellow-400">
+                <h2 class="text-sm font-extrabold uppercase tracking-wider">Register</h2>
+                <p class="text-[10px] text-emerald-200 mt-0.5">ESSU Registrar Appointment Management System</p>
             </div>
 
             <!-- Form Body -->
-            <form id="signupForm" class="p-8 space-y-4" onsubmit="handleSignup(event)">
+            <form id="signupForm" class="p-4 space-y-2.5" onsubmit="handleSignup(event)">
                 
                 <!-- Error/Success Alert Box -->
-                <div id="alertBox" class="hidden px-4 py-3 rounded text-xs"></div>
+                <div id="alertBox" class="hidden px-3 py-2 rounded text-xs"></div>
 
-                <!-- Full Name Field -->
+                <!-- First Name Field -->
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Full Name</label>
+                    <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-600 mb-0.5">First Name</label>
+                    <input type="text" id="firstname" required placeholder="Enter your first name"
+                        class="w-full px-3 py-1.5 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:bg-white outline-none transition">
+                </div>
+
+                <!-- Last Name Field -->
+                <div>
+                    <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-600 mb-0.5">Last Name</label>
+                    <input type="text" id="lastname" required placeholder="Enter your last name"
+                        class="w-full px-3 py-1.5 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:bg-white outline-none transition">
+                </div>
+
+                <!-- Student Number Field -->
+                <div>
+                    <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-600 mb-0.5">Student Number</label>
+                    <input type="text" id="studentnumber" required placeholder="Ex. 24-12345" maxlength="8"
+                        class="w-full px-3 py-1.5 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:bg-white outline-none transition">
+                    <p class="text-[9px] text-slate-500 mt-0.5">must be a valid enrolled student</p>
+                </div>
+
+                <!-- Email Address Field -->
+                <div>
+                    <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-600 mb-0.5">Email Address</label>
+                    <input type="email" id="signupEmail" required placeholder="student@email.com"
+                        class="w-full px-3 py-1.5 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:bg-white outline-none transition">
+                </div>
+
+                <!-- Password Field with Show/Hide Toggle -->
+                <div>
+                    <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-600 mb-0.5">Password</label>
                     <div class="relative">
-                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
-                            <i class="fa-solid fa-user"></i>
-                        </span>
-                        <input type="text" id="fullname" required placeholder="Juan Dela Cruz"
-                            class="w-full pl-10 pr-4 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:bg-white outline-none transition">
+                        <input type="password" id="signupPassword" required placeholder="Min 8 chars, starts with Uppercase, num & symbol"
+                            class="w-full px-3 py-1.5 pr-8 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:bg-white outline-none transition">
+                        <button type="button" onclick="togglePassword('signupPassword', 'toggleIcon1')" class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none">
+                            <i id="toggleIcon1" class="fa-solid fa-eye text-xs"></i>
+                        </button>
                     </div>
                 </div>
 
-                <!-- Email Field -->
+                <!-- Confirm Password Field with Show/Hide Toggle -->
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Email Address</label>
+                    <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-600 mb-0.5">Confirm Password</label>
                     <div class="relative">
-                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
-                            <i class="fa-solid fa-envelope"></i>
-                        </span>
-                        <input type="email" id="signupEmail" required placeholder="student@essu.edu.ph"
-                            class="w-full pl-10 pr-4 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:bg-white outline-none transition">
-                    </div>
-                </div>
-
-                <!-- Password Field -->
-                <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Password</label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
-                            <i class="fa-solid fa-lock"></i>
-                        </span>
-                        <input type="password" id="signupPassword" required placeholder="••••••••"
-                            class="w-full pl-10 pr-10 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:bg-white outline-none transition">
-                        <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600">
-                            <i id="toggleIcon" class="fa-solid fa-eye"></i>
+                        <input type="password" id="confirmPassword" required placeholder="Confirm password"
+                            class="w-full px-3 py-1.5 pr-8 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:bg-white outline-none transition">
+                        <button type="button" onclick="togglePassword('confirmPassword', 'toggleIcon2')" class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none">
+                            <i id="toggleIcon2" class="fa-solid fa-eye text-xs"></i>
                         </button>
                     </div>
                 </div>
 
                 <!-- Submit Button -->
-                <button type="submit" class="w-full mt-2 py-3 bg-red-600 hover:bg-red-700 text-white font-extrabold text-sm rounded-lg shadow-xl tracking-wider transition uppercase">
-                    Register Account
+                <button type="submit" class="w-full mt-1 py-2 bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs rounded-lg shadow-lg tracking-wider transition uppercase">
+                    Register
                 </button>
 
             </form>
@@ -139,58 +153,118 @@
     </main>
 
     <!-- 4. STANDARD FOOTER -->
-    <footer class="bg-emerald-950/90 backdrop-blur-md text-gray-400 text-xs border-t border-emerald-900 py-4 z-20">
+    <footer class="bg-emerald-950/90 backdrop-blur-md text-gray-400 text-xs border-t border-emerald-900 py-2.5 z-20 mt-auto">
         <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-3 text-center md:text-left">
             <div>
                 <p>
                     <a href="https://www.gov.ph" target="_blank" class="text-yellow-400 hover:underline font-semibold">Philippine Government Directory</a> | 
                     <a href="https://www.officialgazette.gov.ph" target="_blank" class="hover:underline">Official Gazette</a>
                 </p>
-                <p class="text-gray-500 text-[11px] mt-0.5">All content is public domain unless otherwise stated.</p>
+                <p class="text-gray-500 text-[10px] mt-0.5">All content is public domain unless otherwise stated.</p>
             </div>
             <div class="flex items-center space-x-3">
-                <img src="img/rp_n.webp" alt="Republic Seal" class="w-7 h-7 rounded-full bg-white p-0.5 object-cover">
+                <img src="img/rp_n.webp" alt="Republic Seal" class="w-6 h-6 rounded-full bg-white p-0.5 object-cover">
                 <div>
-                    <p class="font-bold text-white text-[10px]">REPUBLIC OF THE PHILIPPINES</p>
-                    <p class="text-[9px] text-gray-500">Eastern Samar State University System</p>
+                    <p class="font-bold text-white text-[9px]">REPUBLIC OF THE PHILIPPINES</p>
+                    <p class="text-[8px] text-gray-500">Eastern Samar State University System</p>
                 </div>
             </div>
         </div>
     </footer>
 
-    <!-- Script to handle registration logic -->
+    <!-- Script to handle authentication, toggling, and validation logic -->
     <script>
-        function togglePassword() {
-            const pwd = document.getElementById('signupPassword');
-            const icon = document.getElementById('toggleIcon');
-            if (pwd.type === 'password') {
-                pwd.type = 'text';
-                icon.classList.replace('fa-eye', 'fa-eye-slash');
+        function togglePassword(fieldId, iconId) {
+            const passwordField = document.getElementById(fieldId);
+            const icon = document.getElementById(iconId);
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
             } else {
-                pwd.type = 'password';
-                icon.classList.replace('fa-eye-slash', 'fa-eye');
+                passwordField.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
             }
+        }
+
+        function showAlert(message, isError = true) {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.className = `px-3 py-1.5 rounded text-xs ${isError ? 'bg-red-100 border border-red-400 text-red-700' : 'bg-emerald-100 border border-emerald-400 text-emerald-700'}`;
+            alertBox.textContent = message;
+            alertBox.classList.remove("hidden");
         }
 
         function handleSignup(event) {
             event.preventDefault();
-            const fullName = document.getElementById('fullname').value.trim();
-            const email = document.getElementById('signupEmail').value.trim();
-            const alertBox = document.getElementById('alertBox');
+            
+            const firstName = document.getElementById('firstname').value.trim();
+            const lastName = document.getElementById('lastname').value.trim();
+            const studentnumber = document.getElementById('studentnumber').value.trim();
+            const email = document.getElementById('signupEmail').value.trim().toLowerCase();
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
 
-            if (fullName && email) {
-                alertBox.className = "px-4 py-3 rounded text-xs bg-emerald-100 border border-emerald-400 text-emerald-700";
-                alertBox.textContent = "Registration successful! Redirecting to home...";
-                alertBox.classList.remove("hidden");
-
-                setTimeout(() => {
-                    window.location.replace("index.html");
-                }, 1500);
-            } else {
-                alertBox.className = "px-4 py-3 rounded text-xs bg-red-100 border border-red-400 text-red-700";
-                alertBox.textContent = "Please fill in all fields correctly.";
-                alertBox.classList.remove("hidden");
+            // 1. Student Number Format Check: Exactly 8 characters and includes a dash (-)
+            const studentNumberPattern = /^\d{2}-\d{5}$/;
+            if (studentnumber.length !== 8 || !studentnumber.includes("-") || !studentNumberPattern.test(studentnumber)) {
+                showAlert("Student number must be exactly 8 characters long and include a dash (e.g., 24-xxxxx).");
+                return;
             }
+
+            // 2. Valid Email Address Check
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(email)) {
+                showAlert("Please enter a valid email address (e.g., student@email.com).");
+                return;
+            }
+
+            // 3. Strong Password Rules
+            if (password.length < 8) {
+                showAlert("Password must be at least 8 characters long.");
+                return;
+            }
+            if (!/^[A-Z]/.test(password)) {
+                showAlert("Password must start with an uppercase letter.");
+                return;
+            }
+            if (!/\d/.test(password)) {
+                showAlert("Password must include at least one number.");
+                return;
+            }
+            if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+                showAlert("Password must include at least one special character.");
+                return;
+            }
+
+            // 4. Confirm Password Match Check
+            if (password !== confirmPassword) {
+                showAlert("Passwords do not match. Please check again.");
+                return;
+            }
+
+            // 5. Check if Student Number or Email is already registered in local storage
+            let users = JSON.parse(localStorage.getItem("registeredUsers")) || [];
+            
+            const existingUser = users.find(u => u.studentNumber === studentnumber || u.email === email);
+            if (existingUser) {
+                if (existingUser.studentNumber === studentnumber) {
+                    showAlert("Student number already exists.");
+                } else {
+                    showAlert("This Email Address is already registered.");
+                }
+                return;
+            }
+
+            // 6. Save new user data and redirect
+            users.push({ firstName, lastName, studentNumber: studentnumber, email, password });
+            localStorage.setItem("registeredUsers", JSON.stringify(users));
+
+            showAlert("Registration successful! Redirecting...", false);
+
+            setTimeout(() => {
+                window.location.replace("index.html");
+            }, 1500);
         }
     </script>
 </body>
