@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - ESSU Registrar Portal</title>
+    <title>Login - ESSU Registrar Portal</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
@@ -57,10 +57,10 @@
                 <a href="#" class="hover:text-yellow-400 transition flex items-center gap-1">
                     <i class="fa-solid fa-phone"></i> Contact
                 </a>
-                <a href="signup.html" class="hover:text-yellow-400 transition flex items-center gap-1 text-yellow-300 font-bold">
+                <a href="signup.html" class="hover:text-yellow-400 transition flex items-center gap-1">
                     <i class="fa-solid fa-user-plus"></i> Register
                 </a>
-                <a href="login.html" class="hover:text-yellow-400 transition flex items-center gap-1">
+                <a href="login.html" class="hover:text-yellow-400 transition flex items-center gap-1 text-yellow-300 font-bold">
                     <i class="fa-solid fa-right-to-bracket"></i> Login
                 </a>
             </nav>
@@ -74,54 +74,45 @@
         </div>
     </header>
 
-    <!-- 3. SIGNUP FORM CONTAINER -->
+    <!-- 3. LOGIN FORM CONTAINER -->
     <main class="flex-grow flex items-center justify-center px-4 py-12 z-10">
         <div class="w-full max-w-xl bg-white text-slate-800 rounded-xl shadow-2xl border border-emerald-900/20 overflow-hidden">
             
             <!-- Card Header -->
             <div class="bg-emerald-900 text-white text-center py-5 px-6 border-b-4 border-yellow-400">
-                <h2 class="text-lg font-extrabold uppercase tracking-wider">Create Portal Account</h2>
-                <p class="text-xs text-emerald-200 mt-1">Fill in your details to register for an appointment account</p>
+                <h2 class="text-lg font-extrabold uppercase tracking-wider">Client Sign In</h2>
+                <p class="text-xs text-emerald-200 mt-1">Enter your account credentials to proceed</p>
             </div>
 
             <!-- Form Body -->
-            <form id="signupForm" class="p-8 space-y-4" onsubmit="handleSignup(event)">
+            <form id="loginForm" class="p-8 space-y-5" onsubmit="handleLogin(event)">
                 
-                <!-- Error/Success Alert Box -->
-                <div id="alertBox" class="hidden px-4 py-3 rounded text-xs"></div>
-
-                <!-- Full Name Field -->
-                <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Full Name</label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
-                            <i class="fa-solid fa-user"></i>
-                        </span>
-                        <input type="text" id="fullname" required placeholder="Juan Dela Cruz"
-                            class="w-full pl-10 pr-4 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:bg-white outline-none transition">
-                    </div>
-                </div>
+                <!-- Error Alert Box -->
+                <div id="errorAlert" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded text-xs"></div>
 
                 <!-- Email Field -->
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Email Address</label>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Email Address</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
                             <i class="fa-solid fa-envelope"></i>
                         </span>
-                        <input type="email" id="signupEmail" required placeholder="student@essu.edu.ph"
+                        <input type="email" id="email" required placeholder="student@essu.edu.ph"
                             class="w-full pl-10 pr-4 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:bg-white outline-none transition">
                     </div>
                 </div>
 
                 <!-- Password Field -->
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Password</label>
+                    <div class="flex items-center justify-between mb-1.5">
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">Password</label>
+                        <a href="#" class="text-xs text-emerald-700 hover:underline">Forgot Password?</a>
+                    </div>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
                             <i class="fa-solid fa-lock"></i>
                         </span>
-                        <input type="password" id="signupPassword" required placeholder="••••••••"
+                        <input type="password" id="password" required placeholder="••••••••"
                             class="w-full pl-10 pr-10 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:bg-white outline-none transition">
                         <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600">
                             <i id="toggleIcon" class="fa-solid fa-eye"></i>
@@ -129,9 +120,15 @@
                     </div>
                 </div>
 
+                <!-- Remember Me Checkbox -->
+                <div class="flex items-center">
+                    <input type="checkbox" id="remember" class="w-4 h-4 text-emerald-600 border-slate-300 rounded focus:ring-emerald-500">
+                    <label for="remember" class="ml-2 text-xs text-slate-600">Remember Username</label>
+                </div>
+
                 <!-- Submit Button -->
-                <button type="submit" class="w-full mt-2 py-3 bg-red-600 hover:bg-red-700 text-white font-extrabold text-sm rounded-lg shadow-xl tracking-wider transition uppercase">
-                    Register Account
+                <button type="submit" class="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-extrabold text-sm rounded-lg shadow-xl tracking-wider transition uppercase">
+                    Log In
                 </button>
 
             </form>
@@ -158,10 +155,10 @@
         </div>
     </footer>
 
-    <!-- Script to handle registration logic -->
+    <!-- Script to handle authentication simulation -->
     <script>
         function togglePassword() {
-            const pwd = document.getElementById('signupPassword');
+            const pwd = document.getElementById('password');
             const icon = document.getElementById('toggleIcon');
             if (pwd.type === 'password') {
                 pwd.type = 'text';
@@ -172,24 +169,25 @@
             }
         }
 
-        function handleSignup(event) {
+        function handleLogin(event) {
             event.preventDefault();
-            const fullName = document.getElementById('fullname').value.trim();
-            const email = document.getElementById('signupEmail').value.trim();
-            const alertBox = document.getElementById('alertBox');
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const errorAlert = document.getElementById('errorAlert');
 
-            if (fullName && email) {
-                alertBox.className = "px-4 py-3 rounded text-xs bg-emerald-100 border border-emerald-400 text-emerald-700";
-                alertBox.textContent = "Registration successful! Redirecting to home...";
-                alertBox.classList.remove("hidden");
-
-                setTimeout(() => {
-                    window.location.replace("index.html");
-                }, 1500);
+            // Simple mock logic for authentication demonstration
+            if (email === "admin@essu.edu.ph" && password === "admin123") {
+                sessionStorage.setItem("loggedIn", "true");
+                sessionStorage.setItem("role", "admin");
+                window.location.replace("admin.html");
+            } else if (email !== "" && password !== "") {
+                // Default regular user login assumption
+                sessionStorage.setItem("loggedIn", "true");
+                sessionStorage.setItem("role", "student");
+                window.location.replace("student.html");
             } else {
-                alertBox.className = "px-4 py-3 rounded text-xs bg-red-100 border border-red-400 text-red-700";
-                alertBox.textContent = "Please fill in all fields correctly.";
-                alertBox.classList.remove("hidden");
+                errorAlert.textContent = "Please enter valid login credentials.";
+                errorAlert.classList.remove("hidden");
             }
         }
     </script>

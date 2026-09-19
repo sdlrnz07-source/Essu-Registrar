@@ -4,16 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>ESSU Student Information System</title>
+    <title>ESSU Registrar Portal - LTMS Style</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 
-    <!-- Prevent back button caching and auto-redirect if logged in -->
     <script>
+    // Redirect already logged-in users straight to their dashboard
     if (sessionStorage.getItem("loggedIn") === "true") {
         if (sessionStorage.getItem("role") === "admin") {
             window.location.replace("admin.html");
@@ -21,138 +19,114 @@
             window.location.replace("student.html");
         }
     }
-
-    window.addEventListener("pageshow", function (event) {
-        if (sessionStorage.getItem("loggedIn") === "true") {
-            if (sessionStorage.getItem("role") === "admin") {
-                window.location.replace("admin.html");
-            } else if (sessionStorage.getItem("role") === "student") {
-                window.location.replace("student.html");
-            }
-        } else {
-            const form = document.getElementById("loginForm");
-            if (form) {
-                form.reset();
-            }
-        }
-    });
     </script>
 </head>
-<body class="relative min-h-screen overflow-hidden">
-    <div class="background"></div>
-    <div class="overlay"></div>
 
-    <header class="absolute top-0 left-0 w-full z-20">
-        <div class="bg-black/20 backdrop-blur-md border-b border-white/20 shadow-xl">
-            <div class="max-w-7xl mx-auto px-8 py-4 flex items-center justify-between">
-                
-                <div class="flex items-center gap-4">
-                    <img src="img/OIP.webp"
-                        alt="ESSU Logo"
-                        class="w-16 h-16 rounded-full bg-white border-2 border-yellow-400 shadow-lg p-1">
+<body class="bg-emerald-950 text-white flex flex-col min-h-screen justify-between bg-cover bg-center bg-no-repeat relative" style="background-image: linear-gradient(to bottom, rgba(6, 78, 59, 0.65), rgba(2, 44, 34, 0.85)), url('img/ESSU_thumbnail.png');">
 
-                    <div>
-                        <h1 class="text-2xl font-bold text-white">
-                            ESSU Registrar
-                        </h1>
-                         <p class="text-sm text-blue-100">
-                            Appointment and Scheduling Management System
-                        </p>
-                     </div>
-                </div>
-
-                <div class="hidden lg:block text-right">
-                    <h2 class="text-3xl font-extrabold tracking-wide text-white">
-                        EASTERN SAMAR <span class="text-yellow-400">STATE UNIVERSITY</span>
-                    </h2>
-                </div>
+    <!-- 1. TOP BAR (GWTD Standard) -->
+    <div class="bg-emerald-950/90 text-white text-xs border-b border-emerald-900 z-30 backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto px-6 py-2 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center space-x-2">
+                <img src="img/rp_n.webp" alt="Republic Seal" class="w-4 h-4 rounded-full object-cover">
+                <span class="font-semibold tracking-wider uppercase">Republic of the Philippines</span>
+                <span class="text-emerald-400">|</span>
+                <span class="text-emerald-200">Eastern Samar State University</span>
             </div>
-             <div
-                class="h-1 bg-gradient-to-red from-blue-700 via-blue-500 to-yellow-400">
-            </div>
-        </div>
-    </header>
-
-    <div class="relative z-10 flex items-center justify-center min-h-screen pt-32 px-5">
-        <div class="login-card w-full max-w-md rounded-3xl p-10 text-white border border-white/30 shadow-2xl">
-            <button class="absolute top-5 right-5 text-white hover:text-yellow-300 transition">
-                <i class="fa-solid fa-xmark text-xl"></i>
-            </button>
-            
-            <div class="flex justify-center">
-                <img src="img/OIP.webp"
-                    alt="ESSU Logo"
-                    class="logo w-24 h-24 rounded-full border-4 border-white shadow-lg">
-            </div>
-
-            <div class="text-center mt-5">
-                <h1 class="text-3xl font-bold tracking-wide">
-                    Login
-                </h1>
-             </div>
-
-            <form id="loginForm" class="mt-10 space-y-7" autocomplete="off">
-                <div>
-                    <div class="relative">
-                        <i class="fa-solid fa-envelope absolute left-0 top-3 text-black/80"></i>
-                        <input
-                            type="email"
-                            id="email"
-                            autocomplete="off"
-                            placeholder="Email Address"
-                            class="input-field pl-8 w-full bg-transparent border-b border-white/70 focus:border-yellow-400 outline-none py-2 placeholder-white/70">
-                    </div>
-                    <small id="emailError" class="text-red-400 text-sm"></small>
-                </div>
-
-                <div>
-                    <div class="relative">
-                        <i class="fa-solid fa-lock absolute left-0 top-3 text-black/80"></i>
-                        <input
-                            type="password"
-                            id="password"
-                            autocomplete="new-password"
-                            placeholder="Password"
-                            class="input-field pl-8 pr-8 w-full bg-transparent border-b border-white/70 focus:border-yellow-400 outline-none py-2 placeholder-white/70">
-
-                        <button
-                            type="button"
-                            id="togglePassword"
-                            class="absolute right-0 top-3">
-                            <i class="fa-solid fa-eye text-black/80"></i>
-                         </button>
-                    </div>
-                  <small id="passwordError" class="text-red-400 text-sm"></small>
-                </div>
-                
-                <div class="flex justify-between items-center text-sm">
-                    <label class="flex items-center gap-2">
-                        <input type="checkbox" class="accent-yellow-400">
-                        Remember Me
-                    </label>
-
-                    <a href="#" class="hover:text-yellow-300 transition">
-                        Forgot Password?
-                     </a>
-                </div>
-                
-                <button
-                    type="submit"
-                    class="w-full py-3 rounded-full font-semibold text-lg bg-gradient-to-red from-blue-600 to-yellow-400 hover:scale-105 hover:shadow-xl duration-300">
-                    LOGIN
-                 </button>
-
-                <div class="text-center mt-6 text-sm">
-                    <p class="inline">Don't have an account?</p>
-                    <a href="signup.html" class="text-blue-600 hover:underline font-semibold"> Sign up</a>
-                </div>
-            </form>
-
-            <div class="text-center text-xs text-white/80 mt-4">
-                © 2026 Eastern Samar State University<br>Borongan City, Eastern Samar
+            <div class="flex items-center space-x-4">
+                <a href="#" class="hover:text-yellow-400 transition">Transparency Seal</a>
+                <a href="#" class="hover:text-yellow-400 transition">Citizen's Charter</a>
+                <a href="#" class="hover:text-yellow-400 transition">Help Desk</a>
             </div>
         </div>
     </div>
-    <script type="module" src="login.js"></script>
+
+    <!-- 2. MASTHEAD / NAVBAR -->
+    <header class="bg-emerald-900/80 backdrop-blur-md text-white shadow-lg border-b-4 border-yellow-400 z-20">
+        <div class="max-w-7xl mx-auto px-6 py-3.5 flex items-center justify-between">
+            
+            <!-- Left Logo & Title Updated -->
+            <a href="index.html" class="flex items-center space-x-3">
+                <img src="img/OIP.webp" alt="ESSU Logo" class="w-10 h-10 rounded-full bg-white p-0.5 border border-yellow-400 object-contain shadow">
+                <span class="text-lg font-bold tracking-tight uppercase">ESSU REGISTRAR PORTAL</span>
+            </a>
+
+            <!-- Right Nav Items -->
+            <nav class="hidden lg:flex items-center space-x-6 text-xs font-semibold uppercase tracking-wider">
+                <a href="#" class="hover:text-yellow-400 transition flex items-center gap-1">
+                    <i class="fa-solid fa-phone"></i> Contact
+                </a>
+                <a href="signup.html" class="hover:text-yellow-400 transition flex items-center gap-1">
+                    <i class="fa-solid fa-user-plus"></i> Register
+                </a>
+                <a href="login.html" class="hover:text-yellow-400 transition flex items-center gap-1 text-yellow-300 font-bold">
+                    <i class="fa-solid fa-right-to-bracket"></i> Login
+                </a>
+            </nav>
+
+            <!-- Mobile Quick Buttons -->
+            <div class="flex lg:hidden items-center space-x-2 text-xs font-bold">
+                <a href="signup.html" class="px-3 py-1.5 bg-red-600 rounded text-white hover:bg-red-700 transition">Register</a>
+                <a href="login.html" class="px-3 py-1.5 border border-white rounded text-white hover:bg-white/10 transition">Login</a>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- 3. HERO CONTENT AREA -->
+    <main class="flex-grow flex flex-col items-center justify-center text-center px-4 py-12 z-10">
+        
+        <p class="text-emerald-200 text-sm md:text-lg font-semibold tracking-wide uppercase mb-4 drop-shadow">
+            Appointment & Scheduling Management System
+        </p>
+
+        <!-- Center ESSU Seal Badge -->
+        <div class="mb-6 relative group">
+            <div class="absolute -inset-1 bg-gradient-to-r from-yellow-400 to-emerald-600 rounded-full blur opacity-50 group-hover:opacity-75 transition duration-300"></div>
+            <img src="img/OIP.webp" alt="ESSU Seal" class="relative w-28 h-28 md:w-36 md:h-36 rounded-full bg-white p-2 border-4 border-yellow-400 shadow-2xl object-contain mx-auto">
+        </div>
+
+        <!-- Main Title -->
+        <h1 class="text-3xl md:text-5xl lg:text-6xl font-black tracking-wider uppercase text-white drop-shadow-lg">
+            ESSU REGISTRAR PORTAL
+        </h1>
+
+        <!-- Subtitle -->
+        <p class="text-gray-100 text-xs md:text-base max-w-2xl mt-4 leading-relaxed px-2 font-medium drop-shadow">
+            A front line university portal showcasing fast, transparent, and efficient public service for a progressive academic community.
+        </p>
+
+        <!-- Primary Action Buttons -->
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8 w-full max-w-md">
+            <a href="signup.html" class="w-full sm:w-auto px-8 py-3.5 bg-red-600 hover:bg-red-700 text-white font-extrabold text-sm rounded-lg shadow-xl tracking-wider transition duration-200 transform hover:-translate-y-0.5 text-center uppercase">
+                REGISTER NOW
+            </a>
+            <a href="login.html" class="w-full sm:w-auto px-8 py-3.5 bg-transparent hover:bg-white/10 text-white border-2 border-white font-extrabold text-sm rounded-lg shadow-xl tracking-wider transition duration-200 transform hover:-translate-y-0.5 text-center uppercase">
+                LOG IN
+            </a>
+        </div>
+
+    </main>
+
+    <!-- 4. STANDARD FOOTER (GWTD Compliant) -->
+    <footer class="bg-emerald-950/90 backdrop-blur-md text-gray-400 text-xs border-t border-emerald-900 py-4 z-20">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-3 text-center md:text-left">
+            <div>
+                <p>
+                    <a href="https://www.gov.ph" target="_blank" class="text-yellow-400 hover:underline font-semibold">Philippine Government Directory</a> | 
+                    <a href="https://www.officialgazette.gov.ph" target="_blank" class="hover:underline">Official Gazette</a>
+                </p>
+                <p class="text-gray-500 text-[11px] mt-0.5">All content is public domain unless otherwise stated.</p>
+            </div>
+            <div class="flex items-center space-x-3">
+                <img src="img/rp_n.webp" alt="Republic Seal" class="w-7 h-7 rounded-full bg-white p-0.5 object-cover">
+                <div>
+                    <p class="font-bold text-white text-[10px]">REPUBLIC OF THE PHILIPPINES</p>
+                    <p class="text-[9px] text-gray-500">Eastern Samar State University System</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
 </body>
 </html>
