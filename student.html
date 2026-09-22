@@ -1,71 +1,296 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-
-<title>Student Dashboard</title>
-
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dashboard - ESSu Registrar Appointment and Scheduling System</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="style.css" />
+<style>
+  /* ---- Prevent flash/glitch loading state ---- */
+  main, header { opacity: 0; transition: opacity 0.2s ease-in; }
+  body.loaded main, body.loaded header { opacity: 1; }
 
+  /* ---- Header ---- */
+  .top-bar {
+    background: #0b3d24;
+    color: #e9f5ee;
+    font-size: 0.85rem;
+  }
+  .top-bar a { color: #cdeedd; }
+  .top-bar a:hover { color: #ffffff; }
 
-<script>
-if (
-    sessionStorage.getItem("loggedIn") !== "true" ||
-    sessionStorage.getItem("role") !== "student"
-) {
-    window.location.replace("index.html");
-}
+  .main-nav {
+    background: #0f4c2e;
+    border-bottom: 4px solid #f4c95d;
+  }
 
-history.pushState(null, null, location.href);
-window.onpopstate = function () {
-    history.go(1);
-};
-</script>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
 
+  .brand-title {
+    color: #ffffff;
+    letter-spacing: 0.02em;
+  }
+
+  .btn-red {
+    background: #c1272d;
+    color: #ffffff;
+    transition: background 0.15s ease;
+  }
+  .btn-red:hover { background: #a31f24; }
+
+  .btn-outline-green {
+    border: 1px solid #0f4c2e;
+    color: #0f4c2e;
+    background: transparent;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .btn-outline-green:hover { background: #0f4c2e; color: #ffffff; }
+
+  /* ---- Page Layout & Scroll Fix ---- */
+  html, body {
+    background: #ffffff;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden; /* Locks the outer browser window from scrolling past the header */
+  }
+
+  .app-container {
+    height: calc(100vh - 110px); /* Adjusts scroll view precisely below sticky header */
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  /* Custom clean scrollbar */
+  .app-container::-webkit-scrollbar {
+    width: 8px;
+  }
+  .app-container::-webkit-scrollbar-track {
+    background: #ffffff;
+  }
+  .app-container::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 4px;
+  }
+  .app-container::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+  }
+
+  .card {
+    background: #ffffff;
+    border: 1px solid #e4e7e6;
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+
+  .status-pill {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    display: inline-block;
+  }
+  .status-pending   { background: #fff4de; color: #8a5b00; }
+  .status-approved  { background: #e3f7e9; color: #1d7a3c; }
+  .status-rejected  { background: #fde8e8; color: #b3261e; }
+  .status-cancelled { background: #ececec; color: #616161; }
+
+  /* ---- Calendar ---- */
+  .cal-day {
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background 0.12s ease, color 0.12s ease;
+  }
+  .cal-day:not(.cal-disabled):hover { background: #eaf4ee; }
+  .cal-day.cal-disabled { color: #c7c7c7; cursor: not-allowed; }
+  .cal-day.cal-selected { background: #0f4c2e; color: #ffffff; }
+  .cal-day.cal-today { border: 1px solid #0f4c2e; font-weight: 600; }
+
+  .slot-btn {
+    border: 1px solid #d7dedb;
+    border-radius: 6px;
+    padding: 0.25rem 0;
+    font-size: 0.75rem;
+    text-align: center;
+    cursor: pointer;
+    transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+  }
+  .slot-btn:hover:not(.slot-taken) { border-color: #0f4c2e; }
+  .slot-btn.slot-selected { background: #0f4c2e; color: #fff; border-color: #0f4c2e; }
+  .slot-btn.slot-taken { background: #f3f3f3; color: #b7b7b7; cursor: not-allowed; }
+
+  .modal-backdrop {
+    position: fixed; inset: 0; background: rgba(11,61,36,0.35);
+    display: none; align-items: center; justify-content: center; z-index: 60;
+  }
+  .modal-backdrop.open { display: flex; }
+</style>
 </head>
+<body class="text-gray-800">
 
-<body class="bg-gray-100">
+  <!-- Auth Loading Splash Screen -->
+  <div id="authLoadingScreen" class="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center">
+    <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-[#0f4c2e] mb-3"></div>
+    <p class="text-sm font-semibold text-[#0f4c2e]">Loading student dashboard...</p>
+  </div>
 
-<!-- Header -->
-<div class="bg-blue-600 text-white p-5 flex justify-between items-center">
+  <!-- ============ HEADER ============ -->
+  <header class="site-header" id="siteHeader">
+    <div class="top-bar">
+      <div class="max-w-7xl mx-auto px-4 py-1.5 flex flex-wrap items-center justify-between gap-2">
+        <div class="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs sm:text-sm">
+           <img src="img/rp_n.webp" alt="Republic Seal" class="w-4 h-4 rounded-full object-cover">
+          <span class="font-semibold">REPUBLIC OF THE PHILIPPINES</span>
+          <span>Eastern Samar State University</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs sm:text-sm">
+          <a href="index.html">Home</a>
+          <a href="#">Transparency Seal</a>
+          <a href="#">Citizen's Charter</a>
+          <a href="#">Help Desk</a>
+        </div>
+      </div>
+    </div>
 
-    <h1 class="text-2xl font-bold">
-        Student Dashboard
-    </h1>
+    <div class="main-nav">
+      <div class="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <img src="img/OIP.webp" alt="ESSU Seal" class="h-9 w-9 rounded-full" onerror="this.style.display='none'" />
+          <span class="brand-title text-base sm:text-lg font-extrabold">ESSU REGISTRAR PORTAL</span>
+        </div>
+        <div class="flex items-center gap-3 sm:gap-4">
+          <span id="studentGreeting" class="text-xs sm:text-sm text-white/90">Welcome, Student</span>
+          <a href="#" class="text-xs sm:text-sm text-white/90 hover:text-white">📞 Contact</a>
+          <button id="logoutBtn" class="btn-outline-green rounded px-3 py-1 text-xs sm:text-sm font-semibold bg-white">
+            Logout
+          </button>
+        </div>
+      </div>
+    </div>
 
-    <button
-        onclick="logout()"
-        class="bg-blue-800 hover:bg-blue-900 px-5 py-2 rounded-lg font-semibold">
-        Logout
-    </button>
+    <div class="border-b border-gray-200 bg-white">
+      <div class="max-w-7xl mx-auto px-4 flex gap-6 text-xs sm:text-sm font-medium">
+        <a href="#book" class="py-2.5 border-b-2 border-[#0f4c2e] text-[#0f4c2e]">Book Appointment</a>
+      </div>
+    </div>
+  </header>
 
-</div>
+  <!-- ============ SCROLLABLE WRAPPER ============ -->
+  <div class="app-container">
+    <main class="max-w-7xl mx-auto px-4 py-4 pb-16">
+      <h1 class="text-lg font-bold text-[#0f4c2e] mb-0.5">Appointment Dashboard</h1>
+      <p class="text-xs text-gray-500 mb-4">Book, view, reschedule, or cancel your Registrar appointments.</p>
 
-<!-- Main Content -->
-<div class="flex justify-center items-center h-screen">
+      <!-- BOOKING MODULE -->
+      <section id="book" class="grid lg:grid-cols-5 gap-4 items-start mb-6">
+        <div class="lg:col-span-3 card p-3.5">
+          <div class="flex items-center justify-between mb-2">
+            <button id="prevMonth" class="px-2 py-0.5 text-xs rounded hover:bg-gray-100">&larr;</button>
+            <h2 id="calMonthLabel" class="text-xs sm:text-sm font-semibold text-[#0f4c2e]"></h2>
+            <button id="nextMonth" class="px-2 py-0.5 text-xs rounded hover:bg-gray-100">&rarr;</button>
+          </div>
 
-    <h1 class="text-6xl font-bold text-slate-800">
-        YEHEY
-    </h1>
+          <div class="grid grid-cols-7 gap-1 text-center text-xs text-gray-400 mb-1">
+            <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+          </div>
+          <div id="calGrid" class="grid grid-cols-7 gap-1"></div>
 
-</div>
+          <div class="mt-2.5">
+            <p class="text-xs font-semibold text-gray-700 mb-1">Available time slots</p>
+            <div id="slotGrid" class="grid grid-cols-3 sm:grid-cols-4 gap-1.5"></div>
+            <p id="slotHint" class="text-xs text-gray-400 mt-1">Select a date to see open time slots.</p>
+          </div>
+        </div>
 
-<script>
-function logout() {
+        <div class="lg:col-span-2 card p-3.5">
+          <h2 class="text-xs sm:text-sm font-semibold text-[#0f4c2e] mb-2.5">Appointment Details</h2>
+          <form id="bookingForm" class="space-y-2.5">
+            <div>
+              <label class="block text-xs font-medium mb-0.5">Purpose</label>
+              <select id="purpose" required class="w-full border border-gray-300 rounded px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-[#0f4c2e]">
+                <option value="">Select purpose</option>
+                <option>Request for Transcript of Records</option>
+                <option>Certification / Good Moral</option>
+                <option>Diploma Claiming</option>
+                <option>Enrollment Concern</option>
+                <option>Other Registrar Transaction</option>
+              </select>
+            </div>
 
-    if (confirm("Are you sure you want to logout?")) {
+            <div>
+              <label class="block text-xs font-medium mb-0.5">Selected date</label>
+              <input id="selectedDateDisplay" type="text" disabled placeholder="No date selected"
+                class="w-full border border-gray-300 rounded px-2.5 py-1.5 text-xs bg-gray-50 text-gray-500" />
+            </div>
 
-        // Remove the login session
-        sessionStorage.clear();
+            <div>
+              <label class="block text-xs font-medium mb-0.5">Selected time slot</label>
+              <input id="selectedSlotDisplay" type="text" disabled placeholder="No time slot selected"
+                class="w-full border border-gray-300 rounded px-2.5 py-1.5 text-xs bg-gray-50 text-gray-500" />
+            </div>
 
-        // Redirect to the login page
-        window.location.replace("index.html");
+            <div>
+              <label class="block text-xs font-medium mb-0.5">Notes (optional)</label>
+              <textarea id="notes" rows="2" class="w-full border border-gray-300 rounded px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-[#0f4c2e]" placeholder="Anything the Registrar staff should know"></textarea>
+            </div>
 
-    }
+            <button type="submit" class="btn-red w-full rounded py-1.5 font-semibold text-xs">
+              Confirm Appointment
+            </button>
+            <p id="bookingMsg" class="text-xs mt-0.5"></p>
+          </form>
+        </div>
+      </section>
 
-}
-</script>
+      <!-- APPOINTMENT HISTORY -->
+      <section id="history" class="mb-6">
+        <h2 class="font-semibold text-[#0f4c2e] text-sm sm:text-base mb-2.5">My Appointments</h2>
+        <div class="card overflow-x-auto">
+          <table class="w-full text-xs sm:text-sm">
+            <thead class="bg-gray-50 text-gray-500 text-left">
+              <tr>
+                <th class="px-3 py-2">Date</th>
+                <th class="px-3 py-2">Time</th>
+                <th class="px-3 py-2">Purpose</th>
+                <th class="px-3 py-2">Status</th>
+                <th class="px-3 py-2 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="appointmentsBody">
+              <tr>
+                <td colspan="5" class="px-3 py-4 text-center text-gray-400">Loading your appointments…</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
 
+  <!-- RESCHEDULE MODAL -->
+  <div id="rescheduleModal" class="modal-backdrop">
+    <div class="card p-4 w-full max-w-sm mx-4">
+      <h3 class="font-semibold text-[#0f4c2e] mb-2.5 text-xs sm:text-sm">Reschedule Appointment</h3>
+      <label class="block text-xs font-medium mb-1">New date</label>
+      <input id="rescheduleDate" type="date" class="w-full border border-gray-300 rounded px-2.5 py-1.5 text-xs mb-2" />
+      <label class="block text-xs font-medium mb-1">New time slot</label>
+      <select id="rescheduleSlot" class="w-full border border-gray-300 rounded px-2.5 py-1.5 text-xs mb-3"></select>
+      <div class="flex gap-2">
+        <button id="rescheduleCancelBtn" class="flex-1 rounded border border-gray-300 py-1.5 text-xs">Cancel</button>
+        <button id="rescheduleConfirmBtn" class="flex-1 btn-red rounded py-1.5 text-xs font-semibold">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="student.js"></script>
 </body>
-
 </html>

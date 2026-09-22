@@ -85,11 +85,8 @@
             </div>
 
             <!-- Form Body -->
-            <form id="loginForm" class="p-8 space-y-5" onsubmit="handleLogin(event)">
+            <form id="loginForm" class="p-8 space-y-5">
                 
-                <!-- Error Alert Box -->
-                <div id="errorAlert" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded text-xs"></div>
-
                 <!-- Email Field -->
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Email Address</label>
@@ -100,6 +97,7 @@
                         <input type="email" id="email" required placeholder="student@essu.edu.ph"
                             class="w-full pl-10 pr-4 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:bg-white outline-none transition">
                     </div>
+                    <p id="emailError" class="text-xs text-red-600 mt-1"></p>
                 </div>
 
                 <!-- Password Field -->
@@ -114,10 +112,11 @@
                         </span>
                         <input type="password" id="password" required placeholder="••••••••"
                             class="w-full pl-10 pr-10 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:bg-white outline-none transition">
-                        <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600">
-                            <i id="toggleIcon" class="fa-solid fa-eye"></i>
+                        <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600">
+                            <i class="fa-solid fa-eye"></i>
                         </button>
                     </div>
+                    <p id="passwordError" class="text-xs text-red-600 mt-1"></p>
                 </div>
 
                 <!-- Remember Me Checkbox -->
@@ -155,41 +154,96 @@
         </div>
     </footer>
 
-    <!-- Script to handle authentication simulation -->
-    <script>
-        function togglePassword() {
-            const pwd = document.getElementById('password');
-            const icon = document.getElementById('toggleIcon');
-            if (pwd.type === 'password') {
-                pwd.type = 'text';
-                icon.classList.replace('fa-eye', 'fa-eye-slash');
-            } else {
-                pwd.type = 'password';
-                icon.classList.replace('fa-eye-slash', 'fa-eye');
-            }
+    <!-- Integrated Login JavaScript Module -->
+    <script type="module">
+        import { supabase } from "./supabase.js";
+
+        const togglePassword = document.getElementById("togglePassword");
+        const passwordInput = document.getElementById("password");
+
+        // Show / hide password
+        if (togglePassword && passwordInput) {
+            togglePassword.addEventListener("click", function () {
+                const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+                passwordInput.setAttribute("type", type);
+                
+                const icon = this.querySelector("i");
+                if (icon) {
+                    icon.classList.toggle("fa-eye");
+                    icon.classList.toggle("fa-eye-slash");
+                }
+            });
         }
 
-        function handleLogin(event) {
-            event.preventDefault();
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-            const errorAlert = document.getElementById('errorAlert');
+        // LOGIN
+        document.getElementById("loginForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
 
-            // Simple mock logic for authentication demonstration
-            if (email === "admin@essu.edu.ph" && password === "admin123") {
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value;
+            const emailError = document.getElementById("emailError");
+            const passwordError = document.getElementById("passwordError");
+
+            // Clear previous errors
+            emailError.textContent = "";
+            passwordError.textContent = "";
+
+            // Validation
+            if (email === "") {
+                emailError.textContent = "Email is required.";
+                return;
+            }
+
+            if (password === "") {
+                passwordError.textContent = "Password is required.";
+                return;
+            }
+
+            if (password.length < 8) {
+                passwordError.textContent = "Password must be at least 8 characters.";
+                return;
+            }
+
+            try {
+                // Ask Supabase to verify the email and password
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+
+                // Supabase rejected the login
+                if (error) {
+                    console.error("Login error:", error);
+                    passwordError.textContent = "Invalid email or password.";
+                    return;
+                }
+
+                // Make sure Supabase actually returned a user
+                if (!data.user) {
+                    passwordError.textContent = "Login failed. Please try again.";
+                    return;
+                }
+
+                // Save login information
                 sessionStorage.setItem("loggedIn", "true");
-                sessionStorage.setItem("role", "admin");
-                window.location.replace("admin.html");
-            } else if (email !== "" && password !== "") {
-                // Default regular user login assumption
-                sessionStorage.setItem("loggedIn", "true");
+                sessionStorage.setItem("userEmail", data.user.email);
+
+                // Admin account
+                if (data.user.email.toLowerCase() === "admin@essu.edu.ph") {
+                    sessionStorage.setItem("role", "admin");
+                    window.location.href = "admin.html";
+                    return;
+                }
+
+                // Student account
                 sessionStorage.setItem("role", "student");
-                window.location.replace("student.html");
-            } else {
-                errorAlert.textContent = "Please enter valid login credentials.";
-                errorAlert.classList.remove("hidden");
+                window.location.href = "student.html";
+
+            } catch (error) {
+                console.error("Unexpected login error:", error);
+                passwordError.textContent = "Unable to login. Please try again.";
             }
-        }
+        });
     </script>
 </body>
 </html>
