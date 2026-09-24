@@ -22,11 +22,11 @@
     </script>
 </head>
 
-<body class="bg-emerald-950 text-white flex flex-col min-h-screen bg-cover bg-center bg-no-repeat relative" style="background-image: linear-gradient(to bottom, rgba(6, 78, 59, 0.65), rgba(2, 44, 34, 0.85)), url('img/ESSU_thumbnail.png');">
+<body class="bg-emerald-950 text-white flex flex-col min-h-screen justify-between bg-cover bg-center bg-no-repeat relative" style="background-image: linear-gradient(to bottom, rgba(6, 78, 59, 0.65), rgba(2, 44, 34, 0.85)), url('img/ESSU_thumbnail.png');">
 
-    <!-- 1. TOP BAR (GWTD Standard) -->
+    <!-- 1. TOP BAR -->
     <div class="bg-emerald-950/90 text-white text-xs border-b border-emerald-900 z-30 backdrop-blur-sm">
-        <div class="max-w-7xl mx-auto px-6 py-1.5 flex flex-wrap items-center justify-between gap-4">
+        <div class="max-w-7xl mx-auto px-6 py-2 flex flex-wrap items-center justify-between gap-4">
             <div class="flex items-center space-x-2">
                 <img src="img/rp_n.webp" alt="Republic Seal" class="w-4 h-4 rounded-full object-cover">
                 <span class="font-semibold tracking-wider uppercase">Republic of the Philippines</span>
@@ -44,15 +44,12 @@
 
     <!-- 2. MASTHEAD / NAVBAR -->
     <header class="bg-emerald-900/80 backdrop-blur-md text-white shadow-lg border-b-4 border-yellow-400 z-20">
-        <div class="max-w-7xl mx-auto px-6 py-2.5 flex items-center justify-between">
-            
-            <!-- Left Logo & Title -->
+        <div class="max-w-7xl mx-auto px-6 py-3.5 flex items-center justify-between">
             <a href="index.html" class="flex items-center space-x-3">
-                <img src="img/OIP.webp" alt="ESSU Logo" class="w-9 h-9 rounded-full bg-white p-0.5 border border-yellow-400 object-contain shadow">
-                <span class="text-base font-bold tracking-tight uppercase">ESSU REGISTRAR PORTAL</span>
+                <img src="img/OIP.webp" alt="ESSU Logo" class="w-10 h-10 rounded-full bg-white p-0.5 border border-yellow-400 object-contain shadow">
+                <span class="text-lg font-bold tracking-tight uppercase">ESSU REGISTRAR PORTAL</span>
             </a>
 
-            <!-- Right Nav Items -->
             <nav class="hidden lg:flex items-center space-x-6 text-xs font-semibold uppercase tracking-wider">
                 <a href="#" class="hover:text-yellow-400 transition flex items-center gap-1">
                     <i class="fa-solid fa-phone"></i> Contact
@@ -65,86 +62,79 @@
                 </a>
             </nav>
 
-            <!-- Mobile Quick Buttons -->
             <div class="flex lg:hidden items-center space-x-2 text-xs font-bold">
                 <a href="signup.html" class="px-3 py-1.5 bg-red-600 rounded text-white hover:bg-red-700 transition">Register</a>
                 <a href="login.html" class="px-3 py-1.5 border border-white rounded text-white hover:bg-white/10 transition">Login</a>
             </div>
-
         </div>
     </header>
 
     <!-- 3. SIGNUP FORM CONTAINER -->
-    <main class="flex-grow flex items-center justify-center px-4 py-4 z-10">
-        <div class="w-full max-w-md bg-white text-slate-800 rounded-xl shadow-2xl border border-emerald-900/20 overflow-hidden">
+    <main class="flex-grow flex items-center justify-center px-4 py-12 z-10">
+        <div class="w-full max-w-xl bg-white text-slate-800 rounded-xl shadow-2xl border border-emerald-900/20 overflow-hidden">
             
             <!-- Card Header -->
-            <div class="bg-emerald-900 text-white text-center py-3 px-6 border-b-4 border-yellow-400">
-                <h2 class="text-sm font-extrabold uppercase tracking-wider">Register</h2>
-                <p class="text-[10px] text-emerald-200 mt-0.5">ESSU Registrar Appointment Management System</p>
+            <div class="bg-emerald-900 text-white text-center py-5 px-6 border-b-4 border-yellow-400">
+                <h2 class="text-lg font-extrabold uppercase tracking-wider">Register</h2>
+                <p class="text-xs text-emerald-200 mt-1">ESSU Registrar Appointment Management System</p>
             </div>
 
             <!-- Form Body -->
-            <form id="signupForm" class="p-4 space-y-2.5" onsubmit="handleSignup(event)">
+            <form id="signupForm" class="p-8 space-y-4">
                 
-                <!-- Error/Success Alert Box -->
-                <div id="alertBox" class="hidden px-3 py-2 rounded text-xs"></div>
+                <!-- Alert Box for feedback -->
+                <div id="alertBox" class="hidden p-3 text-xs rounded-lg"></div>
 
-                <!-- First Name Field -->
+                <!-- First Name -->
                 <div>
-                    <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-600 mb-0.5">First Name</label>
-                    <input type="text" id="firstname" required placeholder="Enter your first name"
-                        class="w-full px-3 py-1.5 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:bg-white outline-none transition">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">First Name</label>
+                    <input type="text" id="firstName" required placeholder="Syd Lourenz"
+                        class="w-full px-4 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:bg-white outline-none transition">
                 </div>
 
-                <!-- Last Name Field -->
+                <!-- Last Name -->
                 <div>
-                    <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-600 mb-0.5">Last Name</label>
-                    <input type="text" id="lastname" required placeholder="Enter your last name"
-                        class="w-full px-3 py-1.5 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:bg-white outline-none transition">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Last Name</label>
+                    <input type="text" id="lastName" required placeholder="Calesa"
+                        class="w-full px-4 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:bg-white outline-none transition">
                 </div>
 
-                <!-- Student Number Field -->
+                <!-- Student Number -->
                 <div>
-                    <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-600 mb-0.5">Student Number</label>
-                    <input type="text" id="studentnumber" required placeholder="Ex. 24-12345" maxlength="8"
-                        class="w-full px-3 py-1.5 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:bg-white outline-none transition">
-                    <p class="text-[9px] text-slate-500 mt-0.5">must be a valid enrolled student</p>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Student Number</label>
+                    <input type="text" id="studentnumber" required placeholder="25-02835"
+                        class="w-full px-4 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:bg-white outline-none transition">
+                    <p class="text-[11px] text-slate-400 mt-1">must be a valid enrolled student</p>
                 </div>
 
-                <!-- Email Address Field -->
+                <!-- Email Address -->
                 <div>
-                    <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-600 mb-0.5">Email Address</label>
-                    <input type="email" id="signupEmail" required placeholder="student@email.com"
-                        class="w-full px-3 py-1.5 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:bg-white outline-none transition">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Email Address</label>
+                    <input type="email" id="email" required placeholder="student@essu.edu.ph"
+                        class="w-full px-4 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:bg-white outline-none transition">
                 </div>
 
-                <!-- Password Field with Show/Hide Toggle -->
+                <!-- Password -->
                 <div>
-                    <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-600 mb-0.5">Password</label>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Password</label>
                     <div class="relative">
-                        <input type="password" id="signupPassword" required placeholder="Min 8 chars, starts with Uppercase, num & symbol"
-                            class="w-full px-3 py-1.5 pr-8 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:bg-white outline-none transition">
-                        <button type="button" onclick="togglePassword('signupPassword', 'toggleIcon1')" class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none">
-                            <i id="toggleIcon1" class="fa-solid fa-eye text-xs"></i>
+                        <input type="password" id="password" required placeholder="••••••••"
+                            class="w-full px-4 py-2.5 pr-10 text-sm bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:bg-white outline-none transition">
+                        <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600">
+                            <i class="fa-solid fa-eye text-xs"></i>
                         </button>
                     </div>
                 </div>
 
-                <!-- Confirm Password Field with Show/Hide Toggle -->
+                <!-- Confirm Password -->
                 <div>
-                    <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-600 mb-0.5">Confirm Password</label>
-                    <div class="relative">
-                        <input type="password" id="confirmPassword" required placeholder="Confirm password"
-                            class="w-full px-3 py-1.5 pr-8 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:bg-white outline-none transition">
-                        <button type="button" onclick="togglePassword('confirmPassword', 'toggleIcon2')" class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none">
-                            <i id="toggleIcon2" class="fa-solid fa-eye text-xs"></i>
-                        </button>
-                    </div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Confirm Password</label>
+                    <input type="password" id="confirmPassword" required placeholder="••••••••"
+                        class="w-full px-4 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:bg-white outline-none transition">
                 </div>
 
                 <!-- Submit Button -->
-                <button type="submit" class="w-full mt-1 py-2 bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs rounded-lg shadow-lg tracking-wider transition uppercase">
+                <button type="submit" class="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-extrabold text-sm rounded-lg shadow-xl tracking-wider transition uppercase mt-2">
                     Register
                 </button>
 
@@ -153,100 +143,79 @@
     </main>
 
     <!-- 4. STANDARD FOOTER -->
-    <footer class="bg-emerald-950/90 backdrop-blur-md text-gray-400 text-xs border-t border-emerald-900 py-2.5 z-20 mt-auto">
+    <footer class="bg-emerald-950/90 backdrop-blur-md text-gray-400 text-xs border-t border-emerald-900 py-4 z-20">
         <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-3 text-center md:text-left">
             <div>
                 <p>
                     <a href="https://www.gov.ph" target="_blank" class="text-yellow-400 hover:underline font-semibold">Philippine Government Directory</a> | 
                     <a href="https://www.officialgazette.gov.ph" target="_blank" class="hover:underline">Official Gazette</a>
                 </p>
-                <p class="text-gray-500 text-[10px] mt-0.5">All content is public domain unless otherwise stated.</p>
+                <p class="text-gray-500 text-[11px] mt-0.5">All content is public domain unless otherwise stated.</p>
             </div>
             <div class="flex items-center space-x-3">
-                <img src="img/rp_n.webp" alt="Republic Seal" class="w-6 h-6 rounded-full bg-white p-0.5 object-cover">
+                <img src="img/rp_n.webp" alt="Republic Seal" class="w-7 h-7 rounded-full bg-white p-0.5 object-cover">
                 <div>
-                    <p class="font-bold text-white text-[9px]">REPUBLIC OF THE PHILIPPINES</p>
-                    <p class="text-[8px] text-gray-500">Eastern Samar State University System</p>
+                    <p class="font-bold text-white text-[10px]">REPUBLIC OF THE PHILIPPINES</p>
+                    <p class="text-[9px] text-gray-500">Eastern Samar State University System</p>
                 </div>
             </div>
         </div>
     </footer>
 
-    <!-- Script to handle authentication, toggling, and validation logic -->
+    <!-- Integrated Signup Module (Option 2 Logic) -->
     <script type="module">
-        import { supabase } from './supabase.js';
+        import { supabase } from "./supabase.js";
 
-        window.togglePassword = function(fieldId, iconId) {
-            const passwordField = document.getElementById(fieldId);
-            const icon = document.getElementById(iconId);
-            if (passwordField.type === 'password') {
-                passwordField.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                passwordField.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
+        const togglePassword = document.getElementById("togglePassword");
+        const passwordInput = document.getElementById("password");
+
+        // Show / Hide Password Toggle
+        if (togglePassword && passwordInput) {
+            togglePassword.addEventListener("click", function () {
+                const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+                passwordInput.setAttribute("type", type);
+                
+                const icon = this.querySelector("i");
+                if (icon) {
+                    icon.classList.toggle("fa-eye");
+                    icon.classList.toggle("fa-eye-slash");
+                }
+            });
         }
 
-        window.showAlert = function(message, isError = true) {
-            const alertBox = document.getElementById('alertBox');
-            alertBox.className = `px-3 py-1.5 rounded text-xs ${isError ? 'bg-red-100 border border-red-400 text-red-700' : 'bg-emerald-100 border border-emerald-400 text-emerald-700'}`;
+        function showAlert(message, isError = true) {
+            const alertBox = document.getElementById("alertBox");
             alertBox.textContent = message;
+            alertBox.className = isError 
+                ? "mb-4 p-3 text-xs bg-red-100 border border-red-400 text-red-700 rounded-lg block font-semibold"
+                : "mb-4 p-3 text-xs bg-emerald-100 border border-emerald-400 text-emerald-700 rounded-lg block font-semibold";
             alertBox.classList.remove("hidden");
         }
 
-        window.handleSignup = async function(event) {
-            event.preventDefault();
-            
-            const firstName = document.getElementById('firstname').value.trim();
-            const lastName = document.getElementById('lastname').value.trim();
-            const studentnumber = document.getElementById('studentnumber').value.trim();
-            const email = document.getElementById('signupEmail').value.trim().toLowerCase();
-            const password = document.getElementById('signupPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
+        // SIGNUP SUBMIT EVENT
+        document.getElementById("signupForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
 
-            // 1. Student Number Format Check: Exactly 8 characters and includes a dash (-)
-            const studentNumberPattern = /^\d{2}-\d{5}$/;
-            if (studentnumber.length !== 8 || !studentnumber.includes("-") || !studentNumberPattern.test(studentnumber)) {
-                showAlert("Student number must be exactly 8 characters long and include a dash (e.g., 24-xxxxx).");
-                return;
-            }
+            const firstName = document.getElementById("firstName").value.trim();
+            const lastName = document.getElementById("lastName").value.trim();
+            const studentNumber = document.getElementById("studentnumber").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirmPassword").value;
 
-            // 2. Valid Email Address Check
-            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailPattern.test(email)) {
-                showAlert("Please enter a valid email address (e.g., student@email.com).");
-                return;
-            }
-
-            // 3. Strong Password Rules
+            // Form validations
             if (password.length < 8) {
                 showAlert("Password must be at least 8 characters long.");
                 return;
             }
-            if (!/^[A-Z]/.test(password)) {
-                showAlert("Password must start with an uppercase letter.");
-                return;
-            }
-            if (!/\d/.test(password)) {
-                showAlert("Password must include at least one number.");
-                return;
-            }
-            if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-                showAlert("Password must include at least one special character.");
-                return;
-            }
 
-            // 4. Confirm Password Match Check
             if (password !== confirmPassword) {
-                showAlert("Passwords do not match. Please check again.");
+                showAlert("Passwords do not match.");
                 return;
             }
 
             try {
-                // 5. Register user with Supabase Auth
+                // 1. Create User in Supabase Auth
                 const { data: authData, error: authError } = await supabase.auth.signUp({
                     email: email,
                     password: password,
@@ -254,20 +223,26 @@
 
                 if (authError) throw authError;
 
-                // 6. Insert additional student details into your public.students table
+                if (!authData.user) {
+                    throw new Error("Registration failed. No user object returned.");
+                }
+
+                // 2. Insert corresponding row into public.students table with the Auth ID
                 const { error: dbError } = await supabase
                     .from('students')
                     .insert([
                         { 
+                            id: authData.user.id, 
                             first_name: firstName, 
                             last_name: lastName, 
-                            student_number: studentnumber, 
+                            student_number: studentNumber, 
                             email: email 
                         }
                     ]);
 
                 if (dbError) throw dbError;
 
+                // 3. Success Feedback & Redirect
                 showAlert("Registration successful! Redirecting to login...", false);
 
                 setTimeout(() => {
@@ -275,9 +250,10 @@
                 }, 1500);
 
             } catch (error) {
-                showAlert(error.message || "Registration failed. Please try again.");
+                console.error("Signup error:", error);
+                showAlert(error.message || "Database error saving new user.");
             }
-        }
+        });
     </script>
 </body>
 </html>
