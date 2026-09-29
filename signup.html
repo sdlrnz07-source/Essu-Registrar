@@ -234,6 +234,25 @@
                 return;
             }
 
+            // If the password starts with a letter, ensure it's a capital letter
+            const firstChar = password.charAt(0);
+            if (/[a-zA-Z]/.test(firstChar) && !/[A-Z]/.test(firstChar)) {
+                showAlert("If the password begins with a letter, it must start with a capital letter.");
+                return;
+            }
+
+            // Must contain at least one number
+            if (!/[0-9]/.test(password)) {
+                showAlert("Password must contain at least one number.");
+                return;
+            }
+
+            // Must contain at least one special character
+            if (!/[^a-zA-Z0-9]/.test(password)) {
+                showAlert("Password must contain at least one special character.");
+                return;
+            }
+
             if (password !== confirmPassword) {
                 showAlert("Passwords do not match.");
                 return;
