@@ -14,10 +14,8 @@
         ESSU Registrar Portal - Admin Dashboard
     </title>
 
-
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-
 
     <!-- FontAwesome -->
     <link
@@ -25,13 +23,11 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     >
 
-
     <!-- Google Font -->
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
         rel="stylesheet"
     >
-
 
     <!-- ESSU Tailwind Theme -->
     <script>
@@ -44,17 +40,13 @@
 
                     colors: {
 
-                        essuGreen:
-                            "#124e29",
+                        essuGreen: "#124e29",
 
-                        essuDarkGreen:
-                            "#093219",
+                        essuDarkGreen: "#093219",
 
-                        essuGold:
-                            "#d4af37",
+                        essuGold: "#d4af37",
 
-                        essuLightGold:
-                            "#fef9e7"
+                        essuLightGold: "#fef9e7"
                     },
 
                     fontFamily: {
@@ -85,121 +77,175 @@
 <!-- ========================================================= -->
 
 <header
-    class="bg-essuDarkGreen text-white shadow-lg sticky top-0 z-40"
+    class="bg-[#0f4c2e] text-white shadow-lg sticky top-0 z-40"
 >
 
 
-    <!-- Republic Header -->
+    <!-- TOP BAR -->
 
     <div
-        class="bg-black/20 text-xs py-1.5 px-4 sm:px-8 flex justify-between items-center border-b border-white/10"
+        class="bg-[#0b3d24] text-[#e9f5ee]"
     >
 
-        <span
-            class="tracking-wide font-medium"
+        <div
+            class="max-w-7xl mx-auto px-4 py-1.5 flex flex-wrap items-center justify-between gap-2"
         >
-            REPUBLIC OF THE PHILIPPINES |
-            Eastern Samar State University
-        </span>
 
 
-        <span
-            class="text-essuGold font-bold uppercase tracking-wider hidden sm:block"
-        >
-            Registrar Admin Portal
-        </span>
+            <!-- LEFT SIDE -->
+
+            <div
+                class="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs sm:text-sm"
+            >
+
+                <img
+                    src="img/rp_n.webp"
+                    alt="Republic Seal"
+                    class="w-4 h-4 rounded-full object-cover"
+                >
+
+
+                <span
+                    class="font-semibold"
+                >
+                    REPUBLIC OF THE PHILIPPINES
+                </span>
+
+
+                <span>
+                    Eastern Samar State University
+                </span>
+
+            </div>
+
+
+
+            <!-- RIGHT SIDE -->
+
+            <div
+                class="hidden sm:flex items-center text-xs sm:text-sm"
+            >
+
+                <span
+                    class="text-[#f4c95d] font-bold uppercase tracking-wider"
+                >
+                    Registrar Admin Portal
+                </span>
+
+            </div>
+
+
+        </div>
 
     </div>
 
 
 
-    <!-- Main Navigation -->
+    <!-- MAIN NAVIGATION -->
 
     <div
-        class="max-w-7xl mx-auto px-4 sm:px-8 py-3.5 flex justify-between items-center"
+        class="bg-[#0f4c2e] border-b-4 border-[#f4c95d]"
     >
 
-
         <div
-            class="flex items-center space-x-3"
+            class="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between"
         >
 
 
-            <div
-                class="w-10 h-10 rounded-xl bg-essuGold flex items-center justify-center text-essuDarkGreen font-bold shadow-lg text-xl"
-            >
-
-                <i
-                    class="fa-solid fa-graduation-cap"
-                ></i>
-
-            </div>
-
-
-            <div>
-
-                <h1
-                    class="font-bold text-lg sm:text-xl tracking-tight leading-none text-white"
-                >
-                    ESSU REGISTRAR
-                </h1>
-
-                <p
-                    class="text-[11px] text-essuGold font-semibold tracking-widest mt-1"
-                >
-                    APPOINTMENT & SCHEDULING MANAGEMENT SYSTEM
-                </p>
-
-            </div>
-
-        </div>
-
-
-
-        <!-- Admin Profile -->
-
-        <div
-            class="flex items-center space-x-3 bg-white/10 px-3.5 py-1.5 rounded-xl border border-white/20"
-        >
-
+            <!-- BRAND -->
 
             <div
-                class="w-8 h-8 rounded-lg bg-essuGold text-essuDarkGreen flex items-center justify-center font-bold text-sm shadow"
+                class="flex items-center gap-3"
             >
-                AR
+
+                <img
+                    src="img/OIP.webp"
+                    alt="ESSU Seal"
+                    class="h-9 w-9 rounded-full object-contain"
+                    onerror="this.style.display='none'"
+                >
+
+
+                <div>
+
+                    <span
+                        class="text-white text-base sm:text-lg font-extrabold tracking-wide"
+                    >
+                        ESSU REGISTRAR PORTAL
+                    </span>
+
+
+                    <p
+                        class="text-[10px] sm:text-[11px] text-[#f4c95d] font-semibold tracking-widest mt-0.5"
+                    >
+                        APPOINTMENT & SCHEDULING MANAGEMENT SYSTEM
+                    </p>
+
+                </div>
+
+
             </div>
 
+
+
+            <!-- ADMIN SIDE -->
 
             <div
-                class="hidden md:block text-left"
+                class="flex items-center gap-3 sm:gap-4"
             >
 
-                <p
-                    class="text-xs font-bold text-white leading-tight"
-                >
-                    Admin Registrar
-                </p>
 
-                <p
-                    class="text-[10px] text-essuGold font-medium uppercase tracking-wider"
+                <span
+                    class="hidden md:inline text-xs sm:text-sm text-white/90"
                 >
-                    Office of the Registrar
-                </p>
+                    Welcome, Admin Registrar
+                </span>
+
+
+
+                <div
+                    class="hidden sm:flex items-center gap-2 bg-white/10 border border-white/20 px-3 py-1.5 rounded-lg"
+                >
+
+                    <div
+                        class="w-7 h-7 rounded-md bg-[#f4c95d] text-[#0b3d24] flex items-center justify-center text-xs font-bold"
+                    >
+                        AR
+                    </div>
+
+
+                    <div
+                        class="hidden lg:block"
+                    >
+
+                        <p
+                            class="text-xs font-semibold text-white leading-tight"
+                        >
+                            Admin Registrar
+                        </p>
+
+                        <p
+                            class="text-[9px] text-[#f4c95d] uppercase"
+                        >
+                            Office of the Registrar
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <button
+                    id="adminLogoutBtn"
+                    type="button"
+                    class="rounded px-3 py-1 text-xs sm:text-sm font-semibold bg-white text-[#0f4c2e] border border-white hover:bg-gray-100 transition"
+                >
+                    Logout
+                </button>
+
 
             </div>
-
-
-            <button
-                id="adminLogoutBtn"
-                class="ml-2 text-rose-300 hover:text-white transition pl-3 border-l border-white/20"
-                title="Logout"
-            >
-
-                <i
-                    class="fa-solid fa-right-from-bracket"
-                ></i>
-
-            </button>
 
         </div>
 
@@ -278,8 +324,6 @@
     >
 
 
-        <!-- Total -->
-
         <div
             class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center space-x-4 hover:shadow-md hover:border-blue-300 transition"
         >
@@ -287,11 +331,7 @@
             <div
                 class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl shadow-inner"
             >
-
-                <i
-                    class="fa-solid fa-calendar-days"
-                ></i>
-
+                <i class="fa-solid fa-calendar-days"></i>
             </div>
 
 
@@ -316,8 +356,6 @@
 
 
 
-        <!-- Pending -->
-
         <div
             class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center space-x-4 hover:shadow-md hover:border-amber-300 transition"
         >
@@ -325,11 +363,7 @@
             <div
                 class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl shadow-inner"
             >
-
-                <i
-                    class="fa-solid fa-clock-rotate-left"
-                ></i>
-
+                <i class="fa-solid fa-clock-rotate-left"></i>
             </div>
 
 
@@ -354,8 +388,6 @@
 
 
 
-        <!-- Approved -->
-
         <div
             class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center space-x-4 hover:shadow-md hover:border-emerald-300 transition"
         >
@@ -363,11 +395,7 @@
             <div
                 class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl shadow-inner"
             >
-
-                <i
-                    class="fa-solid fa-circle-check"
-                ></i>
-
+                <i class="fa-solid fa-circle-check"></i>
             </div>
 
 
@@ -392,8 +420,6 @@
 
 
 
-        <!-- Rescheduled -->
-
         <div
             class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center space-x-4 hover:shadow-md hover:border-purple-300 transition"
         >
@@ -401,11 +427,7 @@
             <div
                 class="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center text-xl shadow-inner"
             >
-
-                <i
-                    class="fa-solid fa-calendar-plus"
-                ></i>
-
+                <i class="fa-solid fa-calendar-plus"></i>
             </div>
 
 
@@ -430,8 +452,6 @@
 
 
 
-        <!-- Rejected -->
-
         <div
             class="col-span-2 sm:col-span-2 lg:col-span-1 bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center space-x-4 hover:shadow-md hover:border-rose-300 transition"
         >
@@ -439,11 +459,7 @@
             <div
                 class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl shadow-inner"
             >
-
-                <i
-                    class="fa-solid fa-ban"
-                ></i>
-
+                <i class="fa-solid fa-ban"></i>
             </div>
 
 
@@ -484,13 +500,8 @@
             data-tab="appointments"
             class="adminTabButton flex-1 min-w-[220px] py-3.5 px-4 rounded-xl font-bold text-sm transition flex items-center justify-center gap-2.5 bg-[#0f4c2e] text-white shadow-md"
         >
-
-            <i
-                class="fa-solid fa-clipboard-check text-essuGold"
-            ></i>
-
+            <i class="fa-solid fa-clipboard-check text-essuGold"></i>
             Appointment Approvals
-
         </button>
 
 
@@ -500,13 +511,8 @@
             data-tab="schedules"
             class="adminTabButton flex-1 min-w-[220px] py-3.5 px-4 rounded-xl font-bold text-sm transition flex items-center justify-center gap-2.5 bg-gray-100 text-gray-700 hover:bg-gray-200"
         >
-
-            <i
-                class="fa-solid fa-calendar-days text-essuGreen"
-            ></i>
-
+            <i class="fa-solid fa-calendar-days text-essuGreen"></i>
             Registrar Schedule Manager
-
         </button>
 
 
@@ -516,13 +522,8 @@
             data-tab="daily"
             class="adminTabButton flex-1 min-w-[220px] py-3.5 px-4 rounded-xl font-bold text-sm transition flex items-center justify-center gap-2.5 bg-gray-100 text-gray-700 hover:bg-gray-200"
         >
-
-            <i
-                class="fa-solid fa-file-lines text-essuGreen"
-            ></i>
-
+            <i class="fa-solid fa-file-lines text-essuGreen"></i>
             Daily Appointment List
-
         </button>
 
 
@@ -532,13 +533,8 @@
             data-tab="history"
             class="adminTabButton flex-1 min-w-[220px] py-3.5 px-4 rounded-xl font-bold text-sm transition flex items-center justify-center gap-2.5 bg-gray-100 text-gray-700 hover:bg-gray-200"
         >
-
-            <i
-                class="fa-solid fa-clock-rotate-left text-essuGreen"
-            ></i>
-
+            <i class="fa-solid fa-clock-rotate-left text-essuGreen"></i>
             Activity History
-
         </button>
 
     </section>
@@ -546,7 +542,7 @@
 
 
     <!-- ===================================================== -->
-    <!-- APPOINTMENT MANAGEMENT TAB -->
+    <!-- APPOINTMENT MANAGEMENT -->
     <!-- ===================================================== -->
 
     <section
@@ -559,8 +555,6 @@
             class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden"
         >
 
-
-            <!-- Header -->
 
             <div
                 class="p-6 border-b border-slate-200 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 bg-slate-50/50"
@@ -586,15 +580,12 @@
                     <p
                         class="text-xs text-slate-500 mt-1"
                     >
-                        Approve, reject, or reschedule
-                        student appointment requests.
+                        Approve, reject, or reschedule student appointment requests.
                     </p>
 
                 </div>
 
 
-
-                <!-- Search / Filter -->
 
                 <div
                     class="flex flex-wrap items-center gap-3 w-full lg:w-auto"
@@ -608,11 +599,7 @@
                         <span
                             class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400"
                         >
-
-                            <i
-                                class="fa-solid fa-search"
-                            ></i>
-
+                            <i class="fa-solid fa-search"></i>
                         </span>
 
 
@@ -632,29 +619,12 @@
                         class="py-2.5 px-4 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-essuGreen shadow-sm"
                     >
 
-                        <option value="all">
-                            All Statuses
-                        </option>
-
-                        <option value="pending">
-                            Pending
-                        </option>
-
-                        <option value="approved">
-                            Approved
-                        </option>
-
-                        <option value="rescheduled">
-                            Rescheduled
-                        </option>
-
-                        <option value="rejected">
-                            Rejected
-                        </option>
-
-                        <option value="cancelled">
-                            Cancelled
-                        </option>
+                        <option value="all">All Statuses</option>
+                        <option value="pending">Pending</option>
+                        <option value="approved">Approved</option>
+                        <option value="rescheduled">Rescheduled</option>
+                        <option value="rejected">Rejected</option>
+                        <option value="cancelled">Cancelled</option>
 
                     </select>
 
@@ -664,11 +634,7 @@
 
 
 
-            <!-- Appointments Table -->
-
-            <div
-                class="overflow-x-auto"
-            >
+            <div class="overflow-x-auto">
 
                 <table
                     class="w-full text-left border-collapse"
@@ -680,39 +646,27 @@
                             class="bg-slate-100/70 text-slate-500 uppercase text-[11px] font-bold tracking-wider border-b border-slate-200"
                         >
 
-                            <th
-                                class="py-4 px-6"
-                            >
+                            <th class="py-4 px-6">
                                 Student Information
                             </th>
 
-                            <th
-                                class="py-4 px-6"
-                            >
+                            <th class="py-4 px-6">
                                 Purpose of Visit
                             </th>
 
-                            <th
-                                class="py-4 px-6"
-                            >
+                            <th class="py-4 px-6">
                                 Appointment Date & Time
                             </th>
 
-                            <th
-                                class="py-4 px-6"
-                            >
+                            <th class="py-4 px-6">
                                 Notes / Requirements
                             </th>
 
-                            <th
-                                class="py-4 px-6"
-                            >
+                            <th class="py-4 px-6">
                                 Status
                             </th>
 
-                            <th
-                                class="py-4 px-6 text-right"
-                            >
+                            <th class="py-4 px-6 text-right">
                                 Actions
                             </th>
 
@@ -750,7 +704,7 @@
 
 
     <!-- ===================================================== -->
-    <!-- REGISTRAR SCHEDULE TAB -->
+    <!-- REGISTRAR SCHEDULE -->
     <!-- ===================================================== -->
 
     <section
@@ -763,8 +717,6 @@
             class="grid grid-cols-1 lg:grid-cols-3 gap-6"
         >
 
-
-            <!-- Schedule Form -->
 
             <div
                 class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 space-y-5"
@@ -790,17 +742,14 @@
                     <p
                         class="text-xs text-slate-500 mt-1"
                     >
-                        Set booking availability,
-                        daily limits, or blocked dates.
+                        Set booking availability, daily limits, or blocked dates.
                     </p>
 
                 </div>
 
 
 
-                <div
-                    class="space-y-4"
-                >
+                <div class="space-y-4">
 
 
                     <div>
@@ -879,13 +828,8 @@
                         id="saveScheduleBtn"
                         class="w-full py-3.5 bg-essuGreen text-white font-bold rounded-2xl text-sm hover:bg-essuDarkGreen transition shadow-lg flex items-center justify-center gap-2"
                     >
-
-                        <i
-                            class="fa-solid fa-floppy-disk"
-                        ></i>
-
+                        <i class="fa-solid fa-floppy-disk"></i>
                         Save Schedule Settings
-
                     </button>
 
                 </div>
@@ -893,8 +837,6 @@
             </div>
 
 
-
-            <!-- Schedule List -->
 
             <div
                 class="lg:col-span-2 bg-white p-6 rounded-3xl shadow-sm border border-slate-200 space-y-5"
@@ -911,16 +853,14 @@
                         <h3
                             class="font-extrabold text-lg text-slate-800"
                         >
-                            Active Registrar Schedules
-                            & Blocks
+                            Active Registrar Schedules & Blocks
                         </h3>
 
 
                         <p
                             class="text-xs text-slate-500 mt-0.5"
                         >
-                            Configured availability and
-                            maximum booking capacities.
+                            Configured availability and maximum booking capacities.
                         </p>
 
                     </div>
@@ -930,22 +870,17 @@
                     <span
                         class="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full font-bold flex items-center gap-1.5"
                     >
-
                         <span
                             class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"
                         ></span>
-
                         Live System
-
                     </span>
 
                 </div>
 
 
 
-                <div
-                    class="overflow-x-auto"
-                >
+                <div class="overflow-x-auto">
 
                     <table
                         class="w-full text-left border-collapse"
@@ -957,27 +892,19 @@
                                 class="bg-slate-100/70 text-slate-500 uppercase text-[11px] font-bold tracking-wider border-b border-slate-200"
                             >
 
-                                <th
-                                    class="py-3.5 px-4"
-                                >
+                                <th class="py-3.5 px-4">
                                     Date
                                 </th>
 
-                                <th
-                                    class="py-3.5 px-4"
-                                >
+                                <th class="py-3.5 px-4">
                                     Status / Setting
                                 </th>
 
-                                <th
-                                    class="py-3.5 px-4"
-                                >
+                                <th class="py-3.5 px-4">
                                     Max Capacity
                                 </th>
 
-                                <th
-                                    class="py-3.5 px-4 text-right"
-                                >
+                                <th class="py-3.5 px-4 text-right">
                                     Action
                                 </th>
 
@@ -1017,7 +944,7 @@
 
 
     <!-- ===================================================== -->
-    <!-- DAILY LIST TAB -->
+    <!-- DAILY APPOINTMENT LIST -->
     <!-- ===================================================== -->
 
     <section
@@ -1055,9 +982,7 @@
                     <p
                         class="text-xs text-slate-500 mt-1"
                     >
-                        Review and print approved or
-                        rescheduled appointments for a
-                        selected date.
+                        Review and print approved or rescheduled appointments for a selected date.
                     </p>
 
                 </div>
@@ -1080,13 +1005,8 @@
                         id="generateDailyListBtn"
                         class="bg-essuGreen hover:bg-essuDarkGreen text-white font-bold px-5 py-3 rounded-2xl text-sm transition shadow-md flex items-center gap-2"
                     >
-
-                        <i
-                            class="fa-solid fa-rotate"
-                        ></i>
-
+                        <i class="fa-solid fa-rotate"></i>
                         Generate
-
                     </button>
 
 
@@ -1094,13 +1014,8 @@
                         id="printDailyListBtn"
                         class="bg-slate-900 hover:bg-black text-white font-bold px-5 py-3 rounded-2xl text-sm transition shadow-md flex items-center gap-2"
                     >
-
-                        <i
-                            class="fa-solid fa-print"
-                        ></i>
-
+                        <i class="fa-solid fa-print"></i>
                         Print Official Roster
-
                     </button>
 
                 </div>
@@ -1108,8 +1023,6 @@
             </div>
 
 
-
-            <!-- Printable Report -->
 
             <div
                 id="dailyPrintArea"
@@ -1120,6 +1033,13 @@
                 <div
                     class="text-center border-b border-slate-200 pb-6 space-y-1"
                 >
+
+                    <img
+                        src="img/OIP.webp"
+                        alt="ESSU Seal"
+                        class="h-16 w-16 rounded-full object-contain mx-auto mb-2"
+                    >
+
 
                     <h4
                         class="font-black text-essuGreen text-xl tracking-wide"
@@ -1147,9 +1067,7 @@
 
 
 
-                <div
-                    class="overflow-x-auto"
-                >
+                <div class="overflow-x-auto">
 
                     <table
                         class="w-full text-left border-collapse text-sm"
@@ -1161,33 +1079,23 @@
                                 class="bg-slate-100 text-slate-700 uppercase text-[11px] font-bold tracking-wider border-b border-slate-200"
                             >
 
-                                <th
-                                    class="py-3 px-4"
-                                >
+                                <th class="py-3 px-4">
                                     Time Slot
                                 </th>
 
-                                <th
-                                    class="py-3 px-4"
-                                >
+                                <th class="py-3 px-4">
                                     Student Name
                                 </th>
 
-                                <th
-                                    class="py-3 px-4"
-                                >
+                                <th class="py-3 px-4">
                                     Student Number
                                 </th>
 
-                                <th
-                                    class="py-3 px-4"
-                                >
+                                <th class="py-3 px-4">
                                     Purpose of Visit
                                 </th>
 
-                                <th
-                                    class="py-3 px-4"
-                                >
+                                <th class="py-3 px-4">
                                     Status
                                 </th>
 
@@ -1207,8 +1115,7 @@
                                     colspan="5"
                                     class="text-center py-8 text-slate-400 font-medium"
                                 >
-                                    Select a date and generate
-                                    the daily appointment list.
+                                    Select a date and generate the daily appointment list.
                                 </td>
 
                             </tr>
@@ -1226,8 +1133,7 @@
                 >
 
                     <span>
-                        Generated by:
-                        ESSU Registrar Admin Portal
+                        Generated by: ESSU Registrar Admin Portal
                     </span>
 
                     <span>
@@ -1245,7 +1151,7 @@
 
 
     <!-- ===================================================== -->
-    <!-- ACTIVITY HISTORY TAB -->
+    <!-- ACTIVITY HISTORY -->
     <!-- ===================================================== -->
 
     <section
@@ -1283,8 +1189,7 @@
                     <p
                         class="text-xs text-slate-500 mt-0.5"
                     >
-                        Real database records of appointment
-                        status changes and administrative actions.
+                        Real database records of appointment status changes and administrative actions.
                     </p>
 
                 </div>
@@ -1295,22 +1200,15 @@
                     id="refreshHistoryBtn"
                     class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-4 py-2.5 rounded-xl text-sm transition flex items-center gap-2"
                 >
-
-                    <i
-                        class="fa-solid fa-rotate-right"
-                    ></i>
-
+                    <i class="fa-solid fa-rotate-right"></i>
                     Refresh History
-
                 </button>
 
             </div>
 
 
 
-            <div
-                class="overflow-x-auto"
-            >
+            <div class="overflow-x-auto">
 
                 <table
                     class="w-full text-left border-collapse"
@@ -1322,39 +1220,27 @@
                             class="bg-slate-100/70 text-slate-500 uppercase text-[11px] font-bold tracking-wider border-b border-slate-200"
                         >
 
-                            <th
-                                class="py-3.5 px-4"
-                            >
+                            <th class="py-3.5 px-4">
                                 Date / Time
                             </th>
 
-                            <th
-                                class="py-3.5 px-4"
-                            >
+                            <th class="py-3.5 px-4">
                                 Student
                             </th>
 
-                            <th
-                                class="py-3.5 px-4"
-                            >
+                            <th class="py-3.5 px-4">
                                 Purpose
                             </th>
 
-                            <th
-                                class="py-3.5 px-4"
-                            >
+                            <th class="py-3.5 px-4">
                                 Previous Status
                             </th>
 
-                            <th
-                                class="py-3.5 px-4"
-                            >
+                            <th class="py-3.5 px-4">
                                 New Status
                             </th>
 
-                            <th
-                                class="py-3.5 px-4"
-                            >
+                            <th class="py-3.5 px-4">
                                 Changed By
                             </th>
 
@@ -1435,11 +1321,7 @@
                 id="closeRescheduleModalBtn"
                 class="text-slate-400 hover:text-slate-700 transition"
             >
-
-                <i
-                    class="fa-solid fa-xmark text-lg"
-                ></i>
-
+                <i class="fa-solid fa-xmark text-lg"></i>
             </button>
 
         </div>
@@ -1453,9 +1335,7 @@
 
 
 
-        <div
-            class="space-y-4"
-        >
+        <div class="space-y-4">
 
 
             <div>
@@ -1511,39 +1391,27 @@
                     class="w-full p-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-semibold focus:ring-2 focus:ring-essuGreen"
                 >
 
-                    <option
-                        value="8:00 AM - 9:00 AM"
-                    >
+                    <option value="8:00 AM - 9:00 AM">
                         8:00 AM - 9:00 AM
                     </option>
 
-                    <option
-                        value="9:00 AM - 10:00 AM"
-                    >
+                    <option value="9:00 AM - 10:00 AM">
                         9:00 AM - 10:00 AM
                     </option>
 
-                    <option
-                        value="10:00 AM - 11:00 AM"
-                    >
+                    <option value="10:00 AM - 11:00 AM">
                         10:00 AM - 11:00 AM
                     </option>
 
-                    <option
-                        value="1:00 PM - 2:00 PM"
-                    >
+                    <option value="1:00 PM - 2:00 PM">
                         1:00 PM - 2:00 PM
                     </option>
 
-                    <option
-                        value="2:00 PM - 3:00 PM"
-                    >
+                    <option value="2:00 PM - 3:00 PM">
                         2:00 PM - 3:00 PM
                     </option>
 
-                    <option
-                        value="3:00 PM - 4:00 PM"
-                    >
+                    <option value="3:00 PM - 4:00 PM">
                         3:00 PM - 4:00 PM
                     </option>
 
@@ -1592,13 +1460,8 @@
                 id="confirmRescheduleBtn"
                 class="px-5 py-2.5 bg-essuGreen hover:bg-essuDarkGreen text-white font-bold rounded-2xl text-sm transition shadow-md"
             >
-
-                <i
-                    class="fa-solid fa-calendar-check mr-2"
-                ></i>
-
+                <i class="fa-solid fa-calendar-check mr-2"></i>
                 Confirm Reschedule
-
             </button>
 
         </div>
