@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -9,1030 +11,1614 @@
     >
 
     <title>
-        ESSU Registrar - Admin Dashboard
+        ESSU Registrar Portal - Admin Dashboard
     </title>
 
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
+
+    <!-- FontAwesome -->
     <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     >
-</head>
-
-<body class="bg-gray-100 min-h-screen">
 
 
-    <!-- ====================================================== -->
-    <!-- NAVBAR -->
-    <!-- ====================================================== -->
-
-    <nav
-        class="bg-[#0f4c2e] text-white px-6 py-4 flex justify-between items-center shadow"
+    <!-- Google Font -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet"
     >
 
-        <div>
 
-            <h1 class="text-lg font-bold">
-                ESSU Registrar Portal — Admin Dashboard
-            </h1>
+    <!-- ESSU Tailwind Theme -->
+    <script>
 
-            <p class="text-xs text-green-100 mt-1">
-                Appointment Administration and Scheduling
-            </p>
+        tailwind.config = {
+
+            theme: {
+
+                extend: {
+
+                    colors: {
+
+                        essuGreen:
+                            "#124e29",
+
+                        essuDarkGreen:
+                            "#093219",
+
+                        essuGold:
+                            "#d4af37",
+
+                        essuLightGold:
+                            "#fef9e7"
+                    },
+
+                    fontFamily: {
+
+                        sans: [
+                            "Inter",
+                            "sans-serif"
+                        ]
+                    }
+                }
+            }
+        };
+
+    </script>
+
+</head>
+
+
+
+<body
+    class="bg-slate-100 font-sans text-slate-800 antialiased min-h-screen flex flex-col"
+>
+
+
+
+<!-- ========================================================= -->
+<!-- HEADER -->
+<!-- ========================================================= -->
+
+<header
+    class="bg-essuDarkGreen text-white shadow-lg sticky top-0 z-40"
+>
+
+
+    <!-- Republic Header -->
+
+    <div
+        class="bg-black/20 text-xs py-1.5 px-4 sm:px-8 flex justify-between items-center border-b border-white/10"
+    >
+
+        <span
+            class="tracking-wide font-medium"
+        >
+            REPUBLIC OF THE PHILIPPINES |
+            Eastern Samar State University
+        </span>
+
+
+        <span
+            class="text-essuGold font-bold uppercase tracking-wider hidden sm:block"
+        >
+            Registrar Admin Portal
+        </span>
+
+    </div>
+
+
+
+    <!-- Main Navigation -->
+
+    <div
+        class="max-w-7xl mx-auto px-4 sm:px-8 py-3.5 flex justify-between items-center"
+    >
+
+
+        <div
+            class="flex items-center space-x-3"
+        >
+
+
+            <div
+                class="w-10 h-10 rounded-xl bg-essuGold flex items-center justify-center text-essuDarkGreen font-bold shadow-lg text-xl"
+            >
+
+                <i
+                    class="fa-solid fa-graduation-cap"
+                ></i>
+
+            </div>
+
+
+            <div>
+
+                <h1
+                    class="font-bold text-lg sm:text-xl tracking-tight leading-none text-white"
+                >
+                    ESSU REGISTRAR
+                </h1>
+
+                <p
+                    class="text-[11px] text-essuGold font-semibold tracking-widest mt-1"
+                >
+                    APPOINTMENT & SCHEDULING MANAGEMENT SYSTEM
+                </p>
+
+            </div>
 
         </div>
 
 
-        <button
-            id="adminLogoutBtn"
-            class="bg-red-600 px-4 py-2 rounded text-sm hover:bg-red-700"
+
+        <!-- Admin Profile -->
+
+        <div
+            class="flex items-center space-x-3 bg-white/10 px-3.5 py-1.5 rounded-xl border border-white/20"
         >
-            Logout
-        </button>
-
-    </nav>
 
 
+            <div
+                class="w-8 h-8 rounded-lg bg-essuGold text-essuDarkGreen flex items-center justify-center font-bold text-sm shadow"
+            >
+                AR
+            </div>
 
-    <!-- ====================================================== -->
-    <!-- MAIN -->
-    <!-- ====================================================== -->
 
-    <main
-        class="max-w-7xl mx-auto p-6 space-y-6"
+            <div
+                class="hidden md:block text-left"
+            >
+
+                <p
+                    class="text-xs font-bold text-white leading-tight"
+                >
+                    Admin Registrar
+                </p>
+
+                <p
+                    class="text-[10px] text-essuGold font-medium uppercase tracking-wider"
+                >
+                    Office of the Registrar
+                </p>
+
+            </div>
+
+
+            <button
+                id="adminLogoutBtn"
+                class="ml-2 text-rose-300 hover:text-white transition pl-3 border-l border-white/20"
+                title="Logout"
+            >
+
+                <i
+                    class="fa-solid fa-right-from-bracket"
+                ></i>
+
+            </button>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+
+<!-- ========================================================= -->
+<!-- MAIN CONTENT -->
+<!-- ========================================================= -->
+
+<main
+    class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-8 py-8 space-y-8"
+>
+
+
+
+    <!-- ===================================================== -->
+    <!-- WELCOME BANNER -->
+    <!-- ===================================================== -->
+
+    <section
+        class="bg-gradient-to-r from-essuGreen via-[#165a30] to-essuDarkGreen rounded-3xl p-8 text-white shadow-xl border border-essuGold/30 relative overflow-hidden"
     >
 
 
-        <!-- ================================================== -->
-        <!-- STATISTICS -->
-        <!-- ================================================== -->
+        <div
+            class="absolute -right-10 -bottom-10 w-64 h-64 bg-essuGold/10 rounded-full blur-2xl pointer-events-none"
+        ></div>
 
-        <section
-            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4"
+
+        <div
+            class="relative z-10"
+        >
+
+            <span
+                class="bg-essuGold text-essuDarkGreen font-bold text-xs px-3 py-1 rounded-full uppercase tracking-wider shadow-sm"
+            >
+                Registrar Administration
+            </span>
+
+
+            <h2
+                class="text-2xl sm:text-4xl font-extrabold mt-3 tracking-tight"
+            >
+                Appointment Administration
+                & Scheduling
+            </h2>
+
+
+            <p
+                class="text-slate-200 text-sm mt-2 max-w-3xl leading-relaxed"
+            >
+                Manage student appointment requests,
+                approve or reject submissions,
+                reschedule appointments,
+                configure registrar availability,
+                generate daily appointment lists,
+                and review appointment activity.
+            </p>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ===================================================== -->
+    <!-- STATISTICS -->
+    <!-- ===================================================== -->
+
+    <section
+        class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-4"
+    >
+
+
+        <!-- Total -->
+
+        <div
+            class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center space-x-4 hover:shadow-md hover:border-blue-300 transition"
         >
 
             <div
-                class="bg-white rounded-lg shadow p-5"
+                class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl shadow-inner"
             >
 
+                <i
+                    class="fa-solid fa-calendar-days"
+                ></i>
+
+            </div>
+
+
+            <div>
+
                 <p
-                    class="text-xs uppercase font-semibold text-gray-500"
+                    class="text-[11px] font-bold text-slate-400 uppercase tracking-wider"
                 >
-                    Total Appointments
+                    Total Bookings
                 </p>
 
-                <h2
+                <h3
                     id="statTotal"
-                    class="text-3xl font-bold text-gray-800 mt-2"
+                    class="text-2xl font-black text-slate-800"
                 >
                     0
-                </h2>
+                </h3>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Pending -->
+
+        <div
+            class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center space-x-4 hover:shadow-md hover:border-amber-300 transition"
+        >
+
+            <div
+                class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl shadow-inner"
+            >
+
+                <i
+                    class="fa-solid fa-clock-rotate-left"
+                ></i>
 
             </div>
 
 
-            <div
-                class="bg-white rounded-lg shadow p-5"
-            >
+            <div>
 
                 <p
-                    class="text-xs uppercase font-semibold text-gray-500"
+                    class="text-[11px] font-bold text-slate-400 uppercase tracking-wider"
                 >
-                    Pending
+                    Pending Review
                 </p>
 
-                <h2
+                <h3
                     id="statPending"
-                    class="text-3xl font-bold text-yellow-600 mt-2"
+                    class="text-2xl font-black text-amber-600"
                 >
                     0
-                </h2>
+                </h3>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Approved -->
+
+        <div
+            class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center space-x-4 hover:shadow-md hover:border-emerald-300 transition"
+        >
+
+            <div
+                class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl shadow-inner"
+            >
+
+                <i
+                    class="fa-solid fa-circle-check"
+                ></i>
 
             </div>
 
 
-            <div
-                class="bg-white rounded-lg shadow p-5"
-            >
+            <div>
 
                 <p
-                    class="text-xs uppercase font-semibold text-gray-500"
+                    class="text-[11px] font-bold text-slate-400 uppercase tracking-wider"
                 >
                     Approved
                 </p>
 
-                <h2
+                <h3
                     id="statApproved"
-                    class="text-3xl font-bold text-green-600 mt-2"
+                    class="text-2xl font-black text-emerald-600"
                 >
                     0
-                </h2>
+                </h3>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Rescheduled -->
+
+        <div
+            class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center space-x-4 hover:shadow-md hover:border-purple-300 transition"
+        >
+
+            <div
+                class="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center text-xl shadow-inner"
+            >
+
+                <i
+                    class="fa-solid fa-calendar-plus"
+                ></i>
 
             </div>
 
 
-            <div
-                class="bg-white rounded-lg shadow p-5"
-            >
+            <div>
 
                 <p
-                    class="text-xs uppercase font-semibold text-gray-500"
+                    class="text-[11px] font-bold text-slate-400 uppercase tracking-wider"
                 >
                     Rescheduled
                 </p>
 
-                <h2
+                <h3
                     id="statRescheduled"
-                    class="text-3xl font-bold text-purple-600 mt-2"
+                    class="text-2xl font-black text-purple-600"
                 >
                     0
-                </h2>
+                </h3>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Rejected -->
+
+        <div
+            class="col-span-2 sm:col-span-2 lg:col-span-1 bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center space-x-4 hover:shadow-md hover:border-rose-300 transition"
+        >
+
+            <div
+                class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl shadow-inner"
+            >
+
+                <i
+                    class="fa-solid fa-ban"
+                ></i>
 
             </div>
 
 
-            <div
-                class="bg-white rounded-lg shadow p-5"
-            >
+            <div>
 
                 <p
-                    class="text-xs uppercase font-semibold text-gray-500"
+                    class="text-[11px] font-bold text-slate-400 uppercase tracking-wider"
                 >
                     Rejected
                 </p>
 
-                <h2
+                <h3
                     id="statRejected"
-                    class="text-3xl font-bold text-red-600 mt-2"
+                    class="text-2xl font-black text-rose-600"
                 >
                     0
-                </h2>
+                </h3>
 
             </div>
 
-        </section>
+        </div>
+
+    </section>
 
 
 
-        <!-- ================================================== -->
-        <!-- TAB BUTTONS -->
-        <!-- ================================================== -->
+    <!-- ===================================================== -->
+    <!-- TAB NAVIGATION -->
+    <!-- ===================================================== -->
 
-        <section
-            class="bg-white rounded-lg shadow p-3 flex flex-wrap gap-2"
+    <section
+        class="bg-white rounded-2xl shadow-sm border border-slate-200 p-2.5 flex flex-wrap gap-2"
+    >
+
+
+        <button
+            id="tabAppointmentsBtn"
+            data-tab="appointments"
+            class="adminTabButton flex-1 min-w-[220px] py-3.5 px-4 rounded-xl font-bold text-sm transition flex items-center justify-center gap-2.5 bg-[#0f4c2e] text-white shadow-md"
         >
 
-            <button
-                id="tabAppointmentsBtn"
-                class="adminTabButton bg-[#0f4c2e] text-white px-4 py-2 rounded text-sm font-semibold"
-                data-tab="appointments"
-            >
-                <i class="fa-solid fa-list-check mr-2"></i>
-                Appointment Management
-            </button>
+            <i
+                class="fa-solid fa-clipboard-check text-essuGold"
+            ></i>
 
+            Appointment Approvals
 
-            <button
-                id="tabSchedulesBtn"
-                class="adminTabButton bg-gray-100 text-gray-700 px-4 py-2 rounded text-sm font-semibold hover:bg-gray-200"
-                data-tab="schedules"
-            >
-                <i class="fa-solid fa-calendar-days mr-2"></i>
-                Registrar Schedule
-            </button>
-
-
-            <button
-                id="tabDailyBtn"
-                class="adminTabButton bg-gray-100 text-gray-700 px-4 py-2 rounded text-sm font-semibold hover:bg-gray-200"
-                data-tab="daily"
-            >
-                <i class="fa-solid fa-file-lines mr-2"></i>
-                Daily Appointment List
-            </button>
-
-
-            <button
-                id="tabHistoryBtn"
-                class="adminTabButton bg-gray-100 text-gray-700 px-4 py-2 rounded text-sm font-semibold hover:bg-gray-200"
-                data-tab="history"
-            >
-                <i class="fa-solid fa-clock-rotate-left mr-2"></i>
-                Activity History
-            </button>
-
-        </section>
+        </button>
 
 
 
-        <!-- ================================================== -->
-        <!-- APPOINTMENT MANAGEMENT -->
-        <!-- ================================================== -->
-
-        <section
-            id="tabAppointments"
-            class="adminTabContent"
+        <button
+            id="tabSchedulesBtn"
+            data-tab="schedules"
+            class="adminTabButton flex-1 min-w-[220px] py-3.5 px-4 rounded-xl font-bold text-sm transition flex items-center justify-center gap-2.5 bg-gray-100 text-gray-700 hover:bg-gray-200"
         >
+
+            <i
+                class="fa-solid fa-calendar-days text-essuGreen"
+            ></i>
+
+            Registrar Schedule Manager
+
+        </button>
+
+
+
+        <button
+            id="tabDailyBtn"
+            data-tab="daily"
+            class="adminTabButton flex-1 min-w-[220px] py-3.5 px-4 rounded-xl font-bold text-sm transition flex items-center justify-center gap-2.5 bg-gray-100 text-gray-700 hover:bg-gray-200"
+        >
+
+            <i
+                class="fa-solid fa-file-lines text-essuGreen"
+            ></i>
+
+            Daily Appointment List
+
+        </button>
+
+
+
+        <button
+            id="tabHistoryBtn"
+            data-tab="history"
+            class="adminTabButton flex-1 min-w-[220px] py-3.5 px-4 rounded-xl font-bold text-sm transition flex items-center justify-center gap-2.5 bg-gray-100 text-gray-700 hover:bg-gray-200"
+        >
+
+            <i
+                class="fa-solid fa-clock-rotate-left text-essuGreen"
+            ></i>
+
+            Activity History
+
+        </button>
+
+    </section>
+
+
+
+    <!-- ===================================================== -->
+    <!-- APPOINTMENT MANAGEMENT TAB -->
+    <!-- ===================================================== -->
+
+    <section
+        id="tabAppointments"
+        class="adminTabContent space-y-6"
+    >
+
+
+        <div
+            class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden"
+        >
+
+
+            <!-- Header -->
 
             <div
-                class="bg-white rounded-lg shadow p-6"
+                class="p-6 border-b border-slate-200 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 bg-slate-50/50"
             >
 
+
+                <div>
+
+                    <span
+                        class="bg-essuGreen/10 text-essuGreen font-bold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider"
+                    >
+                        Appointment Management
+                    </span>
+
+
+                    <h3
+                        class="font-extrabold text-xl text-slate-800 mt-2"
+                    >
+                        Student Appointment Requests
+                    </h3>
+
+
+                    <p
+                        class="text-xs text-slate-500 mt-1"
+                    >
+                        Approve, reject, or reschedule
+                        student appointment requests.
+                    </p>
+
+                </div>
+
+
+
+                <!-- Search / Filter -->
+
                 <div
-                    class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-5"
+                    class="flex flex-wrap items-center gap-3 w-full lg:w-auto"
                 >
-
-                    <div>
-
-                        <h2
-                            class="text-xl font-bold text-gray-800"
-                        >
-                            Manage Student Appointments
-                        </h2>
-
-                        <p
-                            class="text-sm text-gray-500 mt-1"
-                        >
-                            Approve, reject, or reschedule student appointments.
-                        </p>
-
-                    </div>
 
 
                     <div
-                        class="flex flex-col sm:flex-row gap-3"
+                        class="relative flex-1 lg:w-72"
                     >
+
+                        <span
+                            class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400"
+                        >
+
+                            <i
+                                class="fa-solid fa-search"
+                            ></i>
+
+                        </span>
+
 
                         <input
                             id="appointmentSearch"
                             type="text"
-                            placeholder="Search student or purpose..."
-                            class="border border-gray-300 rounded px-3 py-2 text-sm min-w-[250px]"
+                            placeholder="Search name, ID or purpose..."
+                            class="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-essuGreen shadow-sm"
                         >
-
-
-                        <select
-                            id="appointmentStatusFilter"
-                            class="border border-gray-300 rounded px-3 py-2 text-sm"
-                        >
-
-                            <option value="all">
-                                All Statuses
-                            </option>
-
-                            <option value="pending">
-                                Pending
-                            </option>
-
-                            <option value="approved">
-                                Approved
-                            </option>
-
-                            <option value="rescheduled">
-                                Rescheduled
-                            </option>
-
-                            <option value="rejected">
-                                Rejected
-                            </option>
-
-                            <option value="cancelled">
-                                Cancelled
-                            </option>
-
-                        </select>
-
-                    </div>
-
-                </div>
-
-
-                <div
-                    class="overflow-x-auto"
-                >
-
-                    <table
-                        class="w-full text-left border-collapse"
-                    >
-
-                        <thead>
-
-                            <tr
-                                class="bg-gray-50 border-b border-gray-200 text-xs font-semibold text-gray-600 uppercase"
-                            >
-
-                                <th class="py-3 px-4">
-                                    Student
-                                </th>
-
-                                <th class="py-3 px-4">
-                                    Purpose
-                                </th>
-
-                                <th class="py-3 px-4">
-                                    Date & Time
-                                </th>
-
-                                <th class="py-3 px-4">
-                                    Notes
-                                </th>
-
-                                <th class="py-3 px-4">
-                                    Status
-                                </th>
-
-                                <th class="py-3 px-4 text-right">
-                                    Actions
-                                </th>
-
-                            </tr>
-
-                        </thead>
-
-
-                        <tbody
-                            id="adminAppointmentsBody"
-                        >
-
-                            <tr>
-
-                                <td
-                                    colspan="6"
-                                    class="py-6 text-center text-gray-400"
-                                >
-                                    Loading appointments...
-                                </td>
-
-                            </tr>
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- ================================================== -->
-        <!-- REGISTRAR SCHEDULE -->
-        <!-- ================================================== -->
-
-        <section
-            id="tabSchedules"
-            class="adminTabContent hidden"
-        >
-
-            <div
-                class="grid grid-cols-1 lg:grid-cols-3 gap-6"
-            >
-
-
-                <!-- ------------------------------------------ -->
-                <!-- SCHEDULE FORM -->
-                <!-- ------------------------------------------ -->
-
-                <div
-                    class="bg-white rounded-lg shadow p-6"
-                >
-
-                    <h2
-                        class="text-xl font-bold text-gray-800"
-                    >
-                        Registrar Schedule Manager
-                    </h2>
-
-                    <p
-                        class="text-sm text-gray-500 mt-1 mb-5"
-                    >
-                        Configure registrar availability and daily capacity.
-                    </p>
-
-
-                    <div
-                        class="space-y-4"
-                    >
-
-                        <div>
-
-                            <label
-                                class="block text-sm font-semibold text-gray-700 mb-1"
-                            >
-                                Date
-                            </label>
-
-                            <input
-                                type="date"
-                                id="scheduleDate"
-                                class="w-full border border-gray-300 rounded px-3 py-2"
-                            >
-
-                        </div>
-
-
-                        <div>
-
-                            <label
-                                class="block text-sm font-semibold text-gray-700 mb-1"
-                            >
-                                Schedule Status
-                            </label>
-
-                            <select
-                                id="scheduleStatus"
-                                class="w-full border border-gray-300 rounded px-3 py-2"
-                            >
-
-                                <option value="OPEN">
-                                    Open
-                                </option>
-
-                                <option value="LIMITED">
-                                    Limited
-                                </option>
-
-                                <option value="BLOCKED">
-                                    Blocked
-                                </option>
-
-                            </select>
-
-                        </div>
-
-
-                        <div>
-
-                            <label
-                                class="block text-sm font-semibold text-gray-700 mb-1"
-                            >
-                                Maximum Daily Capacity
-                            </label>
-
-                            <input
-                                type="number"
-                                id="scheduleCapacity"
-                                min="0"
-                                value="50"
-                                class="w-full border border-gray-300 rounded px-3 py-2"
-                            >
-
-                        </div>
-
-
-                        <button
-                            id="saveScheduleBtn"
-                            class="w-full bg-[#0f4c2e] text-white py-2.5 rounded font-semibold hover:bg-[#0b3922]"
-                        >
-                            Save Schedule
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- ------------------------------------------ -->
-                <!-- SCHEDULE TABLE -->
-                <!-- ------------------------------------------ -->
-
-                <div
-                    class="lg:col-span-2 bg-white rounded-lg shadow p-6"
-                >
-
-                    <h2
-                        class="text-xl font-bold text-gray-800 mb-4"
-                    >
-                        Configured Registrar Schedules
-                    </h2>
-
-
-                    <div
-                        class="overflow-x-auto"
-                    >
-
-                        <table
-                            class="w-full text-left border-collapse"
-                        >
-
-                            <thead>
-
-                                <tr
-                                    class="bg-gray-50 border-b border-gray-200 text-xs font-semibold text-gray-600 uppercase"
-                                >
-
-                                    <th class="py-3 px-4">
-                                        Date
-                                    </th>
-
-                                    <th class="py-3 px-4">
-                                        Status
-                                    </th>
-
-                                    <th class="py-3 px-4">
-                                        Capacity
-                                    </th>
-
-                                    <th class="py-3 px-4 text-right">
-                                        Action
-                                    </th>
-
-                                </tr>
-
-                            </thead>
-
-
-                            <tbody
-                                id="registrarSchedulesBody"
-                            >
-
-                                <tr>
-
-                                    <td
-                                        colspan="4"
-                                        class="py-6 text-center text-gray-400"
-                                    >
-                                        Loading schedules...
-                                    </td>
-
-                                </tr>
-
-                            </tbody>
-
-                        </table>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- ================================================== -->
-        <!-- DAILY APPOINTMENT LIST -->
-        <!-- ================================================== -->
-
-        <section
-            id="tabDaily"
-            class="adminTabContent hidden"
-        >
-
-            <div
-                class="bg-white rounded-lg shadow p-6"
-            >
-
-                <div
-                    class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-5"
-                >
-
-                    <div>
-
-                        <h2
-                            class="text-xl font-bold text-gray-800"
-                        >
-                            Daily Appointment List
-                        </h2>
-
-                        <p
-                            class="text-sm text-gray-500 mt-1"
-                        >
-                            Generate approved and rescheduled appointments for a selected date.
-                        </p>
 
                     </div>
 
 
-                    <div
-                        class="flex flex-col sm:flex-row gap-3"
-                    >
-
-                        <input
-                            type="date"
-                            id="dailyAppointmentDate"
-                            class="border border-gray-300 rounded px-3 py-2"
-                        >
-
-
-                        <button
-                            id="generateDailyListBtn"
-                            class="bg-[#0f4c2e] text-white px-4 py-2 rounded font-semibold hover:bg-[#0b3922]"
-                        >
-                            Generate
-                        </button>
-
-
-                        <button
-                            id="printDailyListBtn"
-                            class="bg-gray-800 text-white px-4 py-2 rounded font-semibold hover:bg-black"
-                        >
-                            <i class="fa-solid fa-print mr-2"></i>
-                            Print
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-                <div
-                    id="dailyPrintArea"
-                >
-
-                    <div
-                        class="text-center mb-5"
-                    >
-
-                        <h3
-                            class="font-bold text-lg text-[#0f4c2e]"
-                        >
-                            Eastern Samar State University
-                        </h3>
-
-                        <p
-                            class="text-sm text-gray-600"
-                        >
-                            Office of the Registrar
-                        </p>
-
-                        <p
-                            id="dailyListTitle"
-                            class="text-sm font-semibold text-gray-700 mt-2"
-                        >
-                            Daily Appointment Schedule
-                        </p>
-
-                    </div>
-
-
-                    <div
-                        class="overflow-x-auto"
-                    >
-
-                        <table
-                            class="w-full text-left border-collapse"
-                        >
-
-                            <thead>
-
-                                <tr
-                                    class="bg-gray-50 border-b border-gray-200 text-xs font-semibold text-gray-600 uppercase"
-                                >
-
-                                    <th class="py-3 px-4">
-                                        Time
-                                    </th>
-
-                                    <th class="py-3 px-4">
-                                        Student
-                                    </th>
-
-                                    <th class="py-3 px-4">
-                                        Student Number
-                                    </th>
-
-                                    <th class="py-3 px-4">
-                                        Purpose
-                                    </th>
-
-                                    <th class="py-3 px-4">
-                                        Status
-                                    </th>
-
-                                </tr>
-
-                            </thead>
-
-
-                            <tbody
-                                id="dailyAppointmentsBody"
-                            >
-
-                                <tr>
-
-                                    <td
-                                        colspan="5"
-                                        class="py-6 text-center text-gray-400"
-                                    >
-                                        Select a date and click Generate.
-                                    </td>
-
-                                </tr>
-
-                            </tbody>
-
-                        </table>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- ================================================== -->
-        <!-- ACTIVITY HISTORY -->
-        <!-- ================================================== -->
-
-        <section
-            id="tabHistory"
-            class="adminTabContent hidden"
-        >
-
-            <div
-                class="bg-white rounded-lg shadow p-6"
-            >
-
-                <div
-                    class="flex justify-between items-center mb-5"
-                >
-
-                    <div>
-
-                        <h2
-                            class="text-xl font-bold text-gray-800"
-                        >
-                            Appointment Activity History
-                        </h2>
-
-                        <p
-                            class="text-sm text-gray-500 mt-1"
-                        >
-                            Real appointment status changes recorded in the database.
-                        </p>
-
-                    </div>
-
-
-                    <button
-                        id="refreshHistoryBtn"
-                        class="bg-gray-100 px-4 py-2 rounded text-sm font-semibold hover:bg-gray-200"
-                    >
-                        <i class="fa-solid fa-rotate-right mr-2"></i>
-                        Refresh
-                    </button>
-
-                </div>
-
-
-                <div
-                    class="overflow-x-auto"
-                >
-
-                    <table
-                        class="w-full text-left border-collapse"
-                    >
-
-                        <thead>
-
-                            <tr
-                                class="bg-gray-50 border-b border-gray-200 text-xs font-semibold text-gray-600 uppercase"
-                            >
-
-                                <th class="py-3 px-4">
-                                    Date / Time
-                                </th>
-
-                                <th class="py-3 px-4">
-                                    Student
-                                </th>
-
-                                <th class="py-3 px-4">
-                                    Purpose
-                                </th>
-
-                                <th class="py-3 px-4">
-                                    Previous Status
-                                </th>
-
-                                <th class="py-3 px-4">
-                                    New Status
-                                </th>
-
-                                <th class="py-3 px-4">
-                                    Changed By
-                                </th>
-
-                            </tr>
-
-                        </thead>
-
-
-                        <tbody
-                            id="historyLogsBody"
-                        >
-
-                            <tr>
-
-                                <td
-                                    colspan="6"
-                                    class="py-6 text-center text-gray-400"
-                                >
-                                    Loading activity history...
-                                </td>
-
-                            </tr>
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-    </main>
-
-
-
-    <!-- ====================================================== -->
-    <!-- RESCHEDULE MODAL -->
-    <!-- ====================================================== -->
-
-    <div
-        id="rescheduleModal"
-        class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4"
-    >
-
-        <div
-            class="bg-white rounded-lg shadow-xl w-full max-w-md p-6"
-        >
-
-            <div
-                class="flex justify-between items-center mb-5"
-            >
-
-                <h2
-                    class="text-xl font-bold text-gray-800"
-                >
-                    Reschedule Appointment
-                </h2>
-
-
-                <button
-                    id="closeRescheduleModalBtn"
-                    class="text-gray-500 hover:text-gray-800"
-                >
-                    <i class="fa-solid fa-xmark text-xl"></i>
-                </button>
-
-            </div>
-
-
-            <input
-                type="hidden"
-                id="rescheduleAppointmentId"
-            >
-
-
-            <div
-                class="space-y-4"
-            >
-
-                <div>
-
-                    <label
-                        class="block text-sm font-semibold text-gray-700 mb-1"
-                    >
-                        Student
-                    </label>
-
-                    <input
-                        type="text"
-                        id="rescheduleStudentName"
-                        disabled
-                        class="w-full border border-gray-300 rounded px-3 py-2 bg-gray-100"
-                    >
-
-                </div>
-
-
-                <div>
-
-                    <label
-                        class="block text-sm font-semibold text-gray-700 mb-1"
-                    >
-                        New Date
-                    </label>
-
-                    <input
-                        type="date"
-                        id="rescheduleDate"
-                        class="w-full border border-gray-300 rounded px-3 py-2"
-                    >
-
-                </div>
-
-
-                <div>
-
-                    <label
-                        class="block text-sm font-semibold text-gray-700 mb-1"
-                    >
-                        New Time
-                    </label>
 
                     <select
-                        id="rescheduleTime"
-                        class="w-full border border-gray-300 rounded px-3 py-2"
+                        id="appointmentStatusFilter"
+                        class="py-2.5 px-4 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-essuGreen shadow-sm"
                     >
 
-                        <option value="8:00 AM - 9:00 AM">
-                            8:00 AM - 9:00 AM
+                        <option value="all">
+                            All Statuses
                         </option>
 
-                        <option value="9:00 AM - 10:00 AM">
-                            9:00 AM - 10:00 AM
+                        <option value="pending">
+                            Pending
                         </option>
 
-                        <option value="10:00 AM - 11:00 AM">
-                            10:00 AM - 11:00 AM
+                        <option value="approved">
+                            Approved
                         </option>
 
-                        <option value="1:00 PM - 2:00 PM">
-                            1:00 PM - 2:00 PM
+                        <option value="rescheduled">
+                            Rescheduled
                         </option>
 
-                        <option value="2:00 PM - 3:00 PM">
-                            2:00 PM - 3:00 PM
+                        <option value="rejected">
+                            Rejected
                         </option>
 
-                        <option value="3:00 PM - 4:00 PM">
-                            3:00 PM - 4:00 PM
+                        <option value="cancelled">
+                            Cancelled
                         </option>
 
                     </select>
 
                 </div>
 
+            </div>
+
+
+
+            <!-- Appointments Table -->
+
+            <div
+                class="overflow-x-auto"
+            >
+
+                <table
+                    class="w-full text-left border-collapse"
+                >
+
+                    <thead>
+
+                        <tr
+                            class="bg-slate-100/70 text-slate-500 uppercase text-[11px] font-bold tracking-wider border-b border-slate-200"
+                        >
+
+                            <th
+                                class="py-4 px-6"
+                            >
+                                Student Information
+                            </th>
+
+                            <th
+                                class="py-4 px-6"
+                            >
+                                Purpose of Visit
+                            </th>
+
+                            <th
+                                class="py-4 px-6"
+                            >
+                                Appointment Date & Time
+                            </th>
+
+                            <th
+                                class="py-4 px-6"
+                            >
+                                Notes / Requirements
+                            </th>
+
+                            <th
+                                class="py-4 px-6"
+                            >
+                                Status
+                            </th>
+
+                            <th
+                                class="py-4 px-6 text-right"
+                            >
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody
+                        id="adminAppointmentsBody"
+                        class="divide-y divide-slate-100 text-sm"
+                    >
+
+                        <tr>
+
+                            <td
+                                colspan="6"
+                                class="text-center py-10 text-slate-400 font-medium"
+                            >
+                                Loading appointments...
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ===================================================== -->
+    <!-- REGISTRAR SCHEDULE TAB -->
+    <!-- ===================================================== -->
+
+    <section
+        id="tabSchedules"
+        class="adminTabContent hidden space-y-6"
+    >
+
+
+        <div
+            class="grid grid-cols-1 lg:grid-cols-3 gap-6"
+        >
+
+
+            <!-- Schedule Form -->
+
+            <div
+                class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 space-y-5"
+            >
+
 
                 <div>
 
-                    <label
-                        class="block text-sm font-semibold text-gray-700 mb-1"
+                    <span
+                        class="bg-essuGreen/10 text-essuGreen font-bold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider"
                     >
-                        Reason
-                    </label>
+                        Capacity & Availability
+                    </span>
 
-                    <textarea
-                        id="rescheduleReason"
-                        rows="3"
-                        placeholder="Optional reason for rescheduling..."
-                        class="w-full border border-gray-300 rounded px-3 py-2"
-                    ></textarea>
+
+                    <h3
+                        class="font-extrabold text-lg text-slate-800 mt-2"
+                    >
+                        Configure Registrar Slots
+                    </h3>
+
+
+                    <p
+                        class="text-xs text-slate-500 mt-1"
+                    >
+                        Set booking availability,
+                        daily limits, or blocked dates.
+                    </p>
+
+                </div>
+
+
+
+                <div
+                    class="space-y-4"
+                >
+
+
+                    <div>
+
+                        <label
+                            class="block text-xs font-bold text-slate-700 uppercase mb-1.5"
+                        >
+                            Target Date
+                        </label>
+
+
+                        <input
+                            type="date"
+                            id="scheduleDate"
+                            class="w-full p-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-semibold focus:ring-2 focus:ring-essuGreen"
+                        >
+
+                    </div>
+
+
+
+                    <div>
+
+                        <label
+                            class="block text-xs font-bold text-slate-700 uppercase mb-1.5"
+                        >
+                            Slot Status / Mode
+                        </label>
+
+
+                        <select
+                            id="scheduleStatus"
+                            class="w-full p-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-semibold focus:ring-2 focus:ring-essuGreen"
+                        >
+
+                            <option value="OPEN">
+                                Open for Booking
+                            </option>
+
+                            <option value="LIMITED">
+                                Limited Slots
+                            </option>
+
+                            <option value="BLOCKED">
+                                Blocked Date
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <div>
+
+                        <label
+                            class="block text-xs font-bold text-slate-700 uppercase mb-1.5"
+                        >
+                            Max Daily Capacity
+                        </label>
+
+
+                        <input
+                            type="number"
+                            id="scheduleCapacity"
+                            min="0"
+                            value="50"
+                            class="w-full p-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-semibold focus:ring-2 focus:ring-essuGreen"
+                        >
+
+                    </div>
+
+
+
+                    <button
+                        id="saveScheduleBtn"
+                        class="w-full py-3.5 bg-essuGreen text-white font-bold rounded-2xl text-sm hover:bg-essuDarkGreen transition shadow-lg flex items-center justify-center gap-2"
+                    >
+
+                        <i
+                            class="fa-solid fa-floppy-disk"
+                        ></i>
+
+                        Save Schedule Settings
+
+                    </button>
 
                 </div>
 
             </div>
 
 
+
+            <!-- Schedule List -->
+
             <div
-                class="flex justify-end gap-3 mt-6"
+                class="lg:col-span-2 bg-white p-6 rounded-3xl shadow-sm border border-slate-200 space-y-5"
             >
 
-                <button
-                    id="cancelRescheduleBtn"
-                    class="bg-gray-200 text-gray-700 px-4 py-2 rounded font-semibold hover:bg-gray-300"
+
+                <div
+                    class="flex justify-between items-center"
                 >
-                    Cancel
-                </button>
 
 
-                <button
-                    id="confirmRescheduleBtn"
-                    class="bg-[#0f4c2e] text-white px-4 py-2 rounded font-semibold hover:bg-[#0b3922]"
+                    <div>
+
+                        <h3
+                            class="font-extrabold text-lg text-slate-800"
+                        >
+                            Active Registrar Schedules
+                            & Blocks
+                        </h3>
+
+
+                        <p
+                            class="text-xs text-slate-500 mt-0.5"
+                        >
+                            Configured availability and
+                            maximum booking capacities.
+                        </p>
+
+                    </div>
+
+
+
+                    <span
+                        class="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full font-bold flex items-center gap-1.5"
+                    >
+
+                        <span
+                            class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"
+                        ></span>
+
+                        Live System
+
+                    </span>
+
+                </div>
+
+
+
+                <div
+                    class="overflow-x-auto"
                 >
-                    Confirm Reschedule
-                </button>
+
+                    <table
+                        class="w-full text-left border-collapse"
+                    >
+
+                        <thead>
+
+                            <tr
+                                class="bg-slate-100/70 text-slate-500 uppercase text-[11px] font-bold tracking-wider border-b border-slate-200"
+                            >
+
+                                <th
+                                    class="py-3.5 px-4"
+                                >
+                                    Date
+                                </th>
+
+                                <th
+                                    class="py-3.5 px-4"
+                                >
+                                    Status / Setting
+                                </th>
+
+                                <th
+                                    class="py-3.5 px-4"
+                                >
+                                    Max Capacity
+                                </th>
+
+                                <th
+                                    class="py-3.5 px-4 text-right"
+                                >
+                                    Action
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody
+                            id="registrarSchedulesBody"
+                            class="divide-y divide-slate-100 text-sm"
+                        >
+
+                            <tr>
+
+                                <td
+                                    colspan="4"
+                                    class="text-center py-8 text-slate-400"
+                                >
+                                    Loading schedules...
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
 
             </div>
 
         </div>
 
+    </section>
+
+
+
+    <!-- ===================================================== -->
+    <!-- DAILY LIST TAB -->
+    <!-- ===================================================== -->
+
+    <section
+        id="tabDaily"
+        class="adminTabContent hidden space-y-6"
+    >
+
+
+        <div
+            class="bg-white rounded-3xl shadow-sm border border-slate-200 p-8 space-y-6"
+        >
+
+
+            <div
+                class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-100 pb-6"
+            >
+
+
+                <div>
+
+                    <span
+                        class="bg-essuGreen/10 text-essuGreen font-bold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider"
+                    >
+                        Daily Report Generator
+                    </span>
+
+
+                    <h3
+                        class="font-extrabold text-xl text-slate-800 mt-2"
+                    >
+                        Daily Appointment Visit List
+                    </h3>
+
+
+                    <p
+                        class="text-xs text-slate-500 mt-1"
+                    >
+                        Review and print approved or
+                        rescheduled appointments for a
+                        selected date.
+                    </p>
+
+                </div>
+
+
+
+                <div
+                    class="flex flex-wrap items-center gap-3"
+                >
+
+
+                    <input
+                        type="date"
+                        id="dailyAppointmentDate"
+                        class="p-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-semibold focus:ring-2 focus:ring-essuGreen"
+                    >
+
+
+                    <button
+                        id="generateDailyListBtn"
+                        class="bg-essuGreen hover:bg-essuDarkGreen text-white font-bold px-5 py-3 rounded-2xl text-sm transition shadow-md flex items-center gap-2"
+                    >
+
+                        <i
+                            class="fa-solid fa-rotate"
+                        ></i>
+
+                        Generate
+
+                    </button>
+
+
+                    <button
+                        id="printDailyListBtn"
+                        class="bg-slate-900 hover:bg-black text-white font-bold px-5 py-3 rounded-2xl text-sm transition shadow-md flex items-center gap-2"
+                    >
+
+                        <i
+                            class="fa-solid fa-print"
+                        ></i>
+
+                        Print Official Roster
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- Printable Report -->
+
+            <div
+                id="dailyPrintArea"
+                class="border border-slate-200 rounded-3xl p-8 bg-white space-y-6 shadow-sm"
+            >
+
+
+                <div
+                    class="text-center border-b border-slate-200 pb-6 space-y-1"
+                >
+
+                    <h4
+                        class="font-black text-essuGreen text-xl tracking-wide"
+                    >
+                        EASTERN SAMAR STATE UNIVERSITY
+                    </h4>
+
+
+                    <p
+                        class="text-xs font-bold text-slate-600 uppercase tracking-widest"
+                    >
+                        Office of the University Registrar
+                        • Borongan City, Eastern Samar
+                    </p>
+
+
+                    <h5
+                        id="dailyListTitle"
+                        class="font-extrabold text-slate-800 text-base mt-2"
+                    >
+                        Daily Appointment Schedule
+                    </h5>
+
+                </div>
+
+
+
+                <div
+                    class="overflow-x-auto"
+                >
+
+                    <table
+                        class="w-full text-left border-collapse text-sm"
+                    >
+
+                        <thead>
+
+                            <tr
+                                class="bg-slate-100 text-slate-700 uppercase text-[11px] font-bold tracking-wider border-b border-slate-200"
+                            >
+
+                                <th
+                                    class="py-3 px-4"
+                                >
+                                    Time Slot
+                                </th>
+
+                                <th
+                                    class="py-3 px-4"
+                                >
+                                    Student Name
+                                </th>
+
+                                <th
+                                    class="py-3 px-4"
+                                >
+                                    Student Number
+                                </th>
+
+                                <th
+                                    class="py-3 px-4"
+                                >
+                                    Purpose of Visit
+                                </th>
+
+                                <th
+                                    class="py-3 px-4"
+                                >
+                                    Status
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody
+                            id="dailyAppointmentsBody"
+                            class="divide-y divide-slate-100"
+                        >
+
+                            <tr>
+
+                                <td
+                                    colspan="5"
+                                    class="text-center py-8 text-slate-400 font-medium"
+                                >
+                                    Select a date and generate
+                                    the daily appointment list.
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+
+                <div
+                    class="flex justify-between items-center pt-6 text-xs text-slate-500 border-t border-slate-100 font-medium"
+                >
+
+                    <span>
+                        Generated by:
+                        ESSU Registrar Admin Portal
+                    </span>
+
+                    <span>
+                        Official Appointment Roster
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ===================================================== -->
+    <!-- ACTIVITY HISTORY TAB -->
+    <!-- ===================================================== -->
+
+    <section
+        id="tabHistory"
+        class="adminTabContent hidden space-y-6"
+    >
+
+
+        <div
+            class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 space-y-5"
+        >
+
+
+            <div
+                class="flex flex-col sm:flex-row justify-between sm:items-center gap-3"
+            >
+
+
+                <div>
+
+                    <span
+                        class="bg-essuGold/20 text-essuDarkGreen font-bold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider"
+                    >
+                        System Integration
+                    </span>
+
+
+                    <h3
+                        class="font-extrabold text-lg text-slate-800 mt-2"
+                    >
+                        Appointment Activity History
+                    </h3>
+
+
+                    <p
+                        class="text-xs text-slate-500 mt-0.5"
+                    >
+                        Real database records of appointment
+                        status changes and administrative actions.
+                    </p>
+
+                </div>
+
+
+
+                <button
+                    id="refreshHistoryBtn"
+                    class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-4 py-2.5 rounded-xl text-sm transition flex items-center gap-2"
+                >
+
+                    <i
+                        class="fa-solid fa-rotate-right"
+                    ></i>
+
+                    Refresh History
+
+                </button>
+
+            </div>
+
+
+
+            <div
+                class="overflow-x-auto"
+            >
+
+                <table
+                    class="w-full text-left border-collapse"
+                >
+
+                    <thead>
+
+                        <tr
+                            class="bg-slate-100/70 text-slate-500 uppercase text-[11px] font-bold tracking-wider border-b border-slate-200"
+                        >
+
+                            <th
+                                class="py-3.5 px-4"
+                            >
+                                Date / Time
+                            </th>
+
+                            <th
+                                class="py-3.5 px-4"
+                            >
+                                Student
+                            </th>
+
+                            <th
+                                class="py-3.5 px-4"
+                            >
+                                Purpose
+                            </th>
+
+                            <th
+                                class="py-3.5 px-4"
+                            >
+                                Previous Status
+                            </th>
+
+                            <th
+                                class="py-3.5 px-4"
+                            >
+                                New Status
+                            </th>
+
+                            <th
+                                class="py-3.5 px-4"
+                            >
+                                Changed By
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody
+                        id="historyLogsBody"
+                        class="divide-y divide-slate-100 text-sm"
+                    >
+
+                        <tr>
+
+                            <td
+                                colspan="6"
+                                class="text-center py-8 text-slate-400"
+                            >
+                                Loading activity history...
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+</main>
+
+
+
+<!-- ========================================================= -->
+<!-- RESCHEDULE MODAL -->
+<!-- ========================================================= -->
+
+<div
+    id="rescheduleModal"
+    class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden items-center justify-center p-4"
+>
+
+
+    <div
+        class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl space-y-5 border border-slate-200"
+    >
+
+
+        <div
+            class="flex justify-between items-center border-b border-slate-100 pb-4"
+        >
+
+            <div>
+
+                <span
+                    class="text-[10px] uppercase tracking-wider font-bold text-purple-600"
+                >
+                    Appointment Management
+                </span>
+
+                <h3
+                    class="font-extrabold text-lg text-slate-800 mt-1"
+                >
+                    Reschedule Appointment
+                </h3>
+
+            </div>
+
+
+            <button
+                id="closeRescheduleModalBtn"
+                class="text-slate-400 hover:text-slate-700 transition"
+            >
+
+                <i
+                    class="fa-solid fa-xmark text-lg"
+                ></i>
+
+            </button>
+
+        </div>
+
+
+
+        <input
+            type="hidden"
+            id="rescheduleAppointmentId"
+        >
+
+
+
+        <div
+            class="space-y-4"
+        >
+
+
+            <div>
+
+                <label
+                    class="block text-xs font-bold text-slate-700 uppercase mb-1.5"
+                >
+                    Student Name
+                </label>
+
+
+                <input
+                    type="text"
+                    id="rescheduleStudentName"
+                    disabled
+                    class="w-full p-3 bg-slate-100 border border-slate-200 rounded-2xl text-sm font-semibold text-slate-600"
+                >
+
+            </div>
+
+
+
+            <div>
+
+                <label
+                    class="block text-xs font-bold text-slate-700 uppercase mb-1.5"
+                >
+                    New Appointment Date
+                </label>
+
+
+                <input
+                    type="date"
+                    id="rescheduleDate"
+                    class="w-full p-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-semibold focus:ring-2 focus:ring-essuGreen"
+                >
+
+            </div>
+
+
+
+            <div>
+
+                <label
+                    class="block text-xs font-bold text-slate-700 uppercase mb-1.5"
+                >
+                    New Time Slot
+                </label>
+
+
+                <select
+                    id="rescheduleTime"
+                    class="w-full p-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-semibold focus:ring-2 focus:ring-essuGreen"
+                >
+
+                    <option
+                        value="8:00 AM - 9:00 AM"
+                    >
+                        8:00 AM - 9:00 AM
+                    </option>
+
+                    <option
+                        value="9:00 AM - 10:00 AM"
+                    >
+                        9:00 AM - 10:00 AM
+                    </option>
+
+                    <option
+                        value="10:00 AM - 11:00 AM"
+                    >
+                        10:00 AM - 11:00 AM
+                    </option>
+
+                    <option
+                        value="1:00 PM - 2:00 PM"
+                    >
+                        1:00 PM - 2:00 PM
+                    </option>
+
+                    <option
+                        value="2:00 PM - 3:00 PM"
+                    >
+                        2:00 PM - 3:00 PM
+                    </option>
+
+                    <option
+                        value="3:00 PM - 4:00 PM"
+                    >
+                        3:00 PM - 4:00 PM
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <div>
+
+                <label
+                    class="block text-xs font-bold text-slate-700 uppercase mb-1.5"
+                >
+                    Reason for Rescheduling
+                </label>
+
+
+                <textarea
+                    id="rescheduleReason"
+                    rows="3"
+                    placeholder="e.g. Registrar meeting conflict..."
+                    class="w-full p-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-semibold focus:ring-2 focus:ring-essuGreen"
+                ></textarea>
+
+            </div>
+
+        </div>
+
+
+
+        <div
+            class="flex justify-end space-x-3 pt-4 border-t border-slate-100"
+        >
+
+
+            <button
+                id="cancelRescheduleBtn"
+                class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-2xl text-sm transition"
+            >
+                Cancel
+            </button>
+
+
+            <button
+                id="confirmRescheduleBtn"
+                class="px-5 py-2.5 bg-essuGreen hover:bg-essuDarkGreen text-white font-bold rounded-2xl text-sm transition shadow-md"
+            >
+
+                <i
+                    class="fa-solid fa-calendar-check mr-2"
+                ></i>
+
+                Confirm Reschedule
+
+            </button>
+
+        </div>
+
     </div>
 
+</div>
 
 
-    <!-- ====================================================== -->
-    <!-- SCRIPT -->
-    <!-- ====================================================== -->
 
-    <script
-        type="module"
-        src="admin.js"
-    ></script>
+<!-- ========================================================= -->
+<!-- ADMIN JAVASCRIPT -->
+<!-- ========================================================= -->
+
+<script
+    type="module"
+    src="admin.js"
+></script>
+
 
 </body>
+
 </html>
