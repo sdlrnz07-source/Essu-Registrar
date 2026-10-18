@@ -20,46 +20,92 @@ const TIME_SLOTS = [
 // ============================================================
 
 const state = {
+
     currentUser: null,
     currentStudent: null,
 
-    calendarMonth: new Date().getMonth(),
-    calendarYear: new Date().getFullYear(),
+    calendarMonth:
+        new Date().getMonth(),
+
+    calendarYear:
+        new Date().getFullYear(),
 
     selectedDate: null,
     selectedSlot: null,
 
     bookedSlotsForDate: [],
+
     appointments: [],
+
     notifications: [],
 
     rescheduleTargetId: null,
+
 };
 
 
-const $ = (id) => document.getElementById(id);
+// ============================================================
+// ELEMENT HELPER
+// ============================================================
+
+const $ = (id) =>
+    document.getElementById(id);
 
 
 // ============================================================
 // PAGE LOAD
 // ============================================================
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener(
+    "DOMContentLoaded",
 
-    const isLoggedIn = await loadCurrentUser();
+    async () => {
 
-    if (!isLoggedIn) {
-        return;
+        const isLoggedIn =
+            await loadCurrentUser();
+
+
+        if (!isLoggedIn) {
+            return;
+        }
+
+
+        // ---------------------------------------------
+        // Load profile information
+        // ---------------------------------------------
+
+        renderStudentProfile();
+
+
+        // ---------------------------------------------
+        // Calendar
+        // ---------------------------------------------
+
+        renderCalendar();
+
+
+        // ---------------------------------------------
+        // Load appointments
+        // ---------------------------------------------
+
+        await loadAppointments();
+
+
+        // ---------------------------------------------
+        // Notifications
+        // ---------------------------------------------
+
+        await loadNotifications();
+
+
+        // ---------------------------------------------
+        // Additional interface events
+        // ---------------------------------------------
+
+        bindEvents();
+
     }
-
-    renderCalendar();
-
-    await loadAppointments();
-
-    await loadNotifications();
-
-    bindEvents();
-});
+);
 
 
 // ============================================================
@@ -71,53 +117,77 @@ async function loadCurrentUser() {
     try {
 
         if (
-            sessionStorage.getItem("loggedIn") !== "true" ||
-            sessionStorage.getItem("role") !== "student"
+            sessionStorage.getItem(
+                "loggedIn"
+            ) !== "true" ||
+
+            sessionStorage.getItem(
+                "role"
+            ) !== "student"
         ) {
-            window.location.href = "login.html";
+
+            window.location.href =
+                "login.html";
+
             return false;
         }
 
 
-        const { data, error } =
+        const {
+            data,
+            error
+        } =
             await supabase.auth.getSession();
 
 
-        if (error || !data?.session?.user) {
+        if (
+            error ||
+            !data?.session?.user
+        ) {
 
             console.error(
                 "No authenticated student session:",
                 error
             );
 
+
             sessionStorage.clear();
 
-            window.location.href = "login.html";
+
+            window.location.href =
+                "login.html";
+
 
             return false;
         }
 
 
-        state.currentUser = data.session.user;
+        state.currentUser =
+            data.session.user;
 
+
+        // ---------------------------------------------
+        // Load student database profile
+        // ---------------------------------------------
 
         const {
             data: student,
             error: studentError
-        } = await supabase
-            .from("students")
-            .select(`
-                id,
-                first_name,
-                last_name,
-                student_number,
-                email
-            `)
-            .eq(
-                "email",
-                state.currentUser.email
-            )
-            .maybeSingle();
+        } =
+            await supabase
+                .from("students")
+                .select(`
+                    id,
+                    first_name,
+                    last_name,
+                    student_number,
+                    email
+                `)
+                .eq(
+                    "email",
+                    state.currentUser.email
+                )
+                .maybeSingle();
 
 
         if (studentError) {
@@ -127,9 +197,11 @@ async function loadCurrentUser() {
                 studentError
             );
 
+
             alert(
                 "Unable to load your student profile."
             );
+
 
             return false;
         }
@@ -141,11 +213,13 @@ async function loadCurrentUser() {
                 "Your login account is not connected to a student profile."
             );
 
+
             return false;
         }
 
 
-        state.currentStudent = student;
+        state.currentStudent =
+            student;
 
 
         sessionStorage.setItem(
@@ -153,6 +227,10 @@ async function loadCurrentUser() {
             student.id
         );
 
+
+        // ---------------------------------------------
+        // Greeting
+        // ---------------------------------------------
 
         const greeting =
             $("studentGreeting");
@@ -173,6 +251,10 @@ async function loadCurrentUser() {
                 );
         }
 
+
+        // ---------------------------------------------
+        // Remove loader
+        // ---------------------------------------------
 
         const loader =
             $("authLoadingScreen");
@@ -198,12 +280,91 @@ async function loadCurrentUser() {
             error
         );
 
+
         sessionStorage.clear();
+
 
         window.location.href =
             "login.html";
 
+
         return false;
+    }
+}
+
+
+// ============================================================
+// STUDENT PROFILE MODULE
+// ============================================================
+
+function renderStudentProfile() {
+
+    if (
+        !state.currentStudent
+    ) {
+        return;
+    }
+
+
+    const student =
+        state.currentStudent;
+
+
+    const fullName =
+        `${student.first_name || ""} ${student.last_name || ""}`
+            .trim();
+
+
+    const profileName =
+        $("profileFullName");
+
+
+    const profileStudentNumber =
+        $("profileStudentNumber");
+
+
+    const profileEmail =
+        $("profileEmail");
+
+
+    const profileAccountStatus =
+        $("profileAccountStatus");
+
+
+    if (profileName) {
+
+        profileName.textContent =
+            fullName ||
+            "Student";
+    }
+
+
+    if (profileStudentNumber) {
+
+        profileStudentNumber.textContent =
+            student.student_number ||
+            "Not available";
+    }
+
+
+    if (profileEmail) {
+
+        profileEmail.textContent =
+            student.email ||
+            state.currentUser?.email ||
+            "Not available";
+    }
+
+
+    if (profileAccountStatus) {
+
+        profileAccountStatus.innerHTML = `
+            <span
+                class="w-1.5 h-1.5 bg-green-500 rounded-full"
+            ></span>
+
+            Active
+        `;
     }
 }
 
@@ -212,29 +373,34 @@ async function loadCurrentUser() {
 // LOGOUT
 // ============================================================
 
-$("logoutBtn")?.addEventListener(
-    "click",
-    async () => {
+$("logoutBtn")
+    ?.addEventListener(
 
-        try {
+        "click",
 
-            await supabase.auth.signOut();
+        async () => {
 
-        } catch (error) {
+            try {
 
-            console.error(
-                "Logout error:",
-                error
-            );
+                await supabase.auth.signOut();
+
+            } catch (error) {
+
+                console.error(
+                    "Logout error:",
+                    error
+                );
+            }
+
+
+            sessionStorage.clear();
+
+
+            window.location.href =
+                "login.html";
+
         }
-
-
-        sessionStorage.clear();
-
-        window.location.href =
-            "login.html";
-    }
-);
+    );
 
 
 // ============================================================
@@ -316,6 +482,10 @@ function renderCalendar() {
     );
 
 
+    // ---------------------------------------------
+    // Empty cells before first day
+    // ---------------------------------------------
+
     for (
         let i = 0;
         i < firstDay;
@@ -323,10 +493,16 @@ function renderCalendar() {
     ) {
 
         grid.appendChild(
-            document.createElement("div")
+            document.createElement(
+                "div"
+            )
         );
     }
 
+
+    // ---------------------------------------------
+    // Calendar dates
+    // ---------------------------------------------
 
     for (
         let day = 1;
@@ -343,14 +519,20 @@ function renderCalendar() {
 
 
         const iso =
-            toISODate(cellDate);
+            toISODate(
+                cellDate
+            );
 
 
         const cell =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
 
-        cell.textContent = day;
+        cell.textContent =
+            day;
+
 
         cell.className =
             "cal-day";
@@ -377,7 +559,9 @@ function renderCalendar() {
         } else {
 
             cell.addEventListener(
+
                 "click",
+
                 () =>
                     selectDate(
                         iso,
@@ -388,7 +572,8 @@ function renderCalendar() {
 
 
         if (
-            toISODate(today) === iso
+            toISODate(today) ===
+            iso
         ) {
 
             cell.classList.add(
@@ -398,7 +583,8 @@ function renderCalendar() {
 
 
         if (
-            state.selectedDate === iso
+            state.selectedDate ===
+            iso
         ) {
 
             cell.classList.add(
@@ -407,53 +593,75 @@ function renderCalendar() {
         }
 
 
-        grid.appendChild(cell);
+        grid.appendChild(
+            cell
+        );
     }
 }
 
 
 // ============================================================
-// PREVIOUS / NEXT MONTH
+// PREVIOUS MONTH
 // ============================================================
 
-$("prevMonth")?.addEventListener(
-    "click",
-    () => {
+$("prevMonth")
+    ?.addEventListener(
 
-        state.calendarMonth--;
+        "click",
 
-        if (
-            state.calendarMonth < 0
-        ) {
+        () => {
 
-            state.calendarMonth = 11;
+            state.calendarMonth--;
 
-            state.calendarYear--;
+
+            if (
+                state.calendarMonth < 0
+            ) {
+
+                state.calendarMonth =
+                    11;
+
+
+                state.calendarYear--;
+            }
+
+
+            renderCalendar();
+
         }
-
-        renderCalendar();
-    }
-);
+    );
 
 
-$("nextMonth")?.addEventListener(
-    "click",
-    () => {
+// ============================================================
+// NEXT MONTH
+// ============================================================
 
-        state.calendarMonth++;
+$("nextMonth")
+    ?.addEventListener(
 
-        if (
-            state.calendarMonth > 11
-        ) {
+        "click",
 
-            state.calendarMonth = 0;
+        () => {
 
-            state.calendarYear++;
+            state.calendarMonth++;
+
+
+            if (
+                state.calendarMonth > 11
+            ) {
+
+                state.calendarMonth =
+                    0;
+
+
+                state.calendarYear++;
+            }
+
+
+            renderCalendar();
+
         }
-
-        renderCalendar();
-    }
-);
+    );
 
 
 // ============================================================
@@ -468,6 +676,7 @@ async function selectDate(
     state.selectedDate =
         iso;
 
+
     state.selectedSlot =
         null;
 
@@ -480,7 +689,9 @@ async function selectDate(
     ) {
 
         $("selectedDateDisplay").value =
-            formatDisplayDate(iso);
+            formatDisplayDate(
+                iso
+            );
     }
 
 
@@ -493,7 +704,10 @@ async function selectDate(
     }
 
 
-    await loadBookedSlots(iso);
+    await loadBookedSlots(
+        iso
+    );
+
 
     renderSlotGrid();
 }
@@ -512,23 +726,24 @@ async function loadBookedSlots(
         const {
             data,
             error
-        } = await supabase
-            .from("appointments")
-            .select(
-                "appointment_time, status"
-            )
-            .eq(
-                "appointment_date",
-                dateISO
-            )
-            .neq(
-                "status",
-                "cancelled"
-            )
-            .neq(
-                "status",
-                "rejected"
-            );
+        } =
+            await supabase
+                .from("appointments")
+                .select(
+                    "appointment_time, status"
+                )
+                .eq(
+                    "appointment_date",
+                    dateISO
+                )
+                .neq(
+                    "status",
+                    "cancelled"
+                )
+                .neq(
+                    "status",
+                    "rejected"
+                );
 
 
         if (error) {
@@ -538,8 +753,10 @@ async function loadBookedSlots(
                 error
             );
 
+
             state.bookedSlotsForDate =
                 [];
+
 
             return;
         }
@@ -559,6 +776,7 @@ async function loadBookedSlots(
             "Unexpected booked slot error:",
             error
         );
+
 
         state.bookedSlotsForDate =
             [];
@@ -581,12 +799,15 @@ function renderSlotGrid() {
     }
 
 
-    container.innerHTML = "";
+    container.innerHTML =
+        "";
 
 
     $("slotHint")
         ?.classList
-        .add("hidden");
+        .add(
+            "hidden"
+        );
 
 
     TIME_SLOTS.forEach(
@@ -594,7 +815,9 @@ function renderSlotGrid() {
 
             const taken =
                 state.bookedSlotsForDate
-                    .includes(slot);
+                    .includes(
+                        slot
+                    );
 
 
             const btn =
@@ -603,7 +826,8 @@ function renderSlotGrid() {
                 );
 
 
-            btn.textContent = slot;
+            btn.textContent =
+                slot;
 
 
             btn.className =
@@ -618,7 +842,9 @@ function renderSlotGrid() {
             if (!taken) {
 
                 btn.addEventListener(
+
                     "click",
+
                     () => {
 
                         state.selectedSlot =
@@ -652,6 +878,7 @@ function renderSlotGrid() {
                         btn.classList.add(
                             "slot-selected"
                         );
+
                     }
                 );
             }
@@ -669,191 +896,248 @@ function renderSlotGrid() {
 // BOOK APPOINTMENT
 // ============================================================
 
-$("bookingForm")?.addEventListener(
-    "submit",
-    async (e) => {
+$("bookingForm")
+    ?.addEventListener(
 
-        e.preventDefault();
+        "submit",
 
+        async (e) => {
 
-        const msg =
-            $("bookingMsg");
-
-
-        if (msg) {
-            msg.textContent = "";
-        }
+            e.preventDefault();
 
 
-        const purpose =
-            $("purpose")?.value;
+            const msg =
+                $("bookingMsg");
 
-
-        if (
-            !purpose ||
-            !state.selectedDate ||
-            !state.selectedSlot
-        ) {
 
             if (msg) {
-
                 msg.textContent =
-                    "Please select a purpose, date, and time slot.";
-
-                msg.className =
-                    "text-sm mt-1 text-red-600";
+                    "";
             }
 
-            return;
-        }
 
-
-        if (
-            !state.currentStudent
-        ) {
-            return;
-        }
-
-
-        try {
-
-            const {
-                data: existing,
-                error: checkError
-            } = await supabase
-                .from("appointments")
-                .select("id")
-                .eq(
-                    "appointment_date",
-                    state.selectedDate
-                )
-                .eq(
-                    "appointment_time",
-                    state.selectedSlot
-                )
-                .neq(
-                    "status",
-                    "cancelled"
-                )
-                .neq(
-                    "status",
-                    "rejected"
-                );
+            const purpose =
+                $("purpose")
+                    ?.value;
 
 
             if (
-                existing &&
-                existing.length > 0
+                !purpose ||
+                !state.selectedDate ||
+                !state.selectedSlot
             ) {
 
                 if (msg) {
 
                     msg.textContent =
-                        "This time slot has already been booked.";
+                        "Please select a purpose, date, and time slot.";
+
 
                     msg.className =
                         "text-sm mt-1 text-red-600";
                 }
 
+
                 return;
             }
 
 
-            const { error } =
-                await supabase
-                    .from("appointments")
-                    .insert({
-
-                        student_id:
-                            state.currentStudent.id,
-
-                        purpose:
-                            purpose,
-
-                        appointment_date:
-                            state.selectedDate,
-
-                        appointment_time:
-                            state.selectedSlot,
-
-                        notes:
-                            $("notes")?.value ||
-                            null,
-
-                        status:
-                            "pending"
-                    });
+            if (
+                !state.currentStudent
+            ) {
+                return;
+            }
 
 
-            if (error) {
+            try {
+
+                // ---------------------------------------------
+                // Check whether selected slot is already booked
+                // ---------------------------------------------
+
+                const {
+                    data: existing,
+                    error: checkError
+                } =
+                    await supabase
+                        .from(
+                            "appointments"
+                        )
+                        .select(
+                            "id"
+                        )
+                        .eq(
+                            "appointment_date",
+                            state.selectedDate
+                        )
+                        .eq(
+                            "appointment_time",
+                            state.selectedSlot
+                        )
+                        .neq(
+                            "status",
+                            "cancelled"
+                        )
+                        .neq(
+                            "status",
+                            "rejected"
+                        );
+
+
+                if (checkError) {
+
+                    console.error(
+                        "Appointment slot check error:",
+                        checkError
+                    );
+                }
+
+
+                if (
+                    existing &&
+                    existing.length > 0
+                ) {
+
+                    if (msg) {
+
+                        msg.textContent =
+                            "This time slot has already been booked.";
+
+
+                        msg.className =
+                            "text-sm mt-1 text-red-600";
+                    }
+
+
+                    return;
+                }
+
+
+                // ---------------------------------------------
+                // Insert appointment
+                // ---------------------------------------------
+
+                const {
+                    error
+                } =
+                    await supabase
+                        .from(
+                            "appointments"
+                        )
+                        .insert({
+
+                            student_id:
+                                state.currentStudent.id,
+
+                            purpose:
+                                purpose,
+
+                            appointment_date:
+                                state.selectedDate,
+
+                            appointment_time:
+                                state.selectedSlot,
+
+                            notes:
+                                $("notes")
+                                    ?.value ||
+                                null,
+
+                            status:
+                                "pending"
+
+                        });
+
+
+                if (error) {
+
+                    console.error(
+                        "Appointment insert error:",
+                        error
+                    );
+
+
+                    if (msg) {
+
+                        msg.textContent =
+                            "Unable to submit appointment request.";
+
+
+                        msg.className =
+                            "text-sm mt-1 text-red-600";
+                    }
+
+
+                    return;
+                }
+
+
+                if (msg) {
+
+                    msg.textContent =
+                        "Appointment request submitted!";
+
+
+                    msg.className =
+                        "text-sm mt-1 text-green-700";
+                }
+
+
+                $("bookingForm")
+                    .reset();
+
+
+                state.selectedDate =
+                    null;
+
+
+                state.selectedSlot =
+                    null;
+
+
+                if (
+                    $("selectedDateDisplay")
+                ) {
+
+                    $("selectedDateDisplay").value =
+                        "";
+                }
+
+
+                if (
+                    $("selectedSlotDisplay")
+                ) {
+
+                    $("selectedSlotDisplay").value =
+                        "";
+                }
+
+
+                if (
+                    $("slotGrid")
+                ) {
+
+                    $("slotGrid").innerHTML =
+                        "";
+                }
+
+
+                renderCalendar();
+
+
+                await loadAppointments();
+
+
+            } catch (error) {
 
                 console.error(
-                    "Appointment insert error:",
+                    "Unexpected booking error:",
                     error
                 );
-
-                return;
             }
 
-
-            if (msg) {
-
-                msg.textContent =
-                    "Appointment request submitted!";
-
-                msg.className =
-                    "text-sm mt-1 text-green-700";
-            }
-
-
-            $("bookingForm").reset();
-
-
-            state.selectedDate =
-                null;
-
-            state.selectedSlot =
-                null;
-
-
-            if (
-                $("selectedDateDisplay")
-            ) {
-                $("selectedDateDisplay").value =
-                    "";
-            }
-
-
-            if (
-                $("selectedSlotDisplay")
-            ) {
-                $("selectedSlotDisplay").value =
-                    "";
-            }
-
-
-            if (
-                $("slotGrid")
-            ) {
-                $("slotGrid").innerHTML =
-                    "";
-            }
-
-
-            renderCalendar();
-
-            await loadAppointments();
-
-
-        } catch (error) {
-
-            console.error(
-                "Unexpected booking error:",
-                error
-            );
         }
-    }
-);
+    );
 
 
 // ============================================================
@@ -866,29 +1150,27 @@ async function loadAppointments() {
         $("appointmentsBody");
 
 
-    if (!tbody) {
-        return;
-    }
-
-
     try {
 
         const {
             data,
             error
-        } = await supabase
-            .from("appointments")
-            .select("*")
-            .eq(
-                "student_id",
-                state.currentStudent.id
-            )
-            .order(
-                "appointment_date",
-                {
-                    ascending: true
-                }
-            );
+        } =
+            await supabase
+                .from(
+                    "appointments"
+                )
+                .select("*")
+                .eq(
+                    "student_id",
+                    state.currentStudent.id
+                )
+                .order(
+                    "appointment_date",
+                    {
+                        ascending: true
+                    }
+                );
 
 
         if (error) {
@@ -898,6 +1180,22 @@ async function loadAppointments() {
                 error
             );
 
+
+            if (tbody) {
+
+                tbody.innerHTML = `
+                    <tr>
+                        <td
+                            colspan="5"
+                            class="px-4 py-6 text-center text-red-500"
+                        >
+                            Unable to load appointments.
+                        </td>
+                    </tr>
+                `;
+            }
+
+
             return;
         }
 
@@ -906,57 +1204,50 @@ async function loadAppointments() {
             data || [];
 
 
-        if (
-            state.appointments.length === 0
-        ) {
+        // ---------------------------------------------
+        // Existing My Appointments table
+        // ---------------------------------------------
 
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="5"
-                        class="px-4 py-6 text-center text-gray-400">
-                        No appointments yet — book one above.
-                    </td>
-                </tr>
-            `;
+        if (tbody) {
 
-            return;
+            if (
+                state.appointments.length ===
+                0
+            ) {
+
+                tbody.innerHTML = `
+                    <tr>
+                        <td
+                            colspan="5"
+                            class="px-4 py-6 text-center text-gray-400"
+                        >
+                            No appointments yet — book one above.
+                        </td>
+                    </tr>
+                `;
+
+            } else {
+
+                tbody.innerHTML =
+                    state.appointments
+                        .map(
+                            rowHTML
+                        )
+                        .join("");
+
+
+                attachAppointmentActionEvents();
+            }
         }
 
 
-        tbody.innerHTML =
-            state.appointments
-                .map(rowHTML)
-                .join("");
+        // ---------------------------------------------
+        // New profile & record module
+        // ---------------------------------------------
 
+        renderRecordStatistics();
 
-        state.appointments
-            .forEach(
-                appt => {
-
-                    $(
-                        `cancel-${appt.id}`
-                    )
-                        ?.addEventListener(
-                            "click",
-                            () =>
-                                cancelAppointment(
-                                    appt.id
-                                )
-                        );
-
-
-                    $(
-                        `reschedule-${appt.id}`
-                    )
-                        ?.addEventListener(
-                            "click",
-                            () =>
-                                openRescheduleModal(
-                                    appt.id
-                                )
-                        );
-                }
-            );
+        renderAppointmentRecords();
 
 
     } catch (error) {
@@ -970,56 +1261,128 @@ async function loadAppointments() {
 
 
 // ============================================================
+// ATTACH APPOINTMENT ACTION EVENTS
+// ============================================================
+
+function attachAppointmentActionEvents() {
+
+    state.appointments
+        .forEach(
+            appt => {
+
+
+                $(
+                    `cancel-${appt.id}`
+                )
+                    ?.addEventListener(
+
+                        "click",
+
+                        () =>
+                            cancelAppointment(
+                                appt.id
+                            )
+                    );
+
+
+                $(
+                    `reschedule-${appt.id}`
+                )
+                    ?.addEventListener(
+
+                        "click",
+
+                        () =>
+                            openRescheduleModal(
+                                appt.id
+                            )
+                    );
+
+            }
+        );
+}
+
+
+// ============================================================
 // APPOINTMENT ROW
 // ============================================================
 
-function rowHTML(appt) {
+function rowHTML(
+    appt
+) {
 
     const status =
         (
             appt.status ||
             "pending"
-        ).toLowerCase();
+        )
+            .toLowerCase();
 
 
     const canModify =
-        status === "pending" ||
-        status === "approved";
+        status ===
+            "pending" ||
+
+        status ===
+            "approved";
 
 
     return `
-        <tr class="border-t border-gray-100">
+        <tr
+            class="border-t border-gray-100"
+        >
 
-            <td class="px-4 py-3">
+            <td
+                class="px-4 py-3"
+            >
                 ${formatDisplayDate(
                     appt.appointment_date
                 )}
             </td>
 
-            <td class="px-4 py-3">
+
+            <td
+                class="px-4 py-3"
+            >
                 ${escapeHTML(
                     appt.appointment_time
                 )}
             </td>
 
-            <td class="px-4 py-3">
+
+            <td
+                class="px-4 py-3"
+            >
                 ${escapeHTML(
                     appt.purpose
                 )}
             </td>
 
-            <td class="px-4 py-3">
-                <span class="status-pill status-${status}">
-                    ${capitalize(status)}
+
+            <td
+                class="px-4 py-3"
+            >
+
+                <span
+                    class="status-pill status-${status}"
+                >
+                    ${capitalize(
+                        status
+                    )}
                 </span>
+
             </td>
 
-            <td class="px-4 py-3 text-right space-x-2">
+
+            <td
+                class="px-4 py-3 text-right space-x-2"
+            >
 
                 ${
                     canModify
 
                         ? `
+
                             <button
                                 id="reschedule-${appt.id}"
                                 class="text-xs font-medium text-[#0f4c2e] hover:underline"
@@ -1027,18 +1390,24 @@ function rowHTML(appt) {
                                 Reschedule
                             </button>
 
+
                             <button
                                 id="cancel-${appt.id}"
                                 class="text-xs font-medium text-red-600 hover:underline"
                             >
                                 Cancel
                             </button>
+
                         `
 
                         : `
-                            <span class="text-xs text-gray-300">
+
+                            <span
+                                class="text-xs text-gray-300"
+                            >
                                 —
                             </span>
+
                         `
                 }
 
@@ -1050,10 +1419,439 @@ function rowHTML(appt) {
 
 
 // ============================================================
+// PROFILE / APPOINTMENT RECORD STATISTICS
+// ============================================================
+
+function renderRecordStatistics() {
+
+    const appointments =
+        state.appointments;
+
+
+    const total =
+        appointments.length;
+
+
+    const pending =
+        appointments.filter(
+            appt =>
+                normalizeStatus(
+                    appt.status
+                ) ===
+                "pending"
+        )
+            .length;
+
+
+    const approved =
+        appointments.filter(
+            appt =>
+                normalizeStatus(
+                    appt.status
+                ) ===
+                "approved"
+        )
+            .length;
+
+
+    const rescheduled =
+        appointments.filter(
+            appt =>
+                normalizeStatus(
+                    appt.status
+                ) ===
+                "rescheduled"
+        )
+            .length;
+
+
+    const closed =
+        appointments.filter(
+            appt => {
+
+                const status =
+                    normalizeStatus(
+                        appt.status
+                    );
+
+
+                return (
+                    status ===
+                        "cancelled" ||
+
+                    status ===
+                        "rejected"
+                );
+            }
+        )
+            .length;
+
+
+    if (
+        $("recordTotal")
+    ) {
+
+        $("recordTotal").textContent =
+            total;
+    }
+
+
+    if (
+        $("recordPending")
+    ) {
+
+        $("recordPending").textContent =
+            pending;
+    }
+
+
+    if (
+        $("recordApproved")
+    ) {
+
+        $("recordApproved").textContent =
+            approved;
+    }
+
+
+    if (
+        $("recordRescheduled")
+    ) {
+
+        $("recordRescheduled").textContent =
+            rescheduled;
+    }
+
+
+    if (
+        $("recordClosed")
+    ) {
+
+        $("recordClosed").textContent =
+            closed;
+    }
+}
+
+
+// ============================================================
+// APPOINTMENT RECORD SEARCH / FILTER
+// ============================================================
+
+function renderAppointmentRecords() {
+
+    const tbody =
+        $("recordsBody");
+
+
+    if (!tbody) {
+        return;
+    }
+
+
+    const searchValue =
+        (
+            $("recordsSearch")
+                ?.value ||
+            ""
+        )
+            .trim()
+            .toLowerCase();
+
+
+    const statusFilter =
+        (
+            $("recordsStatusFilter")
+                ?.value ||
+            "all"
+        )
+            .toLowerCase();
+
+
+    let records =
+        [...state.appointments];
+
+
+    // ---------------------------------------------
+    // Most recent appointments first
+    // ---------------------------------------------
+
+    records.sort(
+        (
+            a,
+            b
+        ) => {
+
+            const dateA =
+                new Date(
+                    `${a.appointment_date}T00:00:00`
+                );
+
+
+            const dateB =
+                new Date(
+                    `${b.appointment_date}T00:00:00`
+                );
+
+
+            return (
+                dateB -
+                dateA
+            );
+        }
+    );
+
+
+    // ---------------------------------------------
+    // Search
+    // ---------------------------------------------
+
+    if (searchValue) {
+
+        records =
+            records.filter(
+                appt => {
+
+                    const purpose =
+                        String(
+                            appt.purpose ||
+                            ""
+                        )
+                            .toLowerCase();
+
+
+                    const notes =
+                        String(
+                            appt.notes ||
+                            ""
+                        )
+                            .toLowerCase();
+
+
+                    const time =
+                        String(
+                            appt.appointment_time ||
+                            ""
+                        )
+                            .toLowerCase();
+
+
+                    const date =
+                        String(
+                            appt.appointment_date ||
+                            ""
+                        )
+                            .toLowerCase();
+
+
+                    return (
+                        purpose.includes(
+                            searchValue
+                        ) ||
+
+                        notes.includes(
+                            searchValue
+                        ) ||
+
+                        time.includes(
+                            searchValue
+                        ) ||
+
+                        date.includes(
+                            searchValue
+                        )
+                    );
+                }
+            );
+    }
+
+
+    // ---------------------------------------------
+    // Status filter
+    // ---------------------------------------------
+
+    if (
+        statusFilter !==
+        "all"
+    ) {
+
+        records =
+            records.filter(
+                appt =>
+                    normalizeStatus(
+                        appt.status
+                    ) ===
+                    statusFilter
+            );
+    }
+
+
+    // ---------------------------------------------
+    // Empty state
+    // ---------------------------------------------
+
+    if (
+        records.length ===
+        0
+    ) {
+
+        tbody.innerHTML = `
+            <tr>
+
+                <td
+                    colspan="5"
+                    class="px-4 py-8 text-center text-gray-400"
+                >
+                    No appointment records found.
+                </td>
+
+            </tr>
+        `;
+
+
+        return;
+    }
+
+
+    // ---------------------------------------------
+    // Render table rows
+    // ---------------------------------------------
+
+    tbody.innerHTML =
+        records
+            .map(
+                appointmentRecordHTML
+            )
+            .join("");
+}
+
+
+// ============================================================
+// APPOINTMENT RECORD ROW
+// ============================================================
+
+function appointmentRecordHTML(
+    appt
+) {
+
+    const status =
+        normalizeStatus(
+            appt.status
+        );
+
+
+    const notes =
+        appt.notes &&
+        String(appt.notes)
+            .trim() !== ""
+
+            ? escapeHTML(
+                appt.notes
+            )
+
+            : `<span
+                   class="text-gray-300"
+               >
+                   No notes
+               </span>`;
+
+
+    return `
+        <tr
+            class="border-t border-gray-100 hover:bg-gray-50"
+        >
+
+            <td
+                class="px-4 py-3 whitespace-nowrap"
+            >
+                ${formatDisplayDate(
+                    appt.appointment_date
+                )}
+            </td>
+
+
+            <td
+                class="px-4 py-3 whitespace-nowrap"
+            >
+                ${escapeHTML(
+                    appt.appointment_time ||
+                    ""
+                )}
+            </td>
+
+
+            <td
+                class="px-4 py-3"
+            >
+                ${escapeHTML(
+                    appt.purpose ||
+                    ""
+                )}
+            </td>
+
+
+            <td
+                class="px-4 py-3 text-gray-600 max-w-xs"
+            >
+                ${notes}
+            </td>
+
+
+            <td
+                class="px-4 py-3 whitespace-nowrap"
+            >
+
+                <span
+                    class="status-pill status-${status}"
+                >
+                    ${capitalize(
+                        status
+                    )}
+                </span>
+
+            </td>
+
+        </tr>
+    `;
+}
+
+
+// ============================================================
+// RECORD SEARCH EVENTS
+// ============================================================
+
+$("recordsSearch")
+    ?.addEventListener(
+
+        "input",
+
+        () => {
+
+            renderAppointmentRecords();
+
+        }
+    );
+
+
+$("recordsStatusFilter")
+    ?.addEventListener(
+
+        "change",
+
+        () => {
+
+            renderAppointmentRecords();
+
+        }
+    );
+
+
+// ============================================================
 // CANCEL APPOINTMENT
 // ============================================================
 
-async function cancelAppointment(id) {
+async function cancelAppointment(
+    id
+) {
 
     const confirmed =
         confirm(
@@ -1068,18 +1866,24 @@ async function cancelAppointment(id) {
 
     try {
 
-        // Get current appointment first
+        // ---------------------------------------------
+        // Get current appointment
+        // ---------------------------------------------
+
         const {
             data: appointment,
             error: fetchError
-        } = await supabase
-            .from("appointments")
-            .select("*")
-            .eq(
-                "id",
-                id
-            )
-            .single();
+        } =
+            await supabase
+                .from(
+                    "appointments"
+                )
+                .select("*")
+                .eq(
+                    "id",
+                    id
+                )
+                .single();
 
 
         if (
@@ -1092,6 +1896,7 @@ async function cancelAppointment(id) {
                 fetchError
             );
 
+
             return;
         }
 
@@ -1101,19 +1906,27 @@ async function cancelAppointment(id) {
             "pending";
 
 
-        // Update to cancelled
+        // ---------------------------------------------
+        // Update appointment
+        // ---------------------------------------------
+
         const {
             error: updateError
-        } = await supabase
-            .from("appointments")
-            .update({
-                status:
-                    "cancelled"
-            })
-            .eq(
-                "id",
-                id
-            );
+        } =
+            await supabase
+                .from(
+                    "appointments"
+                )
+                .update({
+
+                    status:
+                        "cancelled"
+
+                })
+                .eq(
+                    "id",
+                    id
+                );
 
 
         if (updateError) {
@@ -1123,35 +1936,42 @@ async function cancelAppointment(id) {
                 updateError
             );
 
+
             alert(
                 "Couldn't cancel — please try again."
             );
+
 
             return;
         }
 
 
-        // Save history
+        // ---------------------------------------------
+        // Save status history
+        // ---------------------------------------------
+
         const {
             error: historyError
-        } = await supabase
-            .from(
-                "appointment_status_history"
-            )
-            .insert({
+        } =
+            await supabase
+                .from(
+                    "appointment_status_history"
+                )
+                .insert({
 
-                appointment_id:
-                    id,
+                    appointment_id:
+                        id,
 
-                old_status:
-                    oldStatus,
+                    old_status:
+                        oldStatus,
 
-                new_status:
-                    "cancelled",
+                    new_status:
+                        "cancelled",
 
-                changed_by:
-                    state.currentUser.email
-            });
+                    changed_by:
+                        state.currentUser.email
+
+                });
 
 
         if (historyError) {
@@ -1180,7 +2000,9 @@ async function cancelAppointment(id) {
 // OPEN RESCHEDULE MODAL
 // ============================================================
 
-function openRescheduleModal(id) {
+function openRescheduleModal(
+    id
+) {
 
     state.rescheduleTargetId =
         id;
@@ -1189,6 +2011,7 @@ function openRescheduleModal(id) {
     if (
         $("rescheduleDate")
     ) {
+
         $("rescheduleDate").value =
             "";
     }
@@ -1202,7 +2025,13 @@ function openRescheduleModal(id) {
             TIME_SLOTS
                 .map(
                     slot =>
-                        `<option value="${slot}">${slot}</option>`
+                        `
+                            <option
+                                value="${slot}"
+                            >
+                                ${slot}
+                            </option>
+                        `
                 )
                 .join("");
     }
@@ -1210,7 +2039,9 @@ function openRescheduleModal(id) {
 
     $("rescheduleModal")
         ?.classList
-        .add("open");
+        .add(
+            "open"
+        );
 }
 
 
@@ -1220,16 +2051,21 @@ function openRescheduleModal(id) {
 
 $("rescheduleCancelBtn")
     ?.addEventListener(
+
         "click",
+
         () => {
 
             $("rescheduleModal")
                 ?.classList
-                .remove("open");
+                .remove(
+                    "open"
+                );
 
 
             state.rescheduleTargetId =
                 null;
+
         }
     );
 
@@ -1240,7 +2076,9 @@ $("rescheduleCancelBtn")
 
 $("rescheduleConfirmBtn")
     ?.addEventListener(
+
         "click",
+
         async () => {
 
             const newDate =
@@ -1259,6 +2097,7 @@ $("rescheduleConfirmBtn")
                     "Please pick a new date."
                 );
 
+
                 return;
             }
 
@@ -1268,6 +2107,7 @@ $("rescheduleConfirmBtn")
                 alert(
                     "Please select a time slot."
                 );
+
 
                 return;
             }
@@ -1282,18 +2122,24 @@ $("rescheduleConfirmBtn")
 
             try {
 
-                // Get current appointment first
+                // ---------------------------------------------
+                // Current appointment
+                // ---------------------------------------------
+
                 const {
                     data: appointment,
                     error: fetchError
-                } = await supabase
-                    .from("appointments")
-                    .select("*")
-                    .eq(
-                        "id",
-                        state.rescheduleTargetId
-                    )
-                    .single();
+                } =
+                    await supabase
+                        .from(
+                            "appointments"
+                        )
+                        .select("*")
+                        .eq(
+                            "id",
+                            state.rescheduleTargetId
+                        )
+                        .single();
 
 
                 if (
@@ -1306,6 +2152,7 @@ $("rescheduleConfirmBtn")
                         fetchError
                     );
 
+
                     return;
                 }
 
@@ -1315,33 +2162,50 @@ $("rescheduleConfirmBtn")
                     "pending";
 
 
-                // Check if chosen slot is taken
+                // ---------------------------------------------
+                // Check selected slot
+                // ---------------------------------------------
+
                 const {
                     data: existing,
                     error: slotError
-                } = await supabase
-                    .from("appointments")
-                    .select("id")
-                    .eq(
-                        "appointment_date",
-                        newDate
-                    )
-                    .eq(
-                        "appointment_time",
-                        newSlot
-                    )
-                    .neq(
-                        "status",
-                        "cancelled"
-                    )
-                    .neq(
-                        "status",
-                        "rejected"
-                    )
-                    .neq(
-                        "id",
-                        state.rescheduleTargetId
+                } =
+                    await supabase
+                        .from(
+                            "appointments"
+                        )
+                        .select(
+                            "id"
+                        )
+                        .eq(
+                            "appointment_date",
+                            newDate
+                        )
+                        .eq(
+                            "appointment_time",
+                            newSlot
+                        )
+                        .neq(
+                            "status",
+                            "cancelled"
+                        )
+                        .neq(
+                            "status",
+                            "rejected"
+                        )
+                        .neq(
+                            "id",
+                            state.rescheduleTargetId
+                        );
+
+
+                if (slotError) {
+
+                    console.error(
+                        "Reschedule slot check error:",
+                        slotError
                     );
+                }
 
 
                 if (
@@ -1353,30 +2217,38 @@ $("rescheduleConfirmBtn")
                         "That time slot is already booked."
                     );
 
+
                     return;
                 }
 
 
+                // ---------------------------------------------
                 // Update appointment
+                // ---------------------------------------------
+
                 const {
                     error: updateError
-                } = await supabase
-                    .from("appointments")
-                    .update({
+                } =
+                    await supabase
+                        .from(
+                            "appointments"
+                        )
+                        .update({
 
-                        appointment_date:
-                            newDate,
+                            appointment_date:
+                                newDate,
 
-                        appointment_time:
-                            newSlot,
+                            appointment_time:
+                                newSlot,
 
-                        status:
-                            "pending"
-                    })
-                    .eq(
-                        "id",
-                        state.rescheduleTargetId
-                    );
+                            status:
+                                "pending"
+
+                        })
+                        .eq(
+                            "id",
+                            state.rescheduleTargetId
+                        );
 
 
                 if (updateError) {
@@ -1386,31 +2258,37 @@ $("rescheduleConfirmBtn")
                         updateError
                     );
 
+
                     return;
                 }
 
 
-                // Save history
+                // ---------------------------------------------
+                // Status history
+                // ---------------------------------------------
+
                 const {
                     error: historyError
-                } = await supabase
-                    .from(
-                        "appointment_status_history"
-                    )
-                    .insert({
+                } =
+                    await supabase
+                        .from(
+                            "appointment_status_history"
+                        )
+                        .insert({
 
-                        appointment_id:
-                            state.rescheduleTargetId,
+                            appointment_id:
+                                state.rescheduleTargetId,
 
-                        old_status:
-                            oldStatus,
+                            old_status:
+                                oldStatus,
 
-                        new_status:
-                            "pending",
+                            new_status:
+                                "pending",
 
-                        changed_by:
-                            state.currentUser.email
-                    });
+                            changed_by:
+                                state.currentUser.email
+
+                        });
 
 
                 if (historyError) {
@@ -1424,7 +2302,9 @@ $("rescheduleConfirmBtn")
 
                 $("rescheduleModal")
                     ?.classList
-                    .remove("open");
+                    .remove(
+                        "open"
+                    );
 
 
                 state.rescheduleTargetId =
@@ -1446,6 +2326,7 @@ $("rescheduleConfirmBtn")
                     error
                 );
             }
+
         }
     );
 
@@ -1466,19 +2347,23 @@ async function loadNotifications() {
     const {
         data,
         error
-    } = await supabase
-        .from("notifications")
-        .select("*")
-        .eq(
-            "student_id",
-            state.currentStudent.id
-        )
-        .order(
-            "created_at",
-            {
-                ascending: false
-            }
-        );
+    } =
+        await supabase
+            .from(
+                "notifications"
+            )
+            .select("*")
+            .eq(
+                "student_id",
+                state.currentStudent.id
+            )
+            .order(
+                "created_at",
+                {
+                    ascending:
+                        false
+                }
+            );
 
 
     if (error) {
@@ -1487,6 +2372,7 @@ async function loadNotifications() {
             "Notification loading error:",
             error
         );
+
 
         return;
     }
@@ -1509,6 +2395,7 @@ function renderNotifications() {
     const list =
         $("notificationList");
 
+
     const badge =
         $("notificationBadge");
 
@@ -1525,7 +2412,8 @@ function renderNotifications() {
         state.notifications
             .filter(
                 notification =>
-                    notification.is_read === false
+                    notification.is_read ===
+                    false
             )
             .length;
 
@@ -1536,6 +2424,7 @@ function renderNotifications() {
 
         badge.textContent =
             unreadCount;
+
 
         badge.classList.remove(
             "hidden"
@@ -1550,14 +2439,18 @@ function renderNotifications() {
 
 
     if (
-        state.notifications.length === 0
+        state.notifications.length ===
+        0
     ) {
 
         list.innerHTML = `
-            <div class="px-4 py-6 text-center text-xs text-gray-400">
+            <div
+                class="px-4 py-6 text-center text-xs text-gray-400"
+            >
                 No notifications yet.
             </div>
         `;
+
 
         return;
     }
@@ -1579,12 +2472,15 @@ function renderNotifications() {
                     `notification-${notification.id}`
                 )
                     ?.addEventListener(
+
                         "click",
+
                         () =>
                             markNotificationRead(
                                 notification.id
                             )
                     );
+
             }
         );
 }
@@ -1594,7 +2490,9 @@ function renderNotifications() {
 // NOTIFICATION HTML
 // ============================================================
 
-function notificationHTML(notification) {
+function notificationHTML(
+    notification
+) {
 
     const unreadClass =
         notification.is_read
@@ -1610,7 +2508,9 @@ function notificationHTML(notification) {
         notification.type ===
         "approved"
     ) {
-        icon = "✅";
+
+        icon =
+            "✅";
     }
 
 
@@ -1618,7 +2518,19 @@ function notificationHTML(notification) {
         notification.type ===
         "rejected"
     ) {
-        icon = "❌";
+
+        icon =
+            "❌";
+    }
+
+
+    if (
+        notification.type ===
+        "rescheduled"
+    ) {
+
+        icon =
+            "📅";
     }
 
 
@@ -1629,27 +2541,42 @@ function notificationHTML(notification) {
             class="w-full text-left px-4 py-3 border-b border-gray-100 hover:bg-gray-50 ${unreadClass}"
         >
 
-            <div class="flex gap-3">
+            <div
+                class="flex gap-3"
+            >
 
-                <div class="text-lg">
+                <div
+                    class="text-lg"
+                >
                     ${icon}
                 </div>
 
-                <div class="flex-1">
 
-                    <p class="text-xs font-semibold text-gray-800">
+                <div
+                    class="flex-1"
+                >
+
+                    <p
+                        class="text-xs font-semibold text-gray-800"
+                    >
                         ${escapeHTML(
                             notification.title
                         )}
                     </p>
 
-                    <p class="text-xs text-gray-600 mt-1">
+
+                    <p
+                        class="text-xs text-gray-600 mt-1"
+                    >
                         ${escapeHTML(
                             notification.message
                         )}
                     </p>
 
-                    <p class="text-[10px] text-gray-400 mt-2">
+
+                    <p
+                        class="text-[10px] text-gray-400 mt-2"
+                    >
                         ${formatNotificationDate(
                             notification.created_at
                         )}
@@ -1668,23 +2595,37 @@ function notificationHTML(notification) {
 // MARK NOTIFICATION READ
 // ============================================================
 
-async function markNotificationRead(id) {
+async function markNotificationRead(
+    id
+) {
 
     const {
         error
-    } = await supabase
-        .from("notifications")
-        .update({
-            is_read:
-                true
-        })
-        .eq(
-            "id",
-            id
-        );
+    } =
+        await supabase
+            .from(
+                "notifications"
+            )
+            .update({
+
+                is_read:
+                    true
+
+            })
+            .eq(
+                "id",
+                id
+            );
 
 
     if (error) {
+
+        console.error(
+            "Unable to mark notification as read:",
+            error
+        );
+
+
         return;
     }
 
@@ -1692,11 +2633,13 @@ async function markNotificationRead(id) {
     const notification =
         state.notifications.find(
             item =>
-                item.id === id
+                item.id ===
+                id
         );
 
 
     if (notification) {
+
         notification.is_read =
             true;
     }
@@ -1712,19 +2655,40 @@ async function markNotificationRead(id) {
 
 $("markAllReadBtn")
     ?.addEventListener(
+
         "click",
+
         async () => {
 
-            await supabase
-                .from("notifications")
-                .update({
-                    is_read:
-                        true
-                })
-                .eq(
-                    "student_id",
-                    state.currentStudent.id
+            const {
+                error
+            } =
+                await supabase
+                    .from(
+                        "notifications"
+                    )
+                    .update({
+
+                        is_read:
+                            true
+
+                    })
+                    .eq(
+                        "student_id",
+                        state.currentStudent.id
+                    );
+
+
+            if (error) {
+
+                console.error(
+                    "Mark all notifications read error:",
+                    error
                 );
+
+
+                return;
+            }
 
 
             state.notifications
@@ -1733,11 +2697,13 @@ $("markAllReadBtn")
 
                         notification.is_read =
                             true;
+
                     }
                 );
 
 
             renderNotifications();
+
         }
     );
 
@@ -1748,24 +2714,33 @@ $("markAllReadBtn")
 
 $("notificationBtn")
     ?.addEventListener(
+
         "click",
+
         event => {
 
             event.stopPropagation();
 
+
             $("notificationDropdown")
                 ?.classList
-                .toggle("hidden");
+                .toggle(
+                    "hidden"
+                );
+
         }
     );
 
 
 document.addEventListener(
+
     "click",
+
     event => {
 
         const dropdown =
             $("notificationDropdown");
+
 
         const button =
             $("notificationBtn");
@@ -1783,6 +2758,7 @@ document.addEventListener(
             !dropdown.contains(
                 event.target
             ) &&
+
             !button.contains(
                 event.target
             )
@@ -1792,6 +2768,7 @@ document.addEventListener(
                 "hidden"
             );
         }
+
     }
 );
 
@@ -1800,33 +2777,64 @@ document.addEventListener(
 // HELPERS
 // ============================================================
 
-function toISODate(date) {
+function normalizeStatus(
+    status
+) {
+
+    return String(
+        status ||
+        "pending"
+    )
+        .trim()
+        .toLowerCase();
+}
+
+
+// ============================================================
+// DATE TO ISO
+// ============================================================
+
+function toISODate(
+    date
+) {
 
     const y =
         date.getFullYear();
 
+
     const m =
         String(
             date.getMonth() + 1
-        ).padStart(
-            2,
-            "0"
-        );
+        )
+            .padStart(
+                2,
+                "0"
+            );
+
 
     const d =
         String(
             date.getDate()
-        ).padStart(
-            2,
-            "0"
-        );
+        )
+            .padStart(
+                2,
+                "0"
+            );
 
 
-    return `${y}-${m}-${d}`;
+    return (
+        `${y}-${m}-${d}`
+    );
 }
 
 
-function formatDisplayDate(iso) {
+// ============================================================
+// DISPLAY DATE
+// ============================================================
+
+function formatDisplayDate(
+    iso
+) {
 
     if (!iso) {
         return "N/A";
@@ -1837,9 +2845,12 @@ function formatDisplayDate(iso) {
         y,
         m,
         d
-    ] = iso
-        .split("-")
-        .map(Number);
+    ] =
+        iso
+            .split("-")
+            .map(
+                Number
+            );
 
 
     return new Date(
@@ -1850,6 +2861,7 @@ function formatDisplayDate(iso) {
         .toLocaleDateString(
             undefined,
             {
+
                 year:
                     "numeric",
 
@@ -1858,12 +2870,19 @@ function formatDisplayDate(iso) {
 
                 day:
                     "numeric"
+
             }
         );
 }
 
 
-function formatNotificationDate(value) {
+// ============================================================
+// NOTIFICATION DATE
+// ============================================================
+
+function formatNotificationDate(
+    value
+) {
 
     if (!value) {
         return "";
@@ -1872,11 +2891,18 @@ function formatNotificationDate(value) {
 
     return new Date(
         value
-    ).toLocaleString();
+    )
+        .toLocaleString();
 }
 
 
-function capitalize(value) {
+// ============================================================
+// CAPITALIZE
+// ============================================================
+
+function capitalize(
+    value
+) {
 
     if (!value) {
         return "";
@@ -1884,23 +2910,36 @@ function capitalize(value) {
 
 
     return (
-        value.charAt(0).toUpperCase() +
-        value.slice(1)
+        value
+            .charAt(0)
+            .toUpperCase() +
+
+        value
+            .slice(1)
     );
 }
 
 
-function escapeHTML(value) {
+// ============================================================
+// ESCAPE HTML
+// ============================================================
+
+function escapeHTML(
+    value
+) {
 
     if (
         value === null ||
         value === undefined
     ) {
+
         return "";
     }
 
 
-    return String(value)
+    return String(
+        value
+    )
         .replaceAll(
             "&",
             "&amp;"
@@ -1924,6 +2963,43 @@ function escapeHTML(value) {
 }
 
 
+// ============================================================
+// ADDITIONAL EVENT BINDING
+// ============================================================
+
 function bindEvents() {
-    // Additional events can be added here.
+
+    // ---------------------------------------------
+    // Search appointment records
+    // ---------------------------------------------
+
+    $("recordsSearch")
+        ?.addEventListener(
+
+            "input",
+
+            () => {
+
+                renderAppointmentRecords();
+
+            }
+        );
+
+
+    // ---------------------------------------------
+    // Filter appointment records
+    // ---------------------------------------------
+
+    $("recordsStatusFilter")
+        ?.addEventListener(
+
+            "change",
+
+            () => {
+
+                renderAppointmentRecords();
+
+            }
+        );
+
 }

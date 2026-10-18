@@ -529,6 +529,16 @@
 
 
         <button
+            id="tabReportsBtn"
+            data-tab="reports"
+            class="adminTabButton flex-1 min-w-[220px] py-3.5 px-4 rounded-xl font-bold text-sm transition flex items-center justify-center gap-2.5 bg-gray-100 text-gray-700 hover:bg-gray-200"
+        >
+            <i class="fa-solid fa-chart-column text-essuGreen"></i>
+            Reports & Analytics
+        </button>
+
+
+        <button
             id="tabHistoryBtn"
             data-tab="history"
             class="adminTabButton flex-1 min-w-[220px] py-3.5 px-4 rounded-xl font-bold text-sm transition flex items-center justify-center gap-2.5 bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -591,7 +601,7 @@
                     class="flex flex-wrap items-center gap-3 w-full lg:w-auto"
                 >
 
-
+                    <!-- SEARCH -->
                     <div
                         class="relative flex-1 lg:w-72"
                     >
@@ -602,18 +612,17 @@
                             <i class="fa-solid fa-search"></i>
                         </span>
 
-
                         <input
                             id="appointmentSearch"
                             type="text"
-                            placeholder="Search name, ID or purpose..."
+                            placeholder="Search student, ID, purpose..."
                             class="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-essuGreen shadow-sm"
                         >
 
                     </div>
 
 
-
+                    <!-- STATUS FILTER -->
                     <select
                         id="appointmentStatusFilter"
                         class="py-2.5 px-4 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-essuGreen shadow-sm"
@@ -627,6 +636,25 @@
                         <option value="cancelled">Cancelled</option>
 
                     </select>
+
+
+                    <!-- DATE FILTER -->
+                    <input
+                        id="appointmentDateFilter"
+                        type="date"
+                        class="py-2.5 px-4 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-essuGreen shadow-sm"
+                    >
+
+
+                    <!-- CLEAR FILTERS -->
+                    <button
+                        id="clearAppointmentFiltersBtn"
+                        type="button"
+                        class="py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-sm font-bold transition"
+                    >
+                        <i class="fa-solid fa-filter-circle-xmark mr-1"></i>
+                        Clear
+                    </button>
 
                 </div>
 
@@ -1140,6 +1168,415 @@
                         Official Appointment Roster
                     </span>
 
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ===================================================== -->
+    <!-- REPORTS & ANALYTICS -->
+    <!-- ===================================================== -->
+
+    <section
+        id="tabReports"
+        class="adminTabContent hidden space-y-6"
+    >
+
+        <div
+            class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden"
+        >
+
+            <!-- REPORT HEADER / FILTERS -->
+            <div
+                class="p-6 border-b border-slate-200 bg-slate-50/50"
+            >
+
+                <div
+                    class="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-5"
+                >
+
+                    <div>
+
+                        <span
+                            class="bg-essuGold/20 text-essuDarkGreen font-bold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider"
+                        >
+                            Summary Reporting
+                        </span>
+
+                        <h3
+                            class="font-extrabold text-xl text-slate-800 mt-2"
+                        >
+                            Appointment Reports & Analytics
+                        </h3>
+
+                        <p
+                            class="text-xs text-slate-500 mt-1 max-w-2xl"
+                        >
+                            Generate appointment summaries for a selected date range and review totals by status and purpose.
+                        </p>
+
+                    </div>
+
+
+                    <div
+                        class="flex flex-wrap items-end gap-3"
+                    >
+
+                        <div>
+                            <label
+                                for="reportStartDate"
+                                class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5"
+                            >
+                                Start Date
+                            </label>
+
+                            <input
+                                id="reportStartDate"
+                                type="date"
+                                class="p-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-essuGreen"
+                            >
+                        </div>
+
+
+                        <div>
+                            <label
+                                for="reportEndDate"
+                                class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5"
+                            >
+                                End Date
+                            </label>
+
+                            <input
+                                id="reportEndDate"
+                                type="date"
+                                class="p-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-essuGreen"
+                            >
+                        </div>
+
+
+                        <button
+                            id="generateReportBtn"
+                            type="button"
+                            class="bg-essuGreen hover:bg-essuDarkGreen text-white font-bold px-5 py-2.5 rounded-xl text-sm transition shadow-md flex items-center gap-2"
+                        >
+                            <i class="fa-solid fa-chart-line"></i>
+                            Generate
+                        </button>
+
+
+                        <button
+                            id="clearReportFiltersBtn"
+                            type="button"
+                            class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-4 py-2.5 rounded-xl text-sm transition flex items-center gap-2"
+                        >
+                            <i class="fa-solid fa-eraser"></i>
+                            Clear
+                        </button>
+
+
+                        <button
+                            id="printReportBtn"
+                            type="button"
+                            class="bg-slate-900 hover:bg-black text-white font-bold px-5 py-2.5 rounded-xl text-sm transition shadow-md flex items-center gap-2"
+                        >
+                            <i class="fa-solid fa-print"></i>
+                            Print Report
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- PRINTABLE REPORT AREA -->
+            <div
+                id="reportPrintArea"
+                class="p-6 sm:p-8 space-y-6 bg-white"
+            >
+
+                <div
+                    class="text-center border-b border-slate-200 pb-5"
+                >
+
+                    <img
+                        src="img/OIP.webp"
+                        alt="ESSU Seal"
+                        class="h-14 w-14 rounded-full object-contain mx-auto mb-2"
+                    >
+
+                    <h4
+                        class="font-black text-essuGreen text-lg tracking-wide"
+                    >
+                        EASTERN SAMAR STATE UNIVERSITY
+                    </h4>
+
+                    <p
+                        class="text-xs font-bold text-slate-600 uppercase tracking-widest"
+                    >
+                        Office of the University Registrar
+                    </p>
+
+                    <h5
+                        class="font-extrabold text-slate-800 text-base mt-2"
+                    >
+                        Appointment Summary Report
+                    </h5>
+
+                    <p
+                        id="reportRangeLabel"
+                        class="text-xs text-slate-500 mt-1"
+                    >
+                        All appointment records
+                    </p>
+
+                </div>
+
+
+                <!-- REPORT TOTALS -->
+                <div
+                    class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3"
+                >
+
+                    <div
+                        class="border border-slate-200 rounded-2xl p-4 bg-slate-50"
+                    >
+                        <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                            Total
+                        </p>
+                        <p
+                            id="reportTotal"
+                            class="text-2xl font-black text-slate-800 mt-1"
+                        >
+                            0
+                        </p>
+                    </div>
+
+
+                    <div
+                        class="border border-amber-200 rounded-2xl p-4 bg-amber-50"
+                    >
+                        <p class="text-[10px] font-bold uppercase tracking-wider text-amber-600">
+                            Pending
+                        </p>
+                        <p
+                            id="reportPending"
+                            class="text-2xl font-black text-amber-700 mt-1"
+                        >
+                            0
+                        </p>
+                    </div>
+
+
+                    <div
+                        class="border border-emerald-200 rounded-2xl p-4 bg-emerald-50"
+                    >
+                        <p class="text-[10px] font-bold uppercase tracking-wider text-emerald-600">
+                            Approved
+                        </p>
+                        <p
+                            id="reportApproved"
+                            class="text-2xl font-black text-emerald-700 mt-1"
+                        >
+                            0
+                        </p>
+                    </div>
+
+
+                    <div
+                        class="border border-purple-200 rounded-2xl p-4 bg-purple-50"
+                    >
+                        <p class="text-[10px] font-bold uppercase tracking-wider text-purple-600">
+                            Rescheduled
+                        </p>
+                        <p
+                            id="reportRescheduled"
+                            class="text-2xl font-black text-purple-700 mt-1"
+                        >
+                            0
+                        </p>
+                    </div>
+
+
+                    <div
+                        class="border border-rose-200 rounded-2xl p-4 bg-rose-50"
+                    >
+                        <p class="text-[10px] font-bold uppercase tracking-wider text-rose-600">
+                            Rejected
+                        </p>
+                        <p
+                            id="reportRejected"
+                            class="text-2xl font-black text-rose-700 mt-1"
+                        >
+                            0
+                        </p>
+                    </div>
+
+
+                    <div
+                        class="border border-slate-300 rounded-2xl p-4 bg-slate-100"
+                    >
+                        <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                            Cancelled
+                        </p>
+                        <p
+                            id="reportCancelled"
+                            class="text-2xl font-black text-slate-700 mt-1"
+                        >
+                            0
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <!-- SUMMARY TABLES -->
+                <div
+                    class="grid grid-cols-1 lg:grid-cols-2 gap-6"
+                >
+
+                    <div
+                        class="border border-slate-200 rounded-2xl overflow-hidden"
+                    >
+
+                        <div
+                            class="px-5 py-4 bg-slate-50 border-b border-slate-200"
+                        >
+                            <h6
+                                class="font-extrabold text-sm text-slate-800"
+                            >
+                                Summary by Status
+                            </h6>
+                            <p
+                                class="text-[11px] text-slate-500 mt-0.5"
+                            >
+                                Appointment totals grouped by current status.
+                            </p>
+                        </div>
+
+                        <div class="overflow-x-auto">
+
+                            <table
+                                class="w-full text-left border-collapse text-sm"
+                            >
+
+                                <thead>
+                                    <tr
+                                        class="bg-white text-slate-500 uppercase text-[10px] font-bold tracking-wider border-b border-slate-200"
+                                    >
+                                        <th class="py-3 px-4">
+                                            Status
+                                        </th>
+                                        <th class="py-3 px-4 text-right">
+                                            Count
+                                        </th>
+                                        <th class="py-3 px-4 text-right">
+                                            Percentage
+                                        </th>
+                                    </tr>
+                                </thead>
+
+                                <tbody
+                                    id="reportStatusSummaryBody"
+                                    class="divide-y divide-slate-100"
+                                >
+                                    <tr>
+                                        <td
+                                            colspan="3"
+                                            class="py-6 px-4 text-center text-slate-400"
+                                        >
+                                            Generate a report to view status totals.
+                                        </td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="border border-slate-200 rounded-2xl overflow-hidden"
+                    >
+
+                        <div
+                            class="px-5 py-4 bg-slate-50 border-b border-slate-200"
+                        >
+                            <h6
+                                class="font-extrabold text-sm text-slate-800"
+                            >
+                                Summary by Purpose
+                            </h6>
+                            <p
+                                class="text-[11px] text-slate-500 mt-0.5"
+                            >
+                                Appointment totals grouped by Registrar transaction.
+                            </p>
+                        </div>
+
+                        <div class="overflow-x-auto">
+
+                            <table
+                                class="w-full text-left border-collapse text-sm"
+                            >
+
+                                <thead>
+                                    <tr
+                                        class="bg-white text-slate-500 uppercase text-[10px] font-bold tracking-wider border-b border-slate-200"
+                                    >
+                                        <th class="py-3 px-4">
+                                            Purpose
+                                        </th>
+                                        <th class="py-3 px-4 text-right">
+                                            Count
+                                        </th>
+                                        <th class="py-3 px-4 text-right">
+                                            Percentage
+                                        </th>
+                                    </tr>
+                                </thead>
+
+                                <tbody
+                                    id="reportPurposeSummaryBody"
+                                    class="divide-y divide-slate-100"
+                                >
+                                    <tr>
+                                        <td
+                                            colspan="3"
+                                            class="py-6 px-4 text-center text-slate-400"
+                                        >
+                                            Generate a report to view purpose totals.
+                                        </td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="flex flex-col sm:flex-row justify-between gap-2 pt-5 border-t border-slate-100 text-xs text-slate-500 font-medium"
+                >
+                    <span>
+                        Generated by: ESSU Registrar Admin Portal
+                    </span>
+
+                    <span id="reportGeneratedAt">
+                        Report not yet generated
+                    </span>
                 </div>
 
             </div>

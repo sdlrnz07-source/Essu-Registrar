@@ -2,18 +2,35 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8" />
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    />
 
-    <title>Dashboard - ESSu Registrar Appointment and Scheduling System</title>
+    <title>
+        Dashboard - ESSU Registrar Appointment and Scheduling System
+    </title>
 
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <link rel="stylesheet" href="style.css" />
+
+    <!-- Existing stylesheet -->
+    <link
+        rel="stylesheet"
+        href="style.css"
+    />
+
 
     <style>
-        /* ---- Prevent flash/glitch loading state ---- */
+
+        /* ==================================================== */
+        /* PREVENT FLASH / GLITCH WHILE AUTH LOADS */
+        /* ==================================================== */
 
         main,
         header {
@@ -27,7 +44,9 @@
         }
 
 
-        /* ---- Header ---- */
+        /* ==================================================== */
+        /* HEADER */
+        /* ==================================================== */
 
         .top-bar {
             background: #0b3d24;
@@ -63,6 +82,10 @@
         }
 
 
+        /* ==================================================== */
+        /* BUTTONS */
+        /* ==================================================== */
+
         .btn-red {
             background: #c1272d;
             color: #ffffff;
@@ -78,7 +101,9 @@
             border: 1px solid #0f4c2e;
             color: #0f4c2e;
             background: transparent;
-            transition: background 0.15s ease, color 0.15s ease;
+            transition:
+                background 0.15s ease,
+                color 0.15s ease;
         }
 
         .btn-outline-green:hover {
@@ -87,7 +112,9 @@
         }
 
 
-        /* ---- Page Layout & Scroll Fix ---- */
+        /* ==================================================== */
+        /* PAGE LAYOUT */
+        /* ==================================================== */
 
         html,
         body {
@@ -104,8 +131,6 @@
             overflow-x: hidden;
         }
 
-
-        /* Custom clean scrollbar */
 
         .app-container::-webkit-scrollbar {
             width: 8px;
@@ -125,13 +150,22 @@
         }
 
 
+        /* ==================================================== */
+        /* CARD */
+        /* ==================================================== */
+
         .card {
             background: #ffffff;
             border: 1px solid #e4e7e6;
             border-radius: 10px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+            box-shadow:
+                0 1px 3px rgba(0, 0, 0, 0.06);
         }
 
+
+        /* ==================================================== */
+        /* STATUS PILLS */
+        /* ==================================================== */
 
         .status-pill {
             font-size: 0.75rem;
@@ -141,20 +175,24 @@
             display: inline-block;
         }
 
+
         .status-pending {
             background: #fff4de;
             color: #8a5b00;
         }
+
 
         .status-approved {
             background: #e3f7e9;
             color: #1d7a3c;
         }
 
+
         .status-rejected {
             background: #fde8e8;
             color: #b3261e;
         }
+
 
         .status-cancelled {
             background: #ececec;
@@ -162,7 +200,15 @@
         }
 
 
-        /* ---- Calendar ---- */
+        .status-rescheduled {
+            background: #f1e8ff;
+            color: #6d28d9;
+        }
+
+
+        /* ==================================================== */
+        /* CALENDAR */
+        /* ==================================================== */
 
         .cal-day {
             height: 30px;
@@ -172,28 +218,38 @@
             border-radius: 6px;
             font-size: 0.8rem;
             cursor: pointer;
-            transition: background 0.12s ease, color 0.12s ease;
+            transition:
+                background 0.12s ease,
+                color 0.12s ease;
         }
+
 
         .cal-day:not(.cal-disabled):hover {
             background: #eaf4ee;
         }
+
 
         .cal-day.cal-disabled {
             color: #c7c7c7;
             cursor: not-allowed;
         }
 
+
         .cal-day.cal-selected {
             background: #0f4c2e;
             color: #ffffff;
         }
+
 
         .cal-day.cal-today {
             border: 1px solid #0f4c2e;
             font-weight: 600;
         }
 
+
+        /* ==================================================== */
+        /* TIME SLOTS */
+        /* ==================================================== */
 
         .slot-btn {
             border: 1px solid #d7dedb;
@@ -208,15 +264,18 @@
                 border-color 0.12s ease;
         }
 
+
         .slot-btn:hover:not(.slot-taken) {
             border-color: #0f4c2e;
         }
 
+
         .slot-btn.slot-selected {
             background: #0f4c2e;
-            color: #fff;
+            color: #ffffff;
             border-color: #0f4c2e;
         }
+
 
         .slot-btn.slot-taken {
             background: #f3f3f3;
@@ -224,6 +283,10 @@
             cursor: not-allowed;
         }
 
+
+        /* ==================================================== */
+        /* MODAL */
+        /* ==================================================== */
 
         .modal-backdrop {
             position: fixed;
@@ -235,25 +298,67 @@
             z-index: 60;
         }
 
+
         .modal-backdrop.open {
             display: flex;
         }
+
+
+        /* ==================================================== */
+        /* PROFILE / RECORD MODULE */
+        /* ==================================================== */
+
+        .profile-info-label {
+            color: #6b7280;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            font-weight: 600;
+        }
+
+
+        .profile-info-value {
+            color: #1f2937;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-top: 0.15rem;
+            word-break: break-word;
+        }
+
+
+        .record-stat-card {
+            background: #ffffff;
+            border: 1px solid #e4e7e6;
+            border-radius: 10px;
+            padding: 0.9rem;
+        }
+
     </style>
 
 </head>
 
 
+
 <body class="text-gray-800">
 
 
-    <!-- Auth Loading Splash Screen -->
 
-    <div id="authLoadingScreen"
-        class="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center">
+    <!-- ===================================================== -->
+    <!-- AUTH LOADING SCREEN -->
+    <!-- ===================================================== -->
 
-        <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-[#0f4c2e] mb-3"></div>
+    <div
+        id="authLoadingScreen"
+        class="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center"
+    >
 
-        <p class="text-sm font-semibold text-[#0f4c2e]">
+        <div
+            class="animate-spin rounded-full h-10 w-10 border-b-2 border-[#0f4c2e] mb-3"
+        ></div>
+
+        <p
+            class="text-sm font-semibold text-[#0f4c2e]"
+        >
             Loading student dashboard...
         </p>
 
@@ -261,26 +366,46 @@
 
 
 
-    <!-- ============ HEADER ============ -->
+    <!-- ===================================================== -->
+    <!-- HEADER -->
+    <!-- ===================================================== -->
 
-    <header class="site-header" id="siteHeader">
+    <header
+        class="site-header"
+        id="siteHeader"
+    >
 
 
+        <!-- ================================================= -->
         <!-- TOP BAR -->
+        <!-- ================================================= -->
 
         <div class="top-bar">
 
-            <div class="max-w-7xl mx-auto px-4 py-1.5 flex flex-wrap items-center justify-between gap-2">
+            <div
+                class="max-w-7xl mx-auto px-4 py-1.5 flex flex-wrap items-center justify-between gap-2"
+            >
 
-                <div class="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs sm:text-sm">
 
-                    <img src="img/rp_n.webp"
+                <!-- LEFT -->
+
+                <div
+                    class="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs sm:text-sm"
+                >
+
+                    <img
+                        src="img/rp_n.webp"
                         alt="Republic Seal"
-                        class="w-4 h-4 rounded-full object-cover">
+                        class="w-4 h-4 rounded-full object-cover"
+                    >
 
-                    <span class="font-semibold">
+
+                    <span
+                        class="font-semibold"
+                    >
                         REPUBLIC OF THE PHILIPPINES
                     </span>
+
 
                     <span>
                         Eastern Samar State University
@@ -289,7 +414,12 @@
                 </div>
 
 
-                <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs sm:text-sm">
+
+                <!-- LINKS -->
+
+                <div
+                    class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs sm:text-sm"
+                >
 
                     <a href="index.html">
                         Home
@@ -315,23 +445,34 @@
 
 
 
+        <!-- ================================================= -->
         <!-- MAIN NAVIGATION -->
+        <!-- ================================================= -->
 
         <div class="main-nav">
 
-            <div class="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between">
+            <div
+                class="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between"
+            >
 
 
                 <!-- BRAND -->
 
-                <div class="flex items-center gap-3">
+                <div
+                    class="flex items-center gap-3"
+                >
 
-                    <img src="img/OIP.webp"
+                    <img
+                        src="img/OIP.webp"
                         alt="ESSU Seal"
                         class="h-9 w-9 rounded-full"
-                        onerror="this.style.display='none'" />
+                        onerror="this.style.display='none'"
+                    />
 
-                    <span class="brand-title text-base sm:text-lg font-extrabold">
+
+                    <span
+                        class="brand-title text-base sm:text-lg font-extrabold"
+                    >
                         ESSU REGISTRAR PORTAL
                     </span>
 
@@ -341,43 +482,43 @@
 
                 <!-- RIGHT SIDE -->
 
-                <div class="flex items-center gap-3 sm:gap-4">
+                <div
+                    class="flex items-center gap-3 sm:gap-4"
+                >
 
 
-                    <!-- STUDENT NAME -->
+                    <!-- STUDENT GREETING -->
 
-                    <span id="studentGreeting"
-                        class="text-xs sm:text-sm text-white/90">
-
+                    <span
+                        id="studentGreeting"
+                        class="text-xs sm:text-sm text-white/90 hidden sm:inline"
+                    >
                         Welcome, Student
-
                     </span>
 
 
 
-                    <!-- ========================= -->
-                    <!-- NOTIFICATION SYSTEM -->
-                    <!-- ========================= -->
+                    <!-- ===================================== -->
+                    <!-- NOTIFICATIONS -->
+                    <!-- ===================================== -->
 
                     <div class="relative">
 
 
-                        <!-- NOTIFICATION BELL -->
-
-                        <button id="notificationBtn"
+                        <button
+                            id="notificationBtn"
                             type="button"
-                            class="relative text-white hover:text-yellow-300 text-lg">
+                            class="relative text-white hover:text-yellow-300 text-lg"
+                        >
 
                             🔔
 
 
-                            <!-- UNREAD COUNTER -->
-
-                            <span id="notificationBadge"
-                                class="hidden absolute -top-2 -right-2 bg-red-600 text-white text-[9px] min-w-[16px] h-4 px-1 rounded-full flex items-center justify-center font-bold">
-
+                            <span
+                                id="notificationBadge"
+                                class="hidden absolute -top-2 -right-2 bg-red-600 text-white text-[9px] min-w-[16px] h-4 px-1 rounded-full flex items-center justify-center font-bold"
+                            >
                                 0
-
                             </span>
 
                         </button>
@@ -386,42 +527,44 @@
 
                         <!-- NOTIFICATION DROPDOWN -->
 
-                        <div id="notificationDropdown"
-                            class="hidden absolute right-0 mt-3 w-80 sm:w-96 bg-white text-gray-800 rounded-lg shadow-xl border border-gray-200 z-[100] overflow-hidden">
+                        <div
+                            id="notificationDropdown"
+                            class="hidden absolute right-0 mt-3 w-80 sm:w-96 bg-white text-gray-800 rounded-lg shadow-xl border border-gray-200 z-[100] overflow-hidden"
+                        >
 
 
-                            <!-- HEADER -->
+                            <div
+                                class="flex items-center justify-between px-4 py-3 border-b bg-gray-50"
+                            >
 
-                            <div class="flex items-center justify-between px-4 py-3 border-b bg-gray-50">
-
-                                <h3 class="text-sm font-semibold text-[#0f4c2e]">
-
+                                <h3
+                                    class="text-sm font-semibold text-[#0f4c2e]"
+                                >
                                     Notifications
-
                                 </h3>
 
 
-                                <button id="markAllReadBtn"
+                                <button
+                                    id="markAllReadBtn"
                                     type="button"
-                                    class="text-[11px] text-[#0f4c2e] hover:underline">
-
+                                    class="text-[11px] text-[#0f4c2e] hover:underline"
+                                >
                                     Mark all as read
-
                                 </button>
 
                             </div>
 
 
 
-                            <!-- NOTIFICATION LIST -->
+                            <div
+                                id="notificationList"
+                                class="max-h-80 overflow-y-auto"
+                            >
 
-                            <div id="notificationList"
-                                class="max-h-80 overflow-y-auto">
-
-                                <div class="px-4 py-6 text-center text-xs text-gray-400">
-
+                                <div
+                                    class="px-4 py-6 text-center text-xs text-gray-400"
+                                >
                                     Loading notifications...
-
                                 </div>
 
                             </div>
@@ -434,22 +577,22 @@
 
                     <!-- CONTACT -->
 
-                    <a href="#"
-                        class="text-xs sm:text-sm text-white/90 hover:text-white">
-
+                    <a
+                        href="#"
+                        class="text-xs sm:text-sm text-white/90 hover:text-white hidden sm:inline"
+                    >
                         📞 Contact
-
                     </a>
 
 
 
                     <!-- LOGOUT -->
 
-                    <button id="logoutBtn"
-                        class="btn-outline-green rounded px-3 py-1 text-xs sm:text-sm font-semibold bg-white">
-
+                    <button
+                        id="logoutBtn"
+                        class="btn-outline-green rounded px-3 py-1 text-xs sm:text-sm font-semibold bg-white"
+                    >
                         Logout
-
                     </button>
 
                 </div>
@@ -460,17 +603,31 @@
 
 
 
-        <!-- SECONDARY NAV -->
+        <!-- ================================================= -->
+        <!-- SECONDARY NAVIGATION -->
+        <!-- ================================================= -->
 
-        <div class="border-b border-gray-200 bg-white">
+        <div
+            class="border-b border-gray-200 bg-white"
+        >
 
-            <div class="max-w-7xl mx-auto px-4 flex gap-6 text-xs sm:text-sm font-medium">
+            <div
+                class="max-w-7xl mx-auto px-4 flex gap-6 text-xs sm:text-sm font-medium overflow-x-auto"
+            >
 
-                <a href="#book"
-                    class="py-2.5 border-b-2 border-[#0f4c2e] text-[#0f4c2e]">
-
+                <a
+                    href="#book"
+                    class="py-2.5 border-b-2 border-[#0f4c2e] text-[#0f4c2e] whitespace-nowrap"
+                >
                     Book Appointment
+                </a>
 
+
+                <a
+                    href="#profileRecords"
+                    class="py-2.5 text-gray-500 hover:text-[#0f4c2e] whitespace-nowrap"
+                >
+                    My Profile & Records
                 </a>
 
             </div>
@@ -481,65 +638,80 @@
 
 
 
-    <!-- ============ SCROLLABLE WRAPPER ============ -->
+    <!-- ===================================================== -->
+    <!-- SCROLLABLE APP CONTAINER -->
+    <!-- ===================================================== -->
 
     <div class="app-container">
 
-        <main class="max-w-7xl mx-auto px-4 py-4 pb-16">
+
+        <main
+            class="max-w-7xl mx-auto px-4 py-4 pb-16"
+        >
 
 
+            <!-- ================================================= -->
             <!-- PAGE TITLE -->
+            <!-- ================================================= -->
 
-            <h1 class="text-lg font-bold text-[#0f4c2e] mb-0.5">
-
+            <h1
+                class="text-lg font-bold text-[#0f4c2e] mb-0.5"
+            >
                 Appointment Dashboard
-
             </h1>
 
 
-            <p class="text-xs text-gray-500 mb-4">
-
+            <p
+                class="text-xs text-gray-500 mb-4"
+            >
                 Book, view, reschedule, or cancel your Registrar appointments.
-
             </p>
 
 
 
-            <!-- ========================================= -->
+            <!-- ================================================= -->
             <!-- BOOKING MODULE -->
-            <!-- ========================================= -->
+            <!-- ================================================= -->
 
-            <section id="book"
-                class="grid lg:grid-cols-5 gap-4 items-start mb-6">
+            <section
+                id="book"
+                class="grid lg:grid-cols-5 gap-4 items-start mb-6"
+            >
 
 
-
+                <!-- ============================================= -->
                 <!-- CALENDAR -->
+                <!-- ============================================= -->
 
-                <div class="lg:col-span-3 card p-3.5">
+                <div
+                    class="lg:col-span-3 card p-3.5"
+                >
 
 
-                    <div class="flex items-center justify-between mb-2">
+                    <div
+                        class="flex items-center justify-between mb-2"
+                    >
 
-                        <button id="prevMonth"
-                            class="px-2 py-0.5 text-xs rounded hover:bg-gray-100">
-
+                        <button
+                            id="prevMonth"
+                            class="px-2 py-0.5 text-xs rounded hover:bg-gray-100"
+                        >
                             &larr;
-
                         </button>
 
 
-                        <h2 id="calMonthLabel"
-                            class="text-xs sm:text-sm font-semibold text-[#0f4c2e]">
-
+                        <h2
+                            id="calMonthLabel"
+                            class="text-xs sm:text-sm font-semibold text-[#0f4c2e]"
+                        >
                         </h2>
 
 
-                        <button id="nextMonth"
-                            class="px-2 py-0.5 text-xs rounded hover:bg-gray-100">
-
+                        <button
+                            id="nextMonth"
+                            class="px-2 py-0.5 text-xs rounded hover:bg-gray-100"
+                        >
                             &rarr;
-
                         </button>
 
                     </div>
@@ -548,7 +720,9 @@
 
                     <!-- WEEK DAYS -->
 
-                    <div class="grid grid-cols-7 gap-1 text-center text-xs text-gray-400 mb-1">
+                    <div
+                        class="grid grid-cols-7 gap-1 text-center text-xs text-gray-400 mb-1"
+                    >
 
                         <span>Su</span>
                         <span>Mo</span>
@@ -564,9 +738,10 @@
 
                     <!-- CALENDAR GRID -->
 
-                    <div id="calGrid"
-                        class="grid grid-cols-7 gap-1">
-                    </div>
+                    <div
+                        id="calGrid"
+                        class="grid grid-cols-7 gap-1"
+                    ></div>
 
 
 
@@ -574,24 +749,24 @@
 
                     <div class="mt-2.5">
 
-                        <p class="text-xs font-semibold text-gray-700 mb-1">
-
+                        <p
+                            class="text-xs font-semibold text-gray-700 mb-1"
+                        >
                             Available time slots
-
                         </p>
 
 
-                        <div id="slotGrid"
-                            class="grid grid-cols-3 sm:grid-cols-4 gap-1.5">
+                        <div
+                            id="slotGrid"
+                            class="grid grid-cols-3 sm:grid-cols-4 gap-1.5"
+                        ></div>
 
-                        </div>
 
-
-                        <p id="slotHint"
-                            class="text-xs text-gray-400 mt-1">
-
+                        <p
+                            id="slotHint"
+                            class="text-xs text-gray-400 mt-1"
+                        >
                             Select a date to see open time slots.
-
                         </p>
 
                     </div>
@@ -600,39 +775,44 @@
 
 
 
-                <!-- ========================================= -->
+                <!-- ============================================= -->
                 <!-- APPOINTMENT DETAILS -->
-                <!-- ========================================= -->
+                <!-- ============================================= -->
 
-                <div class="lg:col-span-2 card p-3.5">
+                <div
+                    class="lg:col-span-2 card p-3.5"
+                >
 
 
-                    <h2 class="text-xs sm:text-sm font-semibold text-[#0f4c2e] mb-2.5">
-
+                    <h2
+                        class="text-xs sm:text-sm font-semibold text-[#0f4c2e] mb-2.5"
+                    >
                         Appointment Details
-
                     </h2>
 
 
-
-                    <form id="bookingForm"
-                        class="space-y-2.5">
+                    <form
+                        id="bookingForm"
+                        class="space-y-2.5"
+                    >
 
 
                         <!-- PURPOSE -->
 
                         <div>
 
-                            <label class="block text-xs font-medium mb-0.5">
-
+                            <label
+                                class="block text-xs font-medium mb-0.5"
+                            >
                                 Purpose
-
                             </label>
 
 
-                            <select id="purpose"
+                            <select
+                                id="purpose"
                                 required
-                                class="w-full border border-gray-300 rounded px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-[#0f4c2e]">
+                                class="w-full border border-gray-300 rounded px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-[#0f4c2e]"
+                            >
 
                                 <option value="">
                                     Select purpose
@@ -668,18 +848,20 @@
 
                         <div>
 
-                            <label class="block text-xs font-medium mb-0.5">
-
+                            <label
+                                class="block text-xs font-medium mb-0.5"
+                            >
                                 Selected date
-
                             </label>
 
 
-                            <input id="selectedDateDisplay"
+                            <input
+                                id="selectedDateDisplay"
                                 type="text"
                                 disabled
                                 placeholder="No date selected"
-                                class="w-full border border-gray-300 rounded px-2.5 py-1.5 text-xs bg-gray-50 text-gray-500" />
+                                class="w-full border border-gray-300 rounded px-2.5 py-1.5 text-xs bg-gray-50 text-gray-500"
+                            />
 
                         </div>
 
@@ -689,18 +871,20 @@
 
                         <div>
 
-                            <label class="block text-xs font-medium mb-0.5">
-
+                            <label
+                                class="block text-xs font-medium mb-0.5"
+                            >
                                 Selected time slot
-
                             </label>
 
 
-                            <input id="selectedSlotDisplay"
+                            <input
+                                id="selectedSlotDisplay"
                                 type="text"
                                 disabled
                                 placeholder="No time slot selected"
-                                class="w-full border border-gray-300 rounded px-2.5 py-1.5 text-xs bg-gray-50 text-gray-500" />
+                                class="w-full border border-gray-300 rounded px-2.5 py-1.5 text-xs bg-gray-50 text-gray-500"
+                            />
 
                         </div>
 
@@ -710,35 +894,38 @@
 
                         <div>
 
-                            <label class="block text-xs font-medium mb-0.5">
-
+                            <label
+                                class="block text-xs font-medium mb-0.5"
+                            >
                                 Notes (optional)
-
                             </label>
 
 
-                            <textarea id="notes"
+                            <textarea
+                                id="notes"
                                 rows="2"
                                 class="w-full border border-gray-300 rounded px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-[#0f4c2e]"
-                                placeholder="Anything the Registrar staff should know"></textarea>
+                                placeholder="Anything the Registrar staff should know"
+                            ></textarea>
 
                         </div>
 
 
 
-                        <!-- SUBMIT BUTTON -->
+                        <!-- SUBMIT -->
 
-                        <button type="submit"
-                            class="btn-red w-full rounded py-1.5 font-semibold text-xs">
-
+                        <button
+                            type="submit"
+                            class="btn-red w-full rounded py-1.5 font-semibold text-xs"
+                        >
                             Confirm Appointment
-
                         </button>
 
 
-                        <p id="bookingMsg"
-                            class="text-xs mt-0.5">
-                        </p>
+                        <p
+                            id="bookingMsg"
+                            class="text-xs mt-0.5"
+                        ></p>
 
                     </form>
 
@@ -748,28 +935,34 @@
 
 
 
-            <!-- ========================================= -->
-            <!-- APPOINTMENT HISTORY -->
-            <!-- ========================================= -->
+            <!-- ================================================= -->
+            <!-- EXISTING MY APPOINTMENTS -->
+            <!-- ================================================= -->
 
-            <section id="history"
-                class="mb-6">
+            <section
+                id="history"
+                class="mb-6"
+            >
 
 
-                <h2 class="font-semibold text-[#0f4c2e] text-sm sm:text-base mb-2.5">
-
+                <h2
+                    class="font-semibold text-[#0f4c2e] text-sm sm:text-base mb-2.5"
+                >
                     My Appointments
-
                 </h2>
 
 
+                <div
+                    class="card overflow-x-auto"
+                >
 
-                <div class="card overflow-x-auto">
+                    <table
+                        class="w-full text-xs sm:text-sm"
+                    >
 
-                    <table class="w-full text-xs sm:text-sm">
-
-
-                        <thead class="bg-gray-50 text-gray-500 text-left">
+                        <thead
+                            class="bg-gray-50 text-gray-500 text-left"
+                        >
 
                             <tr>
 
@@ -798,16 +991,17 @@
                         </thead>
 
 
-
-                        <tbody id="appointmentsBody">
+                        <tbody
+                            id="appointmentsBody"
+                        >
 
                             <tr>
 
-                                <td colspan="5"
-                                    class="px-3 py-4 text-center text-gray-400">
-
+                                <td
+                                    colspan="5"
+                                    class="px-3 py-4 text-center text-gray-400"
+                                >
                                     Loading your appointments…
-
                                 </td>
 
                             </tr>
@@ -820,74 +1014,675 @@
 
             </section>
 
+
+
+            <!-- ================================================= -->
+            <!-- PROFILE & RECORDS MANAGEMENT -->
+            <!-- ================================================= -->
+
+            <section
+                id="profileRecords"
+                class="mb-6"
+            >
+
+
+                <!-- SECTION HEADER -->
+
+                <div
+                    class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-3"
+                >
+
+                    <div>
+
+                        <h2
+                            class="font-bold text-[#0f4c2e] text-base sm:text-lg"
+                        >
+                            My Profile & Appointment Records
+                        </h2>
+
+
+                        <p
+                            class="text-xs text-gray-500 mt-0.5"
+                        >
+                            View your student information and complete Registrar appointment history.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ================================================= -->
+                <!-- PROFILE CARD -->
+                <!-- ================================================= -->
+
+                <div
+                    class="card overflow-hidden mb-4"
+                >
+
+
+                    <!-- PROFILE HEADER -->
+
+                    <div
+                        class="bg-[#0f4c2e] px-4 sm:px-5 py-4 text-white"
+                    >
+
+                        <div
+                            class="flex flex-col sm:flex-row sm:items-center gap-4"
+                        >
+
+
+                            <!-- PROFILE AVATAR -->
+
+                            <div
+                                class="w-14 h-14 rounded-full bg-white flex items-center justify-center border-2 border-[#f4c95d] flex-shrink-0"
+                            >
+
+                                <img
+                                    src="img/OIP.webp"
+                                    alt="ESSU Seal"
+                                    class="w-11 h-11 rounded-full object-contain"
+                                >
+
+                            </div>
+
+
+
+                            <div>
+
+                                <p
+                                    class="text-[10px] sm:text-xs text-[#f4c95d] uppercase tracking-wider font-semibold"
+                                >
+                                    Student Profile
+                                </p>
+
+
+                                <h3
+                                    id="profileFullName"
+                                    class="text-base sm:text-lg font-bold mt-0.5"
+                                >
+                                    Loading student name...
+                                </h3>
+
+
+                                <p
+                                    class="text-xs text-white/80 mt-0.5"
+                                >
+                                    Eastern Samar State University
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- PROFILE INFORMATION -->
+
+                    <div
+                        class="p-4 sm:p-5"
+                    >
+
+                        <div
+                            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+                        >
+
+
+                            <!-- STUDENT NUMBER -->
+
+                            <div>
+
+                                <p
+                                    class="profile-info-label"
+                                >
+                                    Student Number
+                                </p>
+
+
+                                <p
+                                    id="profileStudentNumber"
+                                    class="profile-info-value"
+                                >
+                                    Loading...
+                                </p>
+
+                            </div>
+
+
+
+                            <!-- EMAIL -->
+
+                            <div>
+
+                                <p
+                                    class="profile-info-label"
+                                >
+                                    Email Address
+                                </p>
+
+
+                                <p
+                                    id="profileEmail"
+                                    class="profile-info-value"
+                                >
+                                    Loading...
+                                </p>
+
+                            </div>
+
+
+
+                            <!-- ACCOUNT TYPE -->
+
+                            <div>
+
+                                <p
+                                    class="profile-info-label"
+                                >
+                                    Account Type
+                                </p>
+
+
+                                <p
+                                    class="profile-info-value"
+                                >
+                                    Student
+                                </p>
+
+                            </div>
+
+
+
+                            <!-- ACCOUNT STATUS -->
+
+                            <div>
+
+                                <p
+                                    class="profile-info-label"
+                                >
+                                    Account Status
+                                </p>
+
+
+                                <div
+                                    class="mt-1"
+                                >
+
+                                    <span
+                                        id="profileAccountStatus"
+                                        class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-green-100 text-green-700"
+                                    >
+
+                                        <span
+                                            class="w-1.5 h-1.5 bg-green-500 rounded-full"
+                                        ></span>
+
+                                        Active
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ================================================= -->
+                <!-- APPOINTMENT RECORD STATISTICS -->
+                <!-- ================================================= -->
+
+                <div
+                    class="grid grid-cols-2 lg:grid-cols-5 gap-3 mb-4"
+                >
+
+
+                    <!-- TOTAL -->
+
+                    <div
+                        class="record-stat-card"
+                    >
+
+                        <p
+                            class="text-[10px] uppercase tracking-wide font-semibold text-gray-400"
+                        >
+                            Total Records
+                        </p>
+
+
+                        <div
+                            class="flex items-end justify-between mt-2"
+                        >
+
+                            <p
+                                id="recordTotal"
+                                class="text-2xl font-bold text-gray-800"
+                            >
+                                0
+                            </p>
+
+
+                            <span
+                                class="text-blue-600 text-lg"
+                            >
+                                📁
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- PENDING -->
+
+                    <div
+                        class="record-stat-card"
+                    >
+
+                        <p
+                            class="text-[10px] uppercase tracking-wide font-semibold text-gray-400"
+                        >
+                            Pending
+                        </p>
+
+
+                        <div
+                            class="flex items-end justify-between mt-2"
+                        >
+
+                            <p
+                                id="recordPending"
+                                class="text-2xl font-bold text-amber-600"
+                            >
+                                0
+                            </p>
+
+
+                            <span class="text-lg">
+                                🕒
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- APPROVED -->
+
+                    <div
+                        class="record-stat-card"
+                    >
+
+                        <p
+                            class="text-[10px] uppercase tracking-wide font-semibold text-gray-400"
+                        >
+                            Approved
+                        </p>
+
+
+                        <div
+                            class="flex items-end justify-between mt-2"
+                        >
+
+                            <p
+                                id="recordApproved"
+                                class="text-2xl font-bold text-green-700"
+                            >
+                                0
+                            </p>
+
+
+                            <span class="text-lg">
+                                ✅
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- RESCHEDULED -->
+
+                    <div
+                        class="record-stat-card"
+                    >
+
+                        <p
+                            class="text-[10px] uppercase tracking-wide font-semibold text-gray-400"
+                        >
+                            Rescheduled
+                        </p>
+
+
+                        <div
+                            class="flex items-end justify-between mt-2"
+                        >
+
+                            <p
+                                id="recordRescheduled"
+                                class="text-2xl font-bold text-purple-700"
+                            >
+                                0
+                            </p>
+
+
+                            <span class="text-lg">
+                                📅
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- CLOSED -->
+
+                    <div
+                        class="record-stat-card col-span-2 lg:col-span-1"
+                    >
+
+                        <p
+                            class="text-[10px] uppercase tracking-wide font-semibold text-gray-400"
+                        >
+                            Cancelled / Rejected
+                        </p>
+
+
+                        <div
+                            class="flex items-end justify-between mt-2"
+                        >
+
+                            <p
+                                id="recordClosed"
+                                class="text-2xl font-bold text-red-600"
+                            >
+                                0
+                            </p>
+
+
+                            <span class="text-lg">
+                                ⛔
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ================================================= -->
+                <!-- APPOINTMENT RECORDS TABLE -->
+                <!-- ================================================= -->
+
+                <div
+                    class="card overflow-hidden"
+                >
+
+
+                    <!-- RECORD TABLE HEADER -->
+
+                    <div
+                        class="p-4 border-b border-gray-200 bg-gray-50"
+                    >
+
+                        <div
+                            class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3"
+                        >
+
+
+                            <div>
+
+                                <h3
+                                    class="text-sm font-semibold text-[#0f4c2e]"
+                                >
+                                    Appointment Records
+                                </h3>
+
+
+                                <p
+                                    class="text-[11px] text-gray-500 mt-0.5"
+                                >
+                                    Search and review your complete appointment history.
+                                </p>
+
+                            </div>
+
+
+
+                            <!-- SEARCH / FILTER -->
+
+                            <div
+                                class="flex flex-col sm:flex-row gap-2 w-full lg:w-auto"
+                            >
+
+
+                                <div
+                                    class="relative w-full sm:w-64"
+                                >
+
+                                    <span
+                                        class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"
+                                    >
+                                        🔎
+                                    </span>
+
+
+                                    <input
+                                        id="recordsSearch"
+                                        type="text"
+                                        placeholder="Search purpose or notes..."
+                                        class="w-full border border-gray-300 rounded-md pl-8 pr-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-[#0f4c2e]"
+                                    >
+
+                                </div>
+
+
+
+                                <select
+                                    id="recordsStatusFilter"
+                                    class="border border-gray-300 rounded-md px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-[#0f4c2e]"
+                                >
+
+                                    <option value="all">
+                                        All Statuses
+                                    </option>
+
+                                    <option value="pending">
+                                        Pending
+                                    </option>
+
+                                    <option value="approved">
+                                        Approved
+                                    </option>
+
+                                    <option value="rescheduled">
+                                        Rescheduled
+                                    </option>
+
+                                    <option value="cancelled">
+                                        Cancelled
+                                    </option>
+
+                                    <option value="rejected">
+                                        Rejected
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- TABLE -->
+
+                    <div
+                        class="overflow-x-auto"
+                    >
+
+                        <table
+                            class="w-full text-xs sm:text-sm"
+                        >
+
+                            <thead
+                                class="bg-gray-50 text-gray-500 text-left"
+                            >
+
+                                <tr>
+
+                                    <th
+                                        class="px-4 py-3 whitespace-nowrap"
+                                    >
+                                        Date
+                                    </th>
+
+                                    <th
+                                        class="px-4 py-3 whitespace-nowrap"
+                                    >
+                                        Time
+                                    </th>
+
+                                    <th
+                                        class="px-4 py-3"
+                                    >
+                                        Purpose
+                                    </th>
+
+                                    <th
+                                        class="px-4 py-3"
+                                    >
+                                        Notes
+                                    </th>
+
+                                    <th
+                                        class="px-4 py-3 whitespace-nowrap"
+                                    >
+                                        Status
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody
+                                id="recordsBody"
+                            >
+
+                                <tr>
+
+                                    <td
+                                        colspan="5"
+                                        class="px-4 py-6 text-center text-gray-400"
+                                    >
+                                        Loading appointment records...
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </section>
+
         </main>
 
     </div>
 
 
 
-    <!-- ========================================= -->
+    <!-- ===================================================== -->
     <!-- RESCHEDULE MODAL -->
-    <!-- ========================================= -->
+    <!-- ===================================================== -->
 
-    <div id="rescheduleModal"
-        class="modal-backdrop">
+    <div
+        id="rescheduleModal"
+        class="modal-backdrop"
+    >
 
 
-        <div class="card p-4 w-full max-w-sm mx-4">
+        <div
+            class="card p-4 w-full max-w-sm mx-4"
+        >
 
 
-            <h3 class="font-semibold text-[#0f4c2e] mb-2.5 text-xs sm:text-sm">
-
+            <h3
+                class="font-semibold text-[#0f4c2e] mb-2.5 text-xs sm:text-sm"
+            >
                 Reschedule Appointment
-
             </h3>
 
 
 
-            <label class="block text-xs font-medium mb-1">
-
+            <label
+                class="block text-xs font-medium mb-1"
+            >
                 New date
-
             </label>
 
 
-            <input id="rescheduleDate"
+            <input
+                id="rescheduleDate"
                 type="date"
-                class="w-full border border-gray-300 rounded px-2.5 py-1.5 text-xs mb-2" />
+                class="w-full border border-gray-300 rounded px-2.5 py-1.5 text-xs mb-2"
+            />
 
 
 
-            <label class="block text-xs font-medium mb-1">
-
+            <label
+                class="block text-xs font-medium mb-1"
+            >
                 New time slot
-
             </label>
 
 
-            <select id="rescheduleSlot"
-                class="w-full border border-gray-300 rounded px-2.5 py-1.5 text-xs mb-3">
-
-            </select>
-
-
-
-            <div class="flex gap-2">
+            <select
+                id="rescheduleSlot"
+                class="w-full border border-gray-300 rounded px-2.5 py-1.5 text-xs mb-3"
+            ></select>
 
 
-                <button id="rescheduleCancelBtn"
-                    class="flex-1 rounded border border-gray-300 py-1.5 text-xs">
 
+            <div
+                class="flex gap-2"
+            >
+
+
+                <button
+                    id="rescheduleCancelBtn"
+                    class="flex-1 rounded border border-gray-300 py-1.5 text-xs"
+                >
                     Cancel
-
                 </button>
 
 
-                <button id="rescheduleConfirmBtn"
-                    class="flex-1 btn-red rounded py-1.5 text-xs font-semibold">
-
+                <button
+                    id="rescheduleConfirmBtn"
+                    class="flex-1 btn-red rounded py-1.5 text-xs font-semibold"
+                >
                     Save
-
                 </button>
 
             </div>
@@ -898,9 +1693,15 @@
 
 
 
+    <!-- ===================================================== -->
     <!-- STUDENT JAVASCRIPT -->
+    <!-- ===================================================== -->
 
-    <script type="module" src="student.js"></script>
+    <script
+        type="module"
+        src="student.js"
+    ></script>
+
 
 </body>
 

@@ -35,6 +35,7 @@ document.addEventListener(
         setupAppointmentFilters();
         setupScheduleEvents();
         setupDailyListEvents();
+        setupReportEvents();
         setupHistoryEvents();
         setupRescheduleEvents();
 
@@ -203,6 +204,27 @@ function setDefaultDates() {
     }
 
 
+    if ($("reportEndDate")) {
+        $("reportEndDate").value =
+            today;
+    }
+
+
+    if ($("reportStartDate")) {
+
+        const currentDate =
+            new Date();
+
+        const firstDayOfMonth =
+            `${currentDate.getFullYear()}-${String(
+                currentDate.getMonth() + 1
+            ).padStart(2, "0")}-01`;
+
+        $("reportStartDate").value =
+            firstDayOfMonth;
+    }
+
+
     if ($("rescheduleDate")) {
         $("rescheduleDate").min =
             today;
@@ -258,6 +280,15 @@ function setupTabs() {
 
                     if (
                         tab ===
+                        "reports"
+                    ) {
+
+                        generateReport();
+                    }
+
+
+                    if (
+                        tab ===
                         "history"
                     ) {
 
@@ -281,6 +312,9 @@ function switchTab(tabName) {
 
         daily:
             "tabDaily",
+
+        reports:
+            "tabReports",
 
         history:
             "tabHistory"
@@ -493,8 +527,14 @@ function setupAppointmentFilters() {
     const search =
         $("appointmentSearch");
 
-    const filter =
+    const statusFilter =
         $("appointmentStatusFilter");
+
+    const dateFilter =
+        $("appointmentDateFilter");
+
+    const clearButton =
+        $("clearAppointmentFiltersBtn");
 
 
     if (search) {
@@ -506,11 +546,49 @@ function setupAppointmentFilters() {
     }
 
 
-    if (filter) {
+    if (statusFilter) {
 
-        filter.addEventListener(
+        statusFilter.addEventListener(
             "change",
             renderAppointments
+        );
+    }
+
+
+    if (dateFilter) {
+
+        dateFilter.addEventListener(
+            "change",
+            renderAppointments
+        );
+    }
+
+
+    if (clearButton) {
+
+        clearButton.addEventListener(
+            "click",
+            () => {
+
+                if (search) {
+                    search.value = "";
+                }
+
+
+                if (statusFilter) {
+                    statusFilter.value =
+                        "all";
+                }
+
+
+                if (dateFilter) {
+                    dateFilter.value =
+                        "";
+                }
+
+
+                renderAppointments();
+            }
         );
     }
 }
@@ -550,6 +628,12 @@ function renderAppointments() {
             .toLowerCase();
 
 
+    const dateFilter =
+        $("appointmentDateFilter")
+            ?.value ||
+        "";
+
+
     const filtered =
         state.appointments
             .filter(
@@ -561,7 +645,7 @@ function renderAppointments() {
                         );
 
 
-                    const name =
+                    const studentName =
                         student
                             ? `${student.first_name || ""} ${student.last_name || ""}`
                                 .trim()
@@ -571,8 +655,15 @@ function renderAppointments() {
 
                     const studentNumber =
                         String(
-                            student
-                                ?.student_number ||
+                            student?.student_number ||
+                            ""
+                        )
+                            .toLowerCase();
+
+
+                    const email =
+                        String(
+                            student?.email ||
                             ""
                         )
                             .toLowerCase();
@@ -581,6 +672,30 @@ function renderAppointments() {
                     const purpose =
                         String(
                             appointment.purpose ||
+                            ""
+                        )
+                            .toLowerCase();
+
+
+                    const notes =
+                        String(
+                            appointment.notes ||
+                            ""
+                        )
+                            .toLowerCase();
+
+
+                    const appointmentDate =
+                        String(
+                            appointment.appointment_date ||
+                            ""
+                        )
+                            .toLowerCase();
+
+
+                    const appointmentTime =
+                        String(
+                            appointment.appointment_time ||
                             ""
                         )
                             .toLowerCase();
@@ -596,27 +711,30 @@ function renderAppointments() {
 
                     const matchesSearch =
                         !search ||
-                        name.includes(
-                            search
-                        ) ||
-                        studentNumber.includes(
-                            search
-                        ) ||
-                        purpose.includes(
-                            search
-                        );
+                        studentName.includes(search) ||
+                        studentNumber.includes(search) ||
+                        email.includes(search) ||
+                        purpose.includes(search) ||
+                        notes.includes(search) ||
+                        appointmentDate.includes(search) ||
+                        appointmentTime.includes(search);
 
 
                     const matchesStatus =
-                        statusFilter ===
-                        "all" ||
-                        status ===
-                        statusFilter;
+                        statusFilter === "all" ||
+                        status === statusFilter;
+
+
+                    const matchesDate =
+                        !dateFilter ||
+                        appointment.appointment_date ===
+                        dateFilter;
 
 
                     return (
                         matchesSearch &&
-                        matchesStatus
+                        matchesStatus &&
+                        matchesDate
                     );
                 }
             );
@@ -631,9 +749,13 @@ function renderAppointments() {
             <tr>
                 <td
                     colspan="6"
-                    class="py-8 text-center text-gray-400"
+                    class="py-10 text-center"
                 >
-                    No appointment records found.
+                    <div class="text-gray-400">
+                        <i class="fa-solid fa-magnifying-glass text-2xl mb-2"></i>
+                        <p class="font-semibold">No appointment records found.</p>
+                        <p class="text-xs mt-1">Try changing your search or filters.</p>
+                    </div>
                 </td>
             </tr>
         `;
@@ -663,8 +785,7 @@ function renderAppointments() {
 
 
             const studentNumber =
-                student
-                    ?.student_number ||
+                student?.student_number ||
                 "N/A";
 
 
@@ -688,84 +809,37 @@ function renderAppointments() {
 
             row.innerHTML = `
                 <td class="py-4 px-4">
-
-                    <div
-                        class="font-semibold text-gray-800"
-                    >
-                        ${escapeHTML(
-                            studentName
-                        )}
+                    <div class="font-semibold text-gray-800">
+                        ${escapeHTML(studentName)}
                     </div>
-
-                    <div
-                        class="text-sm text-gray-500"
-                    >
-                        ${escapeHTML(
-                            studentNumber
-                        )}
+                    <div class="text-sm text-gray-500">
+                        ${escapeHTML(studentNumber)}
                     </div>
-
                 </td>
 
-
-                <td
-                    class="py-4 px-4 text-gray-700"
-                >
-                    ${escapeHTML(
-                        appointment.purpose ||
-                        ""
-                    )}
+                <td class="py-4 px-4 text-gray-700">
+                    ${escapeHTML(appointment.purpose || "")}
                 </td>
 
-
-                <td
-                    class="py-4 px-4 text-gray-700"
-                >
-
+                <td class="py-4 px-4 text-gray-700">
                     <div>
-                        ${formatDate(
-                            appointment.appointment_date
-                        )}
+                        ${formatDate(appointment.appointment_date)}
                     </div>
-
-                    <div
-                        class="text-sm text-gray-500"
-                    >
-                        ${escapeHTML(
-                            appointment.appointment_time ||
-                            ""
-                        )}
+                    <div class="text-sm text-gray-500">
+                        ${escapeHTML(appointment.appointment_time || "")}
                     </div>
-
                 </td>
 
-
-                <td
-                    class="py-4 px-4 text-gray-600 text-sm max-w-xs"
-                >
-                    ${escapeHTML(
-                        appointment.notes ||
-                        "None"
-                    )}
+                <td class="py-4 px-4 text-gray-600 text-sm max-w-xs">
+                    ${escapeHTML(appointment.notes || "None")}
                 </td>
 
-
-                <td
-                    class="py-4 px-4"
-                >
-                    ${statusBadge(
-                        status
-                    )}
+                <td class="py-4 px-4">
+                    ${statusBadge(status)}
                 </td>
 
-
-                <td
-                    class="py-4 px-4 text-right"
-                >
-                    ${actionButtons(
-                        appointment.id,
-                        status
-                    )}
+                <td class="py-4 px-4 text-right">
+                    ${actionButtons(appointment.id, status)}
                 </td>
             `;
 
@@ -2186,6 +2260,626 @@ function printDailyList() {
 
                 button {
                     display: none;
+                }
+
+            </style>
+
+        </head>
+
+        <body>
+
+            ${area.innerHTML}
+
+        </body>
+
+        </html>
+    `);
+
+
+    printWindow.document.close();
+
+
+    printWindow.focus();
+
+
+    setTimeout(
+        () => {
+
+            printWindow.print();
+
+        },
+        300
+    );
+}
+
+
+// ============================================================
+// REPORTS & ANALYTICS EVENTS
+// ============================================================
+
+function setupReportEvents() {
+
+    $("generateReportBtn")
+        ?.addEventListener(
+            "click",
+            generateReport
+        );
+
+
+    $("clearReportFiltersBtn")
+        ?.addEventListener(
+            "click",
+            () => {
+
+                if ($("reportStartDate")) {
+                    $("reportStartDate").value =
+                        "";
+                }
+
+
+                if ($("reportEndDate")) {
+                    $("reportEndDate").value =
+                        "";
+                }
+
+
+                generateReport();
+            }
+        );
+
+
+    $("printReportBtn")
+        ?.addEventListener(
+            "click",
+            printSummaryReport
+        );
+}
+
+
+// ============================================================
+// GENERATE SUMMARY REPORT
+// ============================================================
+
+function generateReport() {
+
+    const startDate =
+        $("reportStartDate")
+            ?.value ||
+        "";
+
+
+    const endDate =
+        $("reportEndDate")
+            ?.value ||
+        "";
+
+
+    if (
+        startDate &&
+        endDate &&
+        startDate > endDate
+    ) {
+
+        alert(
+            "The report start date cannot be later than the end date."
+        );
+
+        return;
+    }
+
+
+    const filteredAppointments =
+        state.appointments.filter(
+            (appointment) => {
+
+                const appointmentDate =
+                    appointment.appointment_date ||
+                    "";
+
+
+                if (
+                    startDate &&
+                    appointmentDate < startDate
+                ) {
+
+                    return false;
+                }
+
+
+                if (
+                    endDate &&
+                    appointmentDate > endDate
+                ) {
+
+                    return false;
+                }
+
+
+                return true;
+            }
+        );
+
+
+    renderReportTotals(
+        filteredAppointments
+    );
+
+
+    renderReportStatusSummary(
+        filteredAppointments
+    );
+
+
+    renderReportPurposeSummary(
+        filteredAppointments
+    );
+
+
+    updateReportLabels(
+        startDate,
+        endDate
+    );
+}
+
+
+// ============================================================
+// REPORT TOTAL CARDS
+// ============================================================
+
+function renderReportTotals(
+    appointments
+) {
+
+    const countStatus =
+        (status) =>
+            appointments.filter(
+                (appointment) =>
+                    String(
+                        appointment.status ||
+                        "pending"
+                    )
+                        .toLowerCase() ===
+                    status
+            ).length;
+
+
+    const values = {
+        reportTotal:
+            appointments.length,
+
+        reportPending:
+            countStatus(
+                "pending"
+            ),
+
+        reportApproved:
+            countStatus(
+                "approved"
+            ),
+
+        reportRescheduled:
+            countStatus(
+                "rescheduled"
+            ),
+
+        reportRejected:
+            countStatus(
+                "rejected"
+            ),
+
+        reportCancelled:
+            countStatus(
+                "cancelled"
+            )
+    };
+
+
+    Object
+        .entries(values)
+        .forEach(
+            ([id, value]) => {
+
+                if ($(id)) {
+                    $(id).textContent =
+                        value;
+                }
+            }
+        );
+}
+
+
+// ============================================================
+// REPORT SUMMARY BY STATUS
+// ============================================================
+
+function renderReportStatusSummary(
+    appointments
+) {
+
+    const tbody =
+        $("reportStatusSummaryBody");
+
+
+    if (!tbody) {
+        return;
+    }
+
+
+    const statuses = [
+        "pending",
+        "approved",
+        "rescheduled",
+        "rejected",
+        "cancelled"
+    ];
+
+
+    const total =
+        appointments.length;
+
+
+    tbody.innerHTML =
+        "";
+
+
+    statuses.forEach(
+        (status) => {
+
+            const count =
+                appointments.filter(
+                    (appointment) =>
+                        String(
+                            appointment.status ||
+                            "pending"
+                        )
+                            .toLowerCase() ===
+                        status
+                ).length;
+
+
+            const percentage =
+                total > 0
+                    ? (
+                        (count / total) *
+                        100
+                    ).toFixed(1)
+                    : "0.0";
+
+
+            const row =
+                document.createElement(
+                    "tr"
+                );
+
+
+            row.innerHTML = `
+                <td class="py-3 px-4">
+                    ${statusBadge(status)}
+                </td>
+
+                <td class="py-3 px-4 text-right font-bold text-slate-700">
+                    ${count}
+                </td>
+
+                <td class="py-3 px-4 text-right text-slate-500">
+                    ${percentage}%
+                </td>
+            `;
+
+
+            tbody.appendChild(
+                row
+            );
+        }
+    );
+}
+
+
+// ============================================================
+// REPORT SUMMARY BY PURPOSE
+// ============================================================
+
+function renderReportPurposeSummary(
+    appointments
+) {
+
+    const tbody =
+        $("reportPurposeSummaryBody");
+
+
+    if (!tbody) {
+        return;
+    }
+
+
+    const total =
+        appointments.length;
+
+
+    const purposeCounts =
+        new Map();
+
+
+    appointments.forEach(
+        (appointment) => {
+
+            const purpose =
+                String(
+                    appointment.purpose ||
+                    "Unspecified"
+                )
+                    .trim() ||
+                "Unspecified";
+
+
+            purposeCounts.set(
+                purpose,
+                (
+                    purposeCounts.get(
+                        purpose
+                    ) ||
+                    0
+                ) + 1
+            );
+        }
+    );
+
+
+    const sortedPurposes =
+        Array
+            .from(
+                purposeCounts.entries()
+            )
+            .sort(
+                (a, b) =>
+                    b[1] - a[1]
+            );
+
+
+    if (
+        sortedPurposes.length ===
+        0
+    ) {
+
+        tbody.innerHTML = `
+            <tr>
+                <td
+                    colspan="3"
+                    class="py-6 px-4 text-center text-slate-400"
+                >
+                    No appointment records found for this report period.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+
+    tbody.innerHTML =
+        "";
+
+
+    sortedPurposes.forEach(
+        ([purpose, count]) => {
+
+            const percentage =
+                total > 0
+                    ? (
+                        (count / total) *
+                        100
+                    ).toFixed(1)
+                    : "0.0";
+
+
+            const row =
+                document.createElement(
+                    "tr"
+                );
+
+
+            row.innerHTML = `
+                <td class="py-3 px-4 font-medium text-slate-700">
+                    ${escapeHTML(
+                        purpose
+                    )}
+                </td>
+
+                <td class="py-3 px-4 text-right font-bold text-slate-700">
+                    ${count}
+                </td>
+
+                <td class="py-3 px-4 text-right text-slate-500">
+                    ${percentage}%
+                </td>
+            `;
+
+
+            tbody.appendChild(
+                row
+            );
+        }
+    );
+}
+
+
+// ============================================================
+// REPORT LABELS
+// ============================================================
+
+function updateReportLabels(
+    startDate,
+    endDate
+) {
+
+    const rangeLabel =
+        $("reportRangeLabel");
+
+
+    if (rangeLabel) {
+
+        if (
+            startDate &&
+            endDate
+        ) {
+
+            rangeLabel.textContent =
+                `${formatDate(
+                    startDate
+                )} to ${formatDate(
+                    endDate
+                )}`;
+
+        } else if (startDate) {
+
+            rangeLabel.textContent =
+                `From ${formatDate(
+                    startDate
+                )}`;
+
+        } else if (endDate) {
+
+            rangeLabel.textContent =
+                `Up to ${formatDate(
+                    endDate
+                )}`;
+
+        } else {
+
+            rangeLabel.textContent =
+                "All appointment records";
+        }
+    }
+
+
+    if ($("reportGeneratedAt")) {
+
+        $("reportGeneratedAt").textContent =
+            `Generated: ${new Date().toLocaleString(
+                "en-US",
+                {
+                    year:
+                        "numeric",
+
+                    month:
+                        "short",
+
+                    day:
+                        "numeric",
+
+                    hour:
+                        "numeric",
+
+                    minute:
+                        "2-digit"
+                }
+            )}`;
+    }
+}
+
+
+// ============================================================
+// PRINT SUMMARY REPORT
+// ============================================================
+
+function printSummaryReport() {
+
+    generateReport();
+
+
+    const area =
+        $("reportPrintArea");
+
+
+    if (!area) {
+        return;
+    }
+
+
+    const printWindow =
+        window.open(
+            "",
+            "_blank"
+        );
+
+
+    if (!printWindow) {
+
+        alert(
+            "Please allow pop-ups to print the appointment summary report."
+        );
+
+        return;
+    }
+
+
+    printWindow.document.write(`
+        <!DOCTYPE html>
+
+        <html>
+
+        <head>
+
+            <title>
+                ESSU Registrar Appointment Summary Report
+            </title>
+
+            <style>
+
+                body {
+                    font-family: Arial, sans-serif;
+                    padding: 30px;
+                    color: #222;
+                }
+
+                img {
+                    max-width: 70px;
+                    display: block;
+                    margin: 0 auto 10px;
+                }
+
+                h4,
+                h5,
+                p {
+                    text-align: center;
+                }
+
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-top: 12px;
+                    margin-bottom: 24px;
+                }
+
+                th,
+                td {
+                    border: 1px solid #999;
+                    padding: 8px;
+                    text-align: left;
+                }
+
+                th {
+                    background: #f2f2f2;
+                }
+
+                .grid {
+                    display: grid;
+                    grid-template-columns: repeat(3, 1fr);
+                    gap: 10px;
+                    margin: 18px 0;
+                }
+
+                .grid > div {
+                    border: 1px solid #bbb;
+                    padding: 10px;
+                }
+
+                .text-right {
+                    text-align: right;
+                }
+
+                button {
+                    display: none !important;
                 }
 
             </style>
