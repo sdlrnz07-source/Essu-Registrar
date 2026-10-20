@@ -812,34 +812,63 @@ function renderAppointments() {
                     <div class="font-semibold text-gray-800">
                         ${escapeHTML(studentName)}
                     </div>
+
                     <div class="text-sm text-gray-500">
                         ${escapeHTML(studentNumber)}
                     </div>
                 </td>
 
-                <td class="py-4 px-4 text-gray-700">
-                    ${escapeHTML(appointment.purpose || "")}
-                </td>
 
                 <td class="py-4 px-4 text-gray-700">
+                    ${escapeHTML(
+                        appointment.purpose ||
+                        ""
+                    )}
+                </td>
+
+
+                <td class="py-4 px-4 text-gray-700">
+
                     <div>
-                        ${formatDate(appointment.appointment_date)}
+                        ${formatDate(
+                            appointment.appointment_date
+                        )}
                     </div>
+
                     <div class="text-sm text-gray-500">
-                        ${escapeHTML(appointment.appointment_time || "")}
+                        ${escapeHTML(
+                            appointment.appointment_time ||
+                            ""
+                        )}
                     </div>
+
                 </td>
 
-                <td class="py-4 px-4 text-gray-600 text-sm max-w-xs">
-                    ${escapeHTML(appointment.notes || "None")}
+
+                <td
+                    class="py-4 px-4 text-gray-600 text-sm max-w-xs"
+                >
+                    ${escapeHTML(
+                        appointment.notes ||
+                        "None"
+                    )}
                 </td>
+
 
                 <td class="py-4 px-4">
-                    ${statusBadge(status)}
+                    ${statusBadge(
+                        status
+                    )}
                 </td>
 
-                <td class="py-4 px-4 text-right">
-                    ${actionButtons(appointment.id, status)}
+
+                <td
+                    class="py-4 px-4 text-right whitespace-nowrap"
+                >
+                    ${actionButtons(
+                        appointment.id,
+                        status
+                    )}
                 </td>
             `;
 
@@ -949,6 +978,7 @@ function statusBadge(status) {
 
 // ============================================================
 // ACTION BUTTONS
+// CLEAN TEXT STYLE LIKE STUDENT PAGE
 // ============================================================
 
 function actionButtons(
@@ -958,63 +988,87 @@ function actionButtons(
 
     const inactive =
         status ===
-            "cancelled";
+        "cancelled";
 
 
     const approveDisabled =
         status ===
-            "approved" ||
+        "approved" ||
         inactive;
 
 
     const rejectDisabled =
         status ===
-            "rejected" ||
+        "rejected" ||
         inactive;
 
 
     return `
         <div
-            class="flex flex-wrap justify-end gap-2"
+            class="flex items-center justify-end gap-4 whitespace-nowrap"
         >
 
-            <button
-                class="approveBtn bg-green-600 text-white px-3 py-2 rounded text-sm hover:bg-green-700 disabled:opacity-40 disabled:cursor-not-allowed"
-                data-id="${appointmentId}"
-                ${
-                    approveDisabled
-                        ? "disabled"
-                        : ""
-                }
-            >
-                Approve
-            </button>
+            ${
+                approveDisabled
+                    ? `
+                        <span
+                            class="text-sm font-medium text-slate-300 cursor-not-allowed select-none"
+                        >
+                            Approve
+                        </span>
+                    `
+                    : `
+                        <button
+                            type="button"
+                            class="approveBtn text-sm font-semibold text-emerald-700 hover:text-emerald-900 hover:underline transition"
+                            data-id="${appointmentId}"
+                        >
+                            Approve
+                        </button>
+                    `
+            }
 
 
-            <button
-                class="rejectBtn bg-red-600 text-white px-3 py-2 rounded text-sm hover:bg-red-700 disabled:opacity-40 disabled:cursor-not-allowed"
-                data-id="${appointmentId}"
-                ${
-                    rejectDisabled
-                        ? "disabled"
-                        : ""
-                }
-            >
-                Reject
-            </button>
+            ${
+                rejectDisabled
+                    ? `
+                        <span
+                            class="text-sm font-medium text-slate-300 cursor-not-allowed select-none"
+                        >
+                            Reject
+                        </span>
+                    `
+                    : `
+                        <button
+                            type="button"
+                            class="rejectBtn text-sm font-semibold text-red-600 hover:text-red-800 hover:underline transition"
+                            data-id="${appointmentId}"
+                        >
+                            Reject
+                        </button>
+                    `
+            }
 
 
-            <button
-                class="rescheduleBtn bg-purple-600 text-white px-3 py-2 rounded text-sm hover:bg-purple-700 disabled:opacity-40 disabled:cursor-not-allowed"
-                data-id="${appointmentId}"
-                ${
-                    inactive
-                        ? "disabled"
-                        : ""
-                }
-            >
-                Reschedule
-            </button>
+            ${
+                inactive
+                    ? `
+                        <span
+                            class="text-sm font-medium text-slate-300 cursor-not-allowed select-none"
+                        >
+                            Reschedule
+                        </span>
+                    `
+                    : `
+                        <button
+                            type="button"
+                            class="rescheduleBtn text-sm font-semibold text-purple-700 hover:text-purple-900 hover:underline transition"
+                            data-id="${appointmentId}"
+                        >
+                            Reschedule
+                        </button>
+                    `
+            }
 
         </div>
     `;
@@ -1676,7 +1730,7 @@ function renderRegistrarSchedules() {
 
 
             row.className =
-                "border-b border-gray-200";
+                "border-b border-gray-200 hover:bg-gray-50";
 
 
             row.innerHTML = `
@@ -1708,11 +1762,12 @@ function renderRegistrarSchedules() {
 
 
                 <td
-                    class="py-4 px-4 text-right"
+                    class="py-4 px-4 text-right whitespace-nowrap"
                 >
 
                     <button
-                        class="deleteScheduleBtn bg-red-600 text-white px-3 py-2 rounded text-sm hover:bg-red-700"
+                        type="button"
+                        class="deleteScheduleBtn text-sm font-semibold text-red-600 hover:text-red-800 hover:underline transition"
                         data-id="${schedule.id}"
                     >
                         Delete
