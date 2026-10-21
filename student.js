@@ -41,6 +41,9 @@ const state = {
 
     rescheduleTargetId: null,
 
+    liveUpdatesChannel: null,
+    liveRefreshTimer: null,
+
 };
 
 
@@ -78,6 +81,15 @@ document.addEventListener(
 
 
         // ---------------------------------------------
+        // Profile picture + Account Settings
+        // ---------------------------------------------
+
+        await loadStudentProfilePicture();
+
+        setupAccountSettings();
+
+
+        // ---------------------------------------------
         // Calendar
         // ---------------------------------------------
 
@@ -99,11 +111,89 @@ document.addEventListener(
 
 
         // ---------------------------------------------
+        // Live appointment / notification updates
+        // ---------------------------------------------
+
+        setupLiveStudentUpdates();
+
+
+        // ---------------------------------------------
         // Additional interface events
         // ---------------------------------------------
 
         bindEvents();
 
+    }
+);
+
+
+// ============================================================
+// BACK / FORWARD CACHE SECURITY
+// ============================================================
+
+window.addEventListener(
+    "pageshow",
+    async () => {
+
+        const loggedIn =
+            sessionStorage.getItem(
+                "loggedIn"
+            );
+
+        const role =
+            sessionStorage.getItem(
+                "role"
+            );
+
+
+        if (
+            loggedIn !== "true" ||
+            role !== "student"
+        ) {
+
+            window.location.replace(
+                "login.html"
+            );
+
+            return;
+        }
+
+
+        try {
+
+            const {
+                data,
+                error
+            } =
+                await supabase.auth.getSession();
+
+
+            if (
+                error ||
+                !data?.session?.user
+            ) {
+
+                sessionStorage.clear();
+
+                window.location.replace(
+                    "login.html"
+                );
+            }
+
+
+        } catch (error) {
+
+            console.error(
+                "Student session restore check failed:",
+                error
+            );
+
+            sessionStorage.clear();
+
+            window.location.replace(
+                "login.html"
+            );
+        }
     }
 );
 
@@ -126,8 +216,9 @@ async function loadCurrentUser() {
             ) !== "student"
         ) {
 
-            window.location.href =
-                "login.html";
+            window.location.replace(
+                "login.html"
+            );
 
             return false;
         }
@@ -154,8 +245,9 @@ async function loadCurrentUser() {
             sessionStorage.clear();
 
 
-            window.location.href =
-                "login.html";
+            window.location.replace(
+                "login.html"
+            );
 
 
             return false;
@@ -165,10 +257,6 @@ async function loadCurrentUser() {
         state.currentUser =
             data.session.user;
 
-
-        // ---------------------------------------------
-        // Load student database profile
-        // ---------------------------------------------
 
         const {
             data: student,
@@ -181,7 +269,8 @@ async function loadCurrentUser() {
                     first_name,
                     last_name,
                     student_number,
-                    email
+                    email,
+                    profile_image_url
                 `)
                 .eq(
                     "email",
@@ -228,10 +317,6 @@ async function loadCurrentUser() {
         );
 
 
-        // ---------------------------------------------
-        // Greeting
-        // ---------------------------------------------
-
         const greeting =
             $("studentGreeting");
 
@@ -251,10 +336,6 @@ async function loadCurrentUser() {
                 );
         }
 
-
-        // ---------------------------------------------
-        // Remove loader
-        // ---------------------------------------------
 
         const loader =
             $("authLoadingScreen");
@@ -284,8 +365,9 @@ async function loadCurrentUser() {
         sessionStorage.clear();
 
 
-        window.location.href =
-            "login.html";
+        window.location.replace(
+            "login.html"
+        );
 
 
         return false;
@@ -370,6 +452,1213 @@ function renderStudentProfile() {
 
 
 // ============================================================
+// ACCOUNT SETTINGS / PROFILE PICTURE
+// ============================================================
+
+const PROFILE_BUCKET =
+    "student-profile-pictures";
+
+const DEFAULT_PROFILE_IMAGE =
+    "img/OIP.webp";
+
+
+// ============================================================
+// LOAD STUDENT PROFILE PICTURE
+// ============================================================
+
+async function loadStudentProfilePicture() {
+
+    const profileAvatar =
+        $("profileAvatar");
+
+    const preview =
+        $("accountProfilePreview");
+
+
+    if (
+        !state.currentStudent ||
+        !state.currentStudent.profile_image_url
+    ) {
+
+        if (profileAvatar) {
+            profileAvatar.src =
+                DEFAULT_PROFILE_IMAGE;
+        }
+
+        if (preview) {
+            preview.src =
+                DEFAULT_PROFILE_IMAGE;
+        }
+
+        return;
+    }
+
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabase
+                .storage
+                .from(
+                    PROFILE_BUCKET
+                )
+                .createSignedUrl(
+                    state.currentStudent.profile_image_url,
+                    60 * 60
+                );
+
+
+        if (
+            error ||
+            !data?.signedUrl
+        ) {
+
+            throw error ||
+                new Error(
+                    "Unable to create profile picture URL."
+                );
+        }
+
+
+        if (profileAvatar) {
+
+            profileAvatar.src =
+                data.signedUrl;
+        }
+
+
+        if (preview) {
+
+            preview.src =
+                data.signedUrl;
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "Profile picture loading error:",
+            error
+        );
+
+
+        if (profileAvatar) {
+
+            profileAvatar.src =
+                DEFAULT_PROFILE_IMAGE;
+        }
+
+
+        if (preview) {
+
+            preview.src =
+                DEFAULT_PROFILE_IMAGE;
+        }
+    }
+}
+
+
+// ============================================================
+// ACCOUNT SETTINGS SETUP
+// ============================================================
+
+function setupAccountSettings() {
+
+    // --------------------------------------------------------
+    // Open Account Settings using the existing gear icon
+    // --------------------------------------------------------
+
+    $("accountSettingsBtn")
+        ?.addEventListener(
+            "click",
+            event => {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                openAccountSettings();
+            }
+        );
+
+
+    // --------------------------------------------------------
+    // Close only when the X button is clicked
+    // --------------------------------------------------------
+
+    $("closeAccountSettingsBtn")
+        ?.addEventListener(
+            "click",
+            event => {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                closeAccountSettings();
+            }
+        );
+
+
+    // IMPORTANT:
+    // There is intentionally NO backdrop-click listener here.
+    // Clicking outside the Account Settings panel will NOT close it.
+    //
+    // There is also intentionally NO Escape-key listener.
+    // The modal closes only through:
+    // 1. the X button
+    // 2. a successful password update
+
+
+    // --------------------------------------------------------
+    // Profile picture preview
+    // --------------------------------------------------------
+
+    $("profileImageInput")
+        ?.addEventListener(
+            "change",
+            handleProfileImagePreview
+        );
+
+
+    // --------------------------------------------------------
+    // Save profile picture
+    // --------------------------------------------------------
+
+    $("saveProfileImageBtn")
+        ?.addEventListener(
+            "click",
+            saveProfilePicture
+        );
+
+
+    // --------------------------------------------------------
+    // Remove profile picture
+    // --------------------------------------------------------
+
+    $("removeProfileImageBtn")
+        ?.addEventListener(
+            "click",
+            removeProfilePicture
+        );
+
+
+    // --------------------------------------------------------
+    // Change password
+    // --------------------------------------------------------
+
+    $("updatePasswordBtn")
+        ?.addEventListener(
+            "click",
+            updateStudentPassword
+        );
+
+
+    // --------------------------------------------------------
+    // Password visibility buttons
+    // --------------------------------------------------------
+
+    setupPasswordToggle(
+        "toggleCurrentPassword",
+        "currentPassword"
+    );
+
+    setupPasswordToggle(
+        "toggleNewPassword",
+        "newPassword"
+    );
+
+    setupPasswordToggle(
+        "toggleConfirmNewPassword",
+        "confirmNewPassword"
+    );
+}
+
+
+// ============================================================
+// OPEN / CLOSE ACCOUNT SETTINGS
+// ============================================================
+
+function openAccountSettings() {
+
+    const modal =
+        $("accountSettingsModal");
+
+
+    if (!modal) {
+        return;
+    }
+
+
+    clearAccountSettingsMessages();
+
+
+    if (
+        $("profileImageInput")
+    ) {
+
+        $("profileImageInput").value =
+            "";
+    }
+
+
+    loadStudentProfilePicture();
+
+
+    modal.classList.remove(
+        "hidden"
+    );
+
+    modal.classList.add(
+        "flex"
+    );
+
+    modal.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+}
+
+
+function closeAccountSettings() {
+
+    const modal =
+        $("accountSettingsModal");
+
+
+    if (!modal) {
+        return;
+    }
+
+
+    modal.classList.add(
+        "hidden"
+    );
+
+    modal.classList.remove(
+        "flex"
+    );
+
+    modal.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+
+    [
+        "currentPassword",
+        "newPassword",
+        "confirmNewPassword"
+    ]
+        .forEach(
+            id => {
+
+                if ($(id)) {
+                    $(id).value =
+                        "";
+                }
+            }
+        );
+
+
+    clearAccountSettingsMessages();
+}
+
+
+// ============================================================
+// ACCOUNT SETTINGS MESSAGES
+// ============================================================
+
+function clearAccountSettingsMessages() {
+
+    [
+        "profileImageMessage",
+        "passwordSettingsMessage"
+    ]
+        .forEach(
+            id => {
+
+                const element =
+                    $(id);
+
+
+                if (!element) {
+                    return;
+                }
+
+
+                element.textContent =
+                    "";
+
+                element.className =
+                    "hidden mt-3 text-xs rounded-md px-3 py-2";
+            }
+        );
+}
+
+
+function showAccountSettingsMessage(
+    elementId,
+    message,
+    type =
+        "success"
+) {
+
+    const element =
+        $(elementId);
+
+
+    if (!element) {
+        return;
+    }
+
+
+    element.textContent =
+        message;
+
+
+    element.className =
+        "mt-3 text-xs rounded-md px-3 py-2 border";
+
+
+    if (
+        type ===
+        "error"
+    ) {
+
+        element.classList.add(
+            "bg-red-50",
+            "text-red-700",
+            "border-red-200"
+        );
+
+
+    } else {
+
+        element.classList.add(
+            "bg-green-50",
+            "text-green-700",
+            "border-green-200"
+        );
+    }
+}
+
+
+// ============================================================
+// PASSWORD VISIBILITY
+// ============================================================
+
+function setupPasswordToggle(
+    buttonId,
+    inputId
+) {
+
+    const button =
+        $(buttonId);
+
+    const input =
+        $(inputId);
+
+
+    if (
+        !button ||
+        !input
+    ) {
+        return;
+    }
+
+
+    button.addEventListener(
+        "click",
+        () => {
+
+            const showPassword =
+                input.type ===
+                "password";
+
+
+            input.type =
+                showPassword
+                    ? "text"
+                    : "password";
+
+
+            button.innerHTML =
+                showPassword
+                    ? '<i class="fa-regular fa-eye-slash"></i>'
+                    : '<i class="fa-regular fa-eye"></i>';
+
+
+            const label =
+                showPassword
+                    ? "Hide password"
+                    : "Show password";
+
+
+            button.setAttribute(
+                "aria-label",
+                label
+            );
+
+            button.setAttribute(
+                "title",
+                label
+            );
+        }
+    );
+}
+
+
+// ============================================================
+// PROFILE IMAGE PREVIEW
+// ============================================================
+
+function handleProfileImagePreview(
+    event
+) {
+
+    const file =
+        event.target
+            ?.files?.[0];
+
+
+    if (!file) {
+        return;
+    }
+
+
+    if (
+        !validateProfileImage(
+            file
+        )
+    ) {
+
+        event.target.value =
+            "";
+
+        return;
+    }
+
+
+    const preview =
+        $("accountProfilePreview");
+
+
+    if (!preview) {
+        return;
+    }
+
+
+    const reader =
+        new FileReader();
+
+
+    reader.onload =
+        readerEvent => {
+
+            preview.src =
+                readerEvent.target.result;
+        };
+
+
+    reader.readAsDataURL(
+        file
+    );
+}
+
+
+function validateProfileImage(
+    file
+) {
+
+    const allowedTypes = [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+    ];
+
+
+    if (
+        !allowedTypes.includes(
+            file.type
+        )
+    ) {
+
+        showAccountSettingsMessage(
+            "profileImageMessage",
+            "Please select a JPG, PNG, or WEBP image.",
+            "error"
+        );
+
+        return false;
+    }
+
+
+    if (
+        file.size >
+        5 * 1024 * 1024
+    ) {
+
+        showAccountSettingsMessage(
+            "profileImageMessage",
+            "Profile picture must be 5 MB or smaller.",
+            "error"
+        );
+
+        return false;
+    }
+
+
+    return true;
+}
+// ============================================================
+// SAVE PROFILE PICTURE
+// ============================================================
+
+async function saveProfilePicture() {
+
+    const file =
+        $("profileImageInput")
+            ?.files?.[0];
+
+
+    if (!file) {
+
+        showAccountSettingsMessage(
+            "profileImageMessage",
+            "Please choose an image first.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if (
+        !validateProfileImage(
+            file
+        )
+    ) {
+        return;
+    }
+
+
+    if (
+        !state.currentUser ||
+        !state.currentStudent
+    ) {
+        return;
+    }
+
+
+    const saveButton =
+        $("saveProfileImageBtn");
+
+
+    if (saveButton) {
+
+        saveButton.disabled =
+            true;
+
+        saveButton.classList.add(
+            "opacity-50",
+            "pointer-events-none"
+        );
+    }
+
+
+    try {
+
+        const extensionMap = {
+            "image/jpeg":
+                "jpg",
+            "image/png":
+                "png",
+            "image/webp":
+                "webp"
+        };
+
+
+        const extension =
+            extensionMap[
+                file.type
+            ] ||
+            "jpg";
+
+
+        const newPath =
+            `${state.currentUser.id}/profile.${extension}`;
+
+
+        const oldPath =
+            state.currentStudent
+                .profile_image_url ||
+            null;
+
+
+        const {
+            error: uploadError
+        } =
+            await supabase
+                .storage
+                .from(
+                    PROFILE_BUCKET
+                )
+                .upload(
+                    newPath,
+                    file,
+                    {
+                        cacheControl:
+                            "3600",
+
+                        upsert:
+                            true,
+
+                        contentType:
+                            file.type
+                    }
+                );
+
+
+        if (uploadError) {
+            throw uploadError;
+        }
+
+
+        const {
+            error: updateError
+        } =
+            await supabase
+                .from(
+                    "students"
+                )
+                .update({
+                    profile_image_url:
+                        newPath
+                })
+                .eq(
+                    "id",
+                    state.currentStudent.id
+                );
+
+
+        if (updateError) {
+
+            await supabase
+                .storage
+                .from(
+                    PROFILE_BUCKET
+                )
+                .remove([
+                    newPath
+                ]);
+
+
+            throw updateError;
+        }
+
+
+        if (
+            oldPath &&
+            oldPath !==
+                newPath
+        ) {
+
+            const {
+                error: removeOldError
+            } =
+                await supabase
+                    .storage
+                    .from(
+                        PROFILE_BUCKET
+                    )
+                    .remove([
+                        oldPath
+                    ]);
+
+
+            if (removeOldError) {
+
+                console.warn(
+                    "Old profile picture could not be removed:",
+                    removeOldError
+                );
+            }
+        }
+
+
+        state.currentStudent
+            .profile_image_url =
+            newPath;
+
+
+        if (
+            $("profileImageInput")
+        ) {
+
+            $("profileImageInput").value =
+                "";
+        }
+
+
+        await loadStudentProfilePicture();
+
+
+        showAccountSettingsMessage(
+            "profileImageMessage",
+            "Profile picture updated successfully."
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Profile picture upload error:",
+            error
+        );
+
+
+        showAccountSettingsMessage(
+            "profileImageMessage",
+            error.message ||
+                "Unable to update profile picture.",
+            "error"
+        );
+
+
+    } finally {
+
+        if (saveButton) {
+
+            saveButton.disabled =
+                false;
+
+            saveButton.classList.remove(
+                "opacity-50",
+                "pointer-events-none"
+            );
+        }
+    }
+}
+
+
+// ============================================================
+// REMOVE PROFILE PICTURE
+// ============================================================
+
+async function removeProfilePicture() {
+
+    if (
+        !state.currentStudent
+    ) {
+        return;
+    }
+
+
+    const currentPath =
+        state.currentStudent
+            .profile_image_url;
+
+
+    if (!currentPath) {
+
+        showAccountSettingsMessage(
+            "profileImageMessage",
+            "No custom profile picture is currently saved.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    const removeButton =
+        $("removeProfileImageBtn");
+
+
+    if (removeButton) {
+
+        removeButton.disabled =
+            true;
+
+        removeButton.classList.add(
+            "opacity-50",
+            "pointer-events-none"
+        );
+    }
+
+
+    try {
+
+        const {
+            error: storageError
+        } =
+            await supabase
+                .storage
+                .from(
+                    PROFILE_BUCKET
+                )
+                .remove([
+                    currentPath
+                ]);
+
+
+        if (storageError) {
+            throw storageError;
+        }
+
+
+        const {
+            error: updateError
+        } =
+            await supabase
+                .from(
+                    "students"
+                )
+                .update({
+                    profile_image_url:
+                        null
+                })
+                .eq(
+                    "id",
+                    state.currentStudent.id
+                );
+
+
+        if (updateError) {
+            throw updateError;
+        }
+
+
+        state.currentStudent
+            .profile_image_url =
+            null;
+
+
+        if (
+            $("profileAvatar")
+        ) {
+
+            $("profileAvatar").src =
+                DEFAULT_PROFILE_IMAGE;
+        }
+
+
+        if (
+            $("accountProfilePreview")
+        ) {
+
+            $("accountProfilePreview").src =
+                DEFAULT_PROFILE_IMAGE;
+        }
+
+
+        if (
+            $("profileImageInput")
+        ) {
+
+            $("profileImageInput").value =
+                "";
+        }
+
+
+        showAccountSettingsMessage(
+            "profileImageMessage",
+            "Profile picture removed successfully."
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Remove profile picture error:",
+            error
+        );
+
+
+        showAccountSettingsMessage(
+            "profileImageMessage",
+            error.message ||
+                "Unable to remove profile picture.",
+            "error"
+        );
+
+
+    } finally {
+
+        if (removeButton) {
+
+            removeButton.disabled =
+                false;
+
+            removeButton.classList.remove(
+                "opacity-50",
+                "pointer-events-none"
+            );
+        }
+    }
+}
+
+
+// ============================================================
+// CHANGE PASSWORD
+// ============================================================
+
+async function updateStudentPassword() {
+
+    const currentPassword =
+        $("currentPassword")
+            ?.value ||
+        "";
+
+    const newPassword =
+        $("newPassword")
+            ?.value ||
+        "";
+
+    const confirmPassword =
+        $("confirmNewPassword")
+            ?.value ||
+        "";
+
+
+    // ========================================================
+    // REQUIRED FIELDS
+    // ========================================================
+
+    if (
+        !currentPassword ||
+        !newPassword ||
+        !confirmPassword
+    ) {
+
+        showAccountSettingsMessage(
+            "passwordSettingsMessage",
+            "Please complete all password fields.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    // ========================================================
+    // STRONG PASSWORD VALIDATION
+    // ========================================================
+    //
+    // Requirements:
+    // 1. Must start with an uppercase letter
+    // 2. Must contain at least one lowercase letter
+    // 3. Must contain at least one number
+    // 4. Must contain at least one special character
+    // 5. Must be at least 8 characters long
+    // ========================================================
+
+    const passwordPattern =
+        /^[A-Z](?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{7,}$/;
+
+
+    if (
+        !passwordPattern.test(
+            newPassword
+        )
+    ) {
+
+        showAccountSettingsMessage(
+            "passwordSettingsMessage",
+            "Password must start with an uppercase letter, contain at least one lowercase letter, one number, one special character, and be at least 8 characters long.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    // ========================================================
+    // CONFIRM PASSWORD
+    // ========================================================
+
+    if (
+        newPassword !==
+        confirmPassword
+    ) {
+
+        showAccountSettingsMessage(
+            "passwordSettingsMessage",
+            "New password and confirmation do not match.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    // ========================================================
+    // NEW PASSWORD MUST BE DIFFERENT
+    // ========================================================
+
+    if (
+        currentPassword ===
+        newPassword
+    ) {
+
+        showAccountSettingsMessage(
+            "passwordSettingsMessage",
+            "Your new password must be different from your current password.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    const updateButton =
+        $("updatePasswordBtn");
+
+
+    if (updateButton) {
+
+        updateButton.disabled =
+            true;
+
+        updateButton.classList.add(
+            "opacity-50",
+            "pointer-events-none"
+        );
+    }
+
+
+    try {
+
+        const email =
+            state.currentUser
+                ?.email ||
+            state.currentStudent
+                ?.email;
+
+
+        // ====================================================
+        // AUTHENTICATE CURRENT PASSWORD
+        // ====================================================
+
+        const {
+            error: verifyError
+        } =
+            await supabase
+                .auth
+                .signInWithPassword({
+                    email,
+                    password:
+                        currentPassword
+                });
+
+
+        if (verifyError) {
+
+            showAccountSettingsMessage(
+                "passwordSettingsMessage",
+                "Current password is incorrect.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        // ====================================================
+        // UPDATE PASSWORD THROUGH SUPABASE AUTH
+        // ====================================================
+
+        const {
+            error: updateError
+        } =
+            await supabase
+                .auth
+                .updateUser({
+                    password:
+                        newPassword
+                });
+
+
+        if (updateError) {
+
+            throw updateError;
+        }
+
+
+        // ====================================================
+        // CLEAR PASSWORD FIELDS
+        // ====================================================
+
+        [
+            "currentPassword",
+            "newPassword",
+            "confirmNewPassword"
+        ]
+            .forEach(
+                id => {
+
+                    if ($(id)) {
+
+                        $(id).value =
+                            "";
+                    }
+                }
+            );
+
+
+        showAccountSettingsMessage(
+            "passwordSettingsMessage",
+            "Password updated successfully."
+        );
+
+
+        // Close Account Settings only after a successful
+        // password update. The short delay lets the student
+        // see the confirmation message first.
+        setTimeout(
+            () => {
+
+                closeAccountSettings();
+
+            },
+            900
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Password update error:",
+            error
+        );
+
+
+        showAccountSettingsMessage(
+            "passwordSettingsMessage",
+            error.message ||
+                "Unable to update password.",
+            "error"
+        );
+
+
+    } finally {
+
+        if (updateButton) {
+
+            updateButton.disabled =
+                false;
+
+            updateButton.classList.remove(
+                "opacity-50",
+                "pointer-events-none"
+            );
+        }
+    }
+}
+
+// ============================================================
 // LOGOUT
 // ============================================================
 
@@ -379,6 +1668,9 @@ $("logoutBtn")
         "click",
 
         async () => {
+
+            stopLiveStudentUpdates();
+
 
             try {
 
@@ -396,8 +1688,9 @@ $("logoutBtn")
             sessionStorage.clear();
 
 
-            window.location.href =
-                "login.html";
+            window.location.replace(
+                "login.html"
+            );
 
         }
     );
@@ -482,10 +1775,6 @@ function renderCalendar() {
     );
 
 
-    // ---------------------------------------------
-    // Empty cells before first day
-    // ---------------------------------------------
-
     for (
         let i = 0;
         i < firstDay;
@@ -499,10 +1788,6 @@ function renderCalendar() {
         );
     }
 
-
-    // ---------------------------------------------
-    // Calendar dates
-    // ---------------------------------------------
 
     for (
         let day = 1;
@@ -890,8 +2175,6 @@ function renderSlotGrid() {
         }
     );
 }
-
-
 // ============================================================
 // BOOK APPOINTMENT
 // ============================================================
@@ -1186,7 +2469,7 @@ async function loadAppointments() {
                 tbody.innerHTML = `
                     <tr>
                         <td
-                            colspan="5"
+                            colspan="6"
                             class="px-4 py-6 text-center text-red-500"
                         >
                             Unable to load appointments.
@@ -1205,23 +2488,30 @@ async function loadAppointments() {
 
 
         // ---------------------------------------------
-        // Existing My Appointments table
+        // My Appointments
+        // Show only active/current appointments.
         // ---------------------------------------------
+
+        const activeAppointments =
+            state.appointments.filter(
+                isCurrentAppointment
+            );
+
 
         if (tbody) {
 
             if (
-                state.appointments.length ===
+                activeAppointments.length ===
                 0
             ) {
 
                 tbody.innerHTML = `
                     <tr>
                         <td
-                            colspan="5"
+                            colspan="6"
                             class="px-4 py-6 text-center text-gray-400"
                         >
-                            No appointments yet — book one above.
+                            No current appointments.
                         </td>
                     </tr>
                 `;
@@ -1229,21 +2519,19 @@ async function loadAppointments() {
             } else {
 
                 tbody.innerHTML =
-                    state.appointments
+                    activeAppointments
                         .map(
                             rowHTML
                         )
                         .join("");
 
 
-                attachAppointmentActionEvents();
+                attachAppointmentActionEvents(
+                    activeAppointments
+                );
             }
         }
 
-
-        // ---------------------------------------------
-        // New profile & record module
-        // ---------------------------------------------
 
         renderRecordStatistics();
 
@@ -1264,20 +2552,20 @@ async function loadAppointments() {
 // ATTACH APPOINTMENT ACTION EVENTS
 // ============================================================
 
-function attachAppointmentActionEvents() {
+function attachAppointmentActionEvents(
+    appointments =
+        state.appointments
+) {
 
-    state.appointments
+    appointments
         .forEach(
             appt => {
-
 
                 $(
                     `cancel-${appt.id}`
                 )
                     ?.addEventListener(
-
                         "click",
-
                         () =>
                             cancelAppointment(
                                 appt.id
@@ -1289,9 +2577,7 @@ function attachAppointmentActionEvents() {
                     `reschedule-${appt.id}`
                 )
                     ?.addEventListener(
-
                         "click",
-
                         () =>
                             openRescheduleModal(
                                 appt.id
@@ -1304,7 +2590,81 @@ function attachAppointmentActionEvents() {
 
 
 // ============================================================
-// APPOINTMENT ROW
+// CHECK IF APPOINTMENT IS CURRENT
+// ============================================================
+
+function isCurrentAppointment(
+    appt
+) {
+
+    const status =
+        normalizeStatus(
+            appt.status
+        );
+
+
+    const activeStatuses = [
+        "pending",
+        "approved",
+        "rescheduled"
+    ];
+
+
+    if (
+        !activeStatuses.includes(
+            status
+        )
+    ) {
+
+        return false;
+    }
+
+
+    if (
+        !appt.appointment_date
+    ) {
+
+        return false;
+    }
+
+
+    const today =
+        new Date();
+
+
+    today.setHours(
+        0,
+        0,
+        0,
+        0
+    );
+
+
+    const appointmentDate =
+        new Date(
+            `${appt.appointment_date}T00:00:00`
+        );
+
+
+    if (
+        Number.isNaN(
+            appointmentDate.getTime()
+        )
+    ) {
+
+        return false;
+    }
+
+
+    return (
+        appointmentDate >=
+        today
+    );
+}
+
+
+// ============================================================
+// MY APPOINTMENTS ROW
 // ============================================================
 
 function rowHTML(
@@ -1312,57 +2672,105 @@ function rowHTML(
 ) {
 
     const status =
-        (
-            appt.status ||
-            "pending"
-        )
-            .toLowerCase();
+        normalizeStatus(
+            appt.status
+        );
 
 
-    const canModify =
+    let actionsHTML = `
+        <span class="text-xs text-gray-300">
+            —
+        </span>
+    `;
+
+
+    if (
         status ===
-            "pending" ||
+        "pending"
+    ) {
 
+        actionsHTML = `
+            <button
+                id="reschedule-${appt.id}"
+                type="button"
+                class="text-xs font-medium text-[#0f4c2e] hover:underline"
+            >
+                Reschedule
+            </button>
+
+            <button
+                id="cancel-${appt.id}"
+                type="button"
+                class="text-xs font-medium text-red-600 hover:underline"
+            >
+                Cancel
+            </button>
+        `;
+    }
+
+
+    if (
         status ===
-            "approved";
+        "approved"
+    ) {
+
+        actionsHTML = `
+            <button
+                id="reschedule-${appt.id}"
+                type="button"
+                class="text-xs font-medium text-[#0f4c2e] hover:underline"
+            >
+                Reschedule
+            </button>
+        `;
+    }
+
+
+    if (
+        status ===
+        "rescheduled"
+    ) {
+
+        actionsHTML = `
+            <span class="text-xs text-gray-400">
+                Awaiting review
+            </span>
+        `;
+    }
 
 
     return `
         <tr
-            class="border-t border-gray-100"
+            class="border-t border-gray-100 hover:bg-gray-50 transition"
         >
 
-            <td
-                class="px-4 py-3"
-            >
+            <td class="px-3 py-3 align-middle">
+                ${formatCreatedAt(
+                    appt.created_at
+                )}
+            </td>
+
+            <td class="px-3 py-3 whitespace-nowrap">
                 ${formatDisplayDate(
                     appt.appointment_date
                 )}
             </td>
 
-
-            <td
-                class="px-4 py-3"
-            >
+            <td class="px-3 py-3 whitespace-nowrap">
                 ${escapeHTML(
-                    appt.appointment_time
+                    appt.appointment_time ||
+                    ""
                 )}
             </td>
 
-
-            <td
-                class="px-4 py-3"
-            >
+            <td class="px-3 py-3">
                 ${escapeHTML(
-                    appt.purpose
+                    appt.purpose ||
+                    ""
                 )}
             </td>
 
-
-            <td
-                class="px-4 py-3"
-            >
-
+            <td class="px-3 py-3 whitespace-nowrap">
                 <span
                     class="status-pill status-${status}"
                 >
@@ -1370,47 +2778,12 @@ function rowHTML(
                         status
                     )}
                 </span>
-
             </td>
 
-
             <td
-                class="px-4 py-3 text-right space-x-2"
+                class="px-3 py-3 text-right space-x-2 whitespace-nowrap"
             >
-
-                ${
-                    canModify
-
-                        ? `
-
-                            <button
-                                id="reschedule-${appt.id}"
-                                class="text-xs font-medium text-[#0f4c2e] hover:underline"
-                            >
-                                Reschedule
-                            </button>
-
-
-                            <button
-                                id="cancel-${appt.id}"
-                                class="text-xs font-medium text-red-600 hover:underline"
-                            >
-                                Cancel
-                            </button>
-
-                        `
-
-                        : `
-
-                            <span
-                                class="text-xs text-gray-300"
-                            >
-                                —
-                            </span>
-
-                        `
-                }
-
+                ${actionsHTML}
             </td>
 
         </tr>
@@ -1531,8 +2904,6 @@ function renderRecordStatistics() {
             closed;
     }
 }
-
-
 // ============================================================
 // APPOINTMENT RECORD SEARCH / FILTER
 // ============================================================
@@ -1571,39 +2942,34 @@ function renderAppointmentRecords() {
         [...state.appointments];
 
 
-    // ---------------------------------------------
-    // Most recent appointments first
-    // ---------------------------------------------
-
     records.sort(
         (
             a,
             b
         ) => {
 
-            const dateA =
+            const timeA =
                 new Date(
-                    `${a.appointment_date}T00:00:00`
-                );
+                    a.created_at ||
+                    0
+                )
+                    .getTime();
 
-
-            const dateB =
+            const timeB =
                 new Date(
-                    `${b.appointment_date}T00:00:00`
-                );
+                    b.created_at ||
+                    0
+                )
+                    .getTime();
 
 
             return (
-                dateB -
-                dateA
+                timeB -
+                timeA
             );
         }
     );
 
-
-    // ---------------------------------------------
-    // Search
-    // ---------------------------------------------
 
     if (searchValue) {
 
@@ -1611,63 +2977,41 @@ function renderAppointmentRecords() {
             records.filter(
                 appt => {
 
-                    const purpose =
-                        String(
-                            appt.purpose ||
-                            ""
-                        )
-                            .toLowerCase();
+                    const values = [
+                        appt.purpose,
+                        appt.notes,
+                        appt.appointment_time,
+                        appt.appointment_date,
+                        normalizeStatus(
+                            appt.status
+                        ),
+                        appt.created_at
+                            ? new Date(
+                                appt.created_at
+                            )
+                                .toLocaleString(
+                                    "en-PH"
+                                )
+                            : ""
+                    ];
 
 
-                    const notes =
-                        String(
-                            appt.notes ||
-                            ""
-                        )
-                            .toLowerCase();
-
-
-                    const time =
-                        String(
-                            appt.appointment_time ||
-                            ""
-                        )
-                            .toLowerCase();
-
-
-                    const date =
-                        String(
-                            appt.appointment_date ||
-                            ""
-                        )
-                            .toLowerCase();
-
-
-                    return (
-                        purpose.includes(
-                            searchValue
-                        ) ||
-
-                        notes.includes(
-                            searchValue
-                        ) ||
-
-                        time.includes(
-                            searchValue
-                        ) ||
-
-                        date.includes(
-                            searchValue
-                        )
-                    );
+                    return values
+                        .some(
+                            value =>
+                                String(
+                                    value ||
+                                    ""
+                                )
+                                    .toLowerCase()
+                                    .includes(
+                                        searchValue
+                                    )
+                        );
                 }
             );
     }
 
-
-    // ---------------------------------------------
-    // Status filter
-    // ---------------------------------------------
 
     if (
         statusFilter !==
@@ -1685,10 +3029,6 @@ function renderAppointmentRecords() {
     }
 
 
-    // ---------------------------------------------
-    // Empty state
-    // ---------------------------------------------
-
     if (
         records.length ===
         0
@@ -1696,14 +3036,12 @@ function renderAppointmentRecords() {
 
         tbody.innerHTML = `
             <tr>
-
                 <td
-                    colspan="5"
+                    colspan="6"
                     class="px-4 py-8 text-center text-gray-400"
                 >
                     No appointment records found.
                 </td>
-
             </tr>
         `;
 
@@ -1711,10 +3049,6 @@ function renderAppointmentRecords() {
         return;
     }
 
-
-    // ---------------------------------------------
-    // Render table rows
-    // ---------------------------------------------
 
     tbody.innerHTML =
         records
@@ -1741,53 +3075,53 @@ function appointmentRecordHTML(
 
     const notes =
         appt.notes &&
-        String(appt.notes)
-            .trim() !== ""
+        String(
+            appt.notes
+        )
+            .trim() !==
+            ""
 
             ? escapeHTML(
                 appt.notes
             )
 
-            : `<span
-                   class="text-gray-300"
-               >
-                   No notes
-               </span>`;
+            : `
+                <span class="text-gray-300">
+                    No notes
+                </span>
+            `;
 
 
     return `
         <tr
-            class="border-t border-gray-100 hover:bg-gray-50"
+            class="border-t border-gray-100 hover:bg-gray-50 transition"
         >
 
-            <td
-                class="px-4 py-3 whitespace-nowrap"
-            >
+            <td class="px-4 py-3 align-middle">
+                ${formatCreatedAt(
+                    appt.created_at
+                )}
+            </td>
+
+            <td class="px-4 py-3 whitespace-nowrap">
                 ${formatDisplayDate(
                     appt.appointment_date
                 )}
             </td>
 
-
-            <td
-                class="px-4 py-3 whitespace-nowrap"
-            >
+            <td class="px-4 py-3 whitespace-nowrap">
                 ${escapeHTML(
                     appt.appointment_time ||
                     ""
                 )}
             </td>
 
-
-            <td
-                class="px-4 py-3"
-            >
+            <td class="px-4 py-3">
                 ${escapeHTML(
                     appt.purpose ||
                     ""
                 )}
             </td>
-
 
             <td
                 class="px-4 py-3 text-gray-600 max-w-xs"
@@ -1795,11 +3129,7 @@ function appointmentRecordHTML(
                 ${notes}
             </td>
 
-
-            <td
-                class="px-4 py-3 whitespace-nowrap"
-            >
-
+            <td class="px-4 py-3 whitespace-nowrap">
                 <span
                     class="status-pill status-${status}"
                 >
@@ -1807,7 +3137,6 @@ function appointmentRecordHTML(
                         status
                     )}
                 </span>
-
             </td>
 
         </tr>
@@ -1866,10 +3195,6 @@ async function cancelAppointment(
 
     try {
 
-        // ---------------------------------------------
-        // Get current appointment
-        // ---------------------------------------------
-
         const {
             data: appointment,
             error: fetchError
@@ -1905,10 +3230,6 @@ async function cancelAppointment(
             appointment.status ||
             "pending";
 
-
-        // ---------------------------------------------
-        // Update appointment
-        // ---------------------------------------------
 
         const {
             error: updateError
@@ -1946,10 +3267,6 @@ async function cancelAppointment(
         }
 
 
-        // ---------------------------------------------
-        // Save status history
-        // ---------------------------------------------
-
         const {
             error: historyError
         } =
@@ -1983,6 +3300,12 @@ async function cancelAppointment(
         }
 
 
+        await sendStudentAppointmentEmail(
+            appointment,
+            "cancelled"
+        );
+
+
         await loadAppointments();
 
 
@@ -1992,6 +3315,96 @@ async function cancelAppointment(
             "Unexpected cancellation error:",
             error
         );
+    }
+}
+
+
+// ============================================================
+// STUDENT EMAIL NOTIFICATION
+// ============================================================
+
+async function sendStudentAppointmentEmail(
+    appointment,
+    status
+) {
+
+    try {
+
+        if (
+            !appointment ||
+            !state.currentStudent?.email
+        ) {
+            return false;
+        }
+
+
+        const studentName =
+            `${state.currentStudent.first_name || ""} ${state.currentStudent.last_name || ""}`
+                .trim() ||
+            "Student";
+
+
+        const {
+            data,
+            error
+        } =
+            await supabase
+                .functions
+                .invoke(
+                    "send-appointment-email",
+                    {
+                        body: {
+
+                            email:
+                                state.currentStudent.email,
+
+                            studentName,
+
+                            status,
+
+                            purpose:
+                                appointment.purpose,
+
+                            appointmentDate:
+                                appointment.appointment_date,
+
+                            appointmentTime:
+                                appointment.appointment_time
+                        }
+                    }
+                );
+
+
+        if (error) {
+
+            console.error(
+                "Student email notification error:",
+                error
+            );
+
+
+            return false;
+        }
+
+
+        console.log(
+            "Student email result:",
+            data
+        );
+
+
+        return true;
+
+
+    } catch (error) {
+
+        console.error(
+            "Student email notification failed:",
+            error
+        );
+
+
+        return false;
     }
 }
 
@@ -2122,10 +3535,6 @@ $("rescheduleConfirmBtn")
 
             try {
 
-                // ---------------------------------------------
-                // Current appointment
-                // ---------------------------------------------
-
                 const {
                     data: appointment,
                     error: fetchError
@@ -2161,10 +3570,6 @@ $("rescheduleConfirmBtn")
                     appointment.status ||
                     "pending";
 
-
-                // ---------------------------------------------
-                // Check selected slot
-                // ---------------------------------------------
 
                 const {
                     data: existing,
@@ -2222,10 +3627,6 @@ $("rescheduleConfirmBtn")
                 }
 
 
-                // ---------------------------------------------
-                // Update appointment
-                // ---------------------------------------------
-
                 const {
                     error: updateError
                 } =
@@ -2261,13 +3662,7 @@ $("rescheduleConfirmBtn")
 
                     return;
                 }
-
-
-                // ---------------------------------------------
-                // Status history
-                // ---------------------------------------------
-
-                const {
+                                const {
                     error: historyError
                 } =
                     await supabase
@@ -2379,15 +3774,71 @@ async function loadNotifications() {
 
 
     state.notifications =
-        data || [];
+        data ||
+        [];
 
 
     renderNotifications();
+
+
+    renderMessages();
 }
 
 
 // ============================================================
-// RENDER NOTIFICATIONS
+// FONT AWESOME NOTIFICATION ICON
+// ============================================================
+
+function getNotificationIcon(
+    type
+) {
+
+    const normalized =
+        String(
+            type ||
+            ""
+        )
+            .trim()
+            .toLowerCase();
+
+
+    const icons = {
+
+        approved:
+            '<i class="fa-solid fa-circle-check text-green-600"></i>',
+
+        rejected:
+            '<i class="fa-solid fa-circle-xmark text-red-600"></i>',
+
+        rescheduled:
+            '<i class="fa-solid fa-calendar-days text-purple-600"></i>',
+
+        cancelled:
+            '<i class="fa-solid fa-circle-minus text-red-500"></i>',
+
+        completed:
+            '<i class="fa-solid fa-check text-green-700"></i>',
+
+        expired:
+            '<i class="fa-regular fa-clock text-slate-500"></i>',
+
+        pending:
+            '<i class="fa-regular fa-clock text-amber-600"></i>'
+
+    };
+
+
+    return (
+        icons[
+            normalized
+        ] ||
+        '<i class="fa-solid fa-circle-info text-slate-500"></i>'
+    );
+}
+
+
+// ============================================================
+// RENDER UNREAD NOTIFICATIONS
 // ============================================================
 
 function renderNotifications() {
@@ -2408,33 +3859,178 @@ function renderNotifications() {
     }
 
 
-    const unreadCount =
+    const unreadNotifications =
         state.notifications
             .filter(
                 notification =>
                     notification.is_read ===
                     false
-            )
-            .length;
+            );
 
 
     if (
-        unreadCount > 0
+        unreadNotifications.length >
+        0
     ) {
 
         badge.textContent =
-            unreadCount;
+            unreadNotifications.length;
 
 
         badge.classList.remove(
             "hidden"
         );
 
+
     } else {
+
+        badge.textContent =
+            "0";
+
 
         badge.classList.add(
             "hidden"
         );
+    }
+
+
+    if (
+        unreadNotifications.length ===
+        0
+    ) {
+
+        list.innerHTML = `
+            <div class="px-4 py-7 text-center">
+
+                <i
+                    class="fa-solid fa-circle-check text-[#0f4c2e] text-xl"
+                ></i>
+
+                <p
+                    class="text-xs font-semibold text-gray-500 mt-2"
+                >
+                    You're all caught up.
+                </p>
+
+                <p
+                    class="text-[10px] text-gray-400 mt-1"
+                >
+                    Read messages remain available in Mail.
+                </p>
+
+            </div>
+        `;
+
+
+        return;
+    }
+
+
+    list.innerHTML =
+        unreadNotifications
+            .map(
+                notification =>
+                    notificationHTML(
+                        notification
+                    )
+            )
+            .join("");
+}
+
+
+// ============================================================
+// UNREAD NOTIFICATION HTML
+// ============================================================
+
+function notificationHTML(
+    notification
+) {
+
+    return `
+        <div
+            id="notification-${notification.id}"
+            class="px-4 py-3 border-b border-gray-100 bg-green-50 hover:bg-green-100 transition"
+        >
+
+            <div class="flex gap-3">
+
+                <div
+                    class="text-lg flex-shrink-0 pt-0.5"
+                >
+                    ${getNotificationIcon(
+                        notification.type
+                    )}
+                </div>
+
+
+                <div
+                    class="flex-1 min-w-0"
+                >
+
+                    <p
+                        class="text-xs font-semibold text-gray-800"
+                    >
+                        ${escapeHTML(
+                            notification.title ||
+                            "Appointment Update"
+                        )}
+                    </p>
+
+
+                    <p
+                        class="text-xs text-gray-600 mt-1 leading-relaxed"
+                    >
+                        ${escapeHTML(
+                            notification.message ||
+                            ""
+                        )}
+                    </p>
+
+
+                    <div
+                        class="flex items-center justify-between gap-3 mt-2"
+                    >
+
+                        <p
+                            class="text-[10px] text-gray-400"
+                        >
+                            ${formatNotificationDate(
+                                notification.created_at
+                            )}
+                        </p>
+
+
+                        <button
+                            type="button"
+                            class="markNotificationReadBtn text-[10px] font-semibold text-[#0f4c2e] hover:underline whitespace-nowrap"
+                            data-id="${notification.id}"
+                        >
+                            Mark as read
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    `;
+}
+
+
+// ============================================================
+// RENDER MESSAGE HISTORY
+// ============================================================
+
+function renderMessages() {
+
+    const list =
+        $("messageList");
+
+
+    if (!list) {
+        return;
     }
 
 
@@ -2444,10 +4040,24 @@ function renderNotifications() {
     ) {
 
         list.innerHTML = `
-            <div
-                class="px-4 py-6 text-center text-xs text-gray-400"
-            >
-                No notifications yet.
+            <div class="px-4 py-7 text-center">
+
+                <i
+                    class="fa-regular fa-envelope text-[#0f4c2e] text-xl"
+                ></i>
+
+                <p
+                    class="text-xs font-semibold text-gray-500 mt-2"
+                >
+                    No messages yet.
+                </p>
+
+                <p
+                    class="text-[10px] text-gray-400 mt-1"
+                >
+                    Appointment updates will appear here.
+                </p>
+
             </div>
         `;
 
@@ -2459,117 +4069,81 @@ function renderNotifications() {
     list.innerHTML =
         state.notifications
             .map(
-                notificationHTML
+                messageHistoryHTML
             )
             .join("");
-
-
-    state.notifications
-        .forEach(
-            notification => {
-
-                $(
-                    `notification-${notification.id}`
-                )
-                    ?.addEventListener(
-
-                        "click",
-
-                        () =>
-                            markNotificationRead(
-                                notification.id
-                            )
-                    );
-
-            }
-        );
 }
 
 
 // ============================================================
-// NOTIFICATION HTML
+// MESSAGE HISTORY HTML
 // ============================================================
 
-function notificationHTML(
+function messageHistoryHTML(
     notification
 ) {
 
-    const unreadClass =
+    const readLabel =
         notification.is_read
-            ? "bg-white"
-            : "bg-green-50";
+            ? "Read"
+            : "Unread";
 
 
-    let icon =
-        "ℹ️";
-
-
-    if (
-        notification.type ===
-        "approved"
-    ) {
-
-        icon =
-            "✅";
-    }
-
-
-    if (
-        notification.type ===
-        "rejected"
-    ) {
-
-        icon =
-            "❌";
-    }
-
-
-    if (
-        notification.type ===
-        "rescheduled"
-    ) {
-
-        icon =
-            "📅";
-    }
+    const readClass =
+        notification.is_read
+            ? "text-gray-400"
+            : "text-[#0f4c2e]";
 
 
     return `
-        <button
-            id="notification-${notification.id}"
-            type="button"
-            class="w-full text-left px-4 py-3 border-b border-gray-100 hover:bg-gray-50 ${unreadClass}"
+        <div
+            class="px-4 py-3 border-b border-gray-100 hover:bg-gray-50 transition"
         >
 
-            <div
-                class="flex gap-3"
-            >
+            <div class="flex gap-3">
 
                 <div
-                    class="text-lg"
+                    class="text-lg flex-shrink-0 pt-0.5"
                 >
-                    ${icon}
+                    ${getNotificationIcon(
+                        notification.type
+                    )}
                 </div>
 
 
                 <div
-                    class="flex-1"
+                    class="flex-1 min-w-0"
                 >
 
-                    <p
-                        class="text-xs font-semibold text-gray-800"
+                    <div
+                        class="flex items-start justify-between gap-3"
                     >
-                        ${escapeHTML(
-                            notification.title
-                        )}
-                    </p>
+
+                        <p
+                            class="text-xs font-semibold text-gray-800"
+                        >
+                            ${escapeHTML(
+                                notification.title ||
+                                "Appointment Update"
+                            )}
+                        </p>
+
+
+                        <span
+                            class="text-[9px] font-semibold ${readClass} whitespace-nowrap"
+                        >
+                            ${readLabel}
+                        </span>
+
+                    </div>
 
 
                     <p
-                        class="text-xs text-gray-600 mt-1"
+                        class="text-xs text-gray-600 mt-1 leading-relaxed"
                     >
                         ${escapeHTML(
-                            notification.message
+                            notification.message ||
+                            ""
                         )}
                     </p>
 
@@ -2586,18 +4160,26 @@ function notificationHTML(
 
             </div>
 
-        </button>
+        </div>
     `;
 }
 
 
 // ============================================================
-// MARK NOTIFICATION READ
+// MARK ONE NOTIFICATION READ
 // ============================================================
 
 async function markNotificationRead(
     id
 ) {
+
+    if (
+        !id ||
+        !state.currentStudent
+    ) {
+        return;
+    }
+
 
     const {
         error
@@ -2607,14 +4189,16 @@ async function markNotificationRead(
                 "notifications"
             )
             .update({
-
                 is_read:
                     true
-
             })
             .eq(
                 "id",
                 id
+            )
+            .eq(
+                "student_id",
+                state.currentStudent.id
             );
 
 
@@ -2631,11 +4215,16 @@ async function markNotificationRead(
 
 
     const notification =
-        state.notifications.find(
-            item =>
-                item.id ===
-                id
-        );
+        state.notifications
+            .find(
+                item =>
+                    String(
+                        item.id
+                    ) ===
+                    String(
+                        id
+                    )
+            );
 
 
     if (notification) {
@@ -2646,7 +4235,46 @@ async function markNotificationRead(
 
 
     renderNotifications();
+
+
+    renderMessages();
 }
+
+
+// ============================================================
+// MARK AS READ BUTTON
+// ============================================================
+
+document.addEventListener(
+
+    "click",
+
+    async event => {
+
+        const button =
+            event.target
+                .closest(
+                    ".markNotificationReadBtn"
+                );
+
+
+        if (!button) {
+            return;
+        }
+
+
+        event.preventDefault();
+
+
+        event.stopPropagation();
+
+
+        await markNotificationRead(
+            button.dataset.id
+        );
+
+    }
+);
 
 
 // ============================================================
@@ -2658,7 +4286,17 @@ $("markAllReadBtn")
 
         "click",
 
-        async () => {
+        async event => {
+
+            event.stopPropagation();
+
+
+            if (
+                !state.currentStudent
+            ) {
+                return;
+            }
+
 
             const {
                 error
@@ -2668,14 +4306,16 @@ $("markAllReadBtn")
                         "notifications"
                     )
                     .update({
-
                         is_read:
                             true
-
                     })
                     .eq(
                         "student_id",
                         state.currentStudent.id
+                    )
+                    .eq(
+                        "is_read",
+                        false
                     );
 
 
@@ -2704,12 +4344,15 @@ $("markAllReadBtn")
 
             renderNotifications();
 
+
+            renderMessages();
+
         }
     );
 
 
 // ============================================================
-// NOTIFICATION DROPDOWN
+// BELL DROPDOWN
 // ============================================================
 
 $("notificationBtn")
@@ -2722,6 +4365,13 @@ $("notificationBtn")
             event.stopPropagation();
 
 
+            $("messageDropdown")
+                ?.classList
+                .add(
+                    "hidden"
+                );
+
+
             $("notificationDropdown")
                 ?.classList
                 .toggle(
@@ -2732,40 +4382,319 @@ $("notificationBtn")
     );
 
 
+// ============================================================
+// MAIL DROPDOWN
+// ============================================================
+
+$("messageBtn")
+    ?.addEventListener(
+
+        "click",
+
+        event => {
+
+            event.stopPropagation();
+
+
+            $("notificationDropdown")
+                ?.classList
+                .add(
+                    "hidden"
+                );
+
+
+            $("messageDropdown")
+                ?.classList
+                .toggle(
+                    "hidden"
+                );
+
+
+            renderMessages();
+
+        }
+    );
+
+
+// ============================================================
+// CLOSE NOTIFICATION / MAIL DROPDOWNS
+// ============================================================
+
 document.addEventListener(
 
     "click",
 
     event => {
 
-        const dropdown =
+        const notificationDropdown =
             $("notificationDropdown");
 
 
-        const button =
+        const notificationButton =
             $("notificationBtn");
 
 
+        const messageDropdown =
+            $("messageDropdown");
+
+
+        const messageButton =
+            $("messageBtn");
+
+
+        const clickedNotificationArea =
+            (
+                notificationDropdown &&
+                notificationDropdown.contains(
+                    event.target
+                )
+            ) ||
+            (
+                notificationButton &&
+                notificationButton.contains(
+                    event.target
+                )
+            );
+
+
+        const clickedMessageArea =
+            (
+                messageDropdown &&
+                messageDropdown.contains(
+                    event.target
+                )
+            ) ||
+            (
+                messageButton &&
+                messageButton.contains(
+                    event.target
+                )
+            );
+
+
         if (
-            !dropdown ||
-            !button
+            !clickedNotificationArea
         ) {
-            return;
+
+            notificationDropdown
+                ?.classList
+                .add(
+                    "hidden"
+                );
         }
 
 
         if (
-            !dropdown.contains(
-                event.target
-            ) &&
-
-            !button.contains(
-                event.target
-            )
+            !clickedMessageArea
         ) {
 
-            dropdown.classList.add(
-                "hidden"
+            messageDropdown
+                ?.classList
+                .add(
+                    "hidden"
+                );
+        }
+
+    }
+);
+// ============================================================
+// LIVE STUDENT UPDATES
+// ============================================================
+
+function setupLiveStudentUpdates() {
+
+    if (
+        !state.currentStudent
+    ) {
+        return;
+    }
+
+
+    stopLiveStudentUpdates();
+
+
+    const studentId =
+        state.currentStudent.id;
+
+
+    state.liveUpdatesChannel =
+        supabase
+            .channel(
+                `student-dashboard-${studentId}`
+            )
+            .on(
+                "postgres_changes",
+                {
+                    event:
+                        "*",
+
+                    schema:
+                        "public",
+
+                    table:
+                        "appointments",
+
+                    filter:
+                        `student_id=eq.${studentId}`
+                },
+
+                async () => {
+
+                    await loadAppointments();
+                }
+            )
+            .on(
+                "postgres_changes",
+                {
+                    event:
+                        "*",
+
+                    schema:
+                        "public",
+
+                    table:
+                        "notifications",
+
+                    filter:
+                        `student_id=eq.${studentId}`
+                },
+
+                async () => {
+
+                    await loadNotifications();
+                }
+            )
+            .subscribe(
+                status => {
+
+                    console.log(
+                        "Student realtime status:",
+                        status
+                    );
+                }
+            );
+
+
+    // ---------------------------------------------
+    // Polling fallback
+    // ---------------------------------------------
+
+    state.liveRefreshTimer =
+        setInterval(
+
+            async () => {
+
+                if (
+                    document.visibilityState !==
+                    "visible"
+                ) {
+                    return;
+                }
+
+
+                try {
+
+                    await Promise.all([
+                        loadAppointments(),
+                        loadNotifications()
+                    ]);
+
+
+                } catch (error) {
+
+                    console.warn(
+                        "Student fallback refresh failed:",
+                        error
+                    );
+                }
+
+            },
+
+            3000
+        );
+}
+
+
+// ============================================================
+// STOP LIVE STUDENT UPDATES
+// ============================================================
+
+function stopLiveStudentUpdates() {
+
+    if (
+        state.liveRefreshTimer
+    ) {
+
+        clearInterval(
+            state.liveRefreshTimer
+        );
+
+
+        state.liveRefreshTimer =
+            null;
+    }
+
+
+    if (
+        state.liveUpdatesChannel
+    ) {
+
+        try {
+
+            supabase.removeChannel(
+                state.liveUpdatesChannel
+            );
+
+
+        } catch (error) {
+
+            console.warn(
+                "Unable to remove student realtime channel:",
+                error
+            );
+        }
+
+
+        state.liveUpdatesChannel =
+            null;
+    }
+}
+
+
+// ============================================================
+// REFRESH WHEN TAB BECOMES VISIBLE
+// ============================================================
+
+document.addEventListener(
+
+    "visibilitychange",
+
+    async () => {
+
+        if (
+            document.visibilityState !==
+                "visible" ||
+
+            !state.currentStudent
+        ) {
+
+            return;
+        }
+
+
+        try {
+
+            await Promise.all([
+                loadAppointments(),
+                loadNotifications()
+            ]);
+
+
+        } catch (error) {
+
+            console.warn(
+                "Student visibility refresh failed:",
+                error
             );
         }
 
@@ -2774,7 +4703,24 @@ document.addEventListener(
 
 
 // ============================================================
+// CLEAN UP REALTIME ON PAGE EXIT
+// ============================================================
+
+window.addEventListener(
+
+    "beforeunload",
+
+    stopLiveStudentUpdates
+);
+
+
+// ============================================================
 // HELPERS
+// ============================================================
+
+
+// ============================================================
+// NORMALIZE STATUS
 // ============================================================
 
 function normalizeStatus(
@@ -2783,7 +4729,7 @@ function normalizeStatus(
 
     return String(
         status ||
-        "pending"
+        ""
     )
         .trim()
         .toLowerCase();
@@ -2798,11 +4744,11 @@ function toISODate(
     date
 ) {
 
-    const y =
+    const year =
         date.getFullYear();
 
 
-    const m =
+    const month =
         String(
             date.getMonth() + 1
         )
@@ -2812,7 +4758,7 @@ function toISODate(
             );
 
 
-    const d =
+    const day =
         String(
             date.getDate()
         )
@@ -2822,9 +4768,92 @@ function toISODate(
             );
 
 
-    return (
-        `${y}-${m}-${d}`
-    );
+    return `${year}-${month}-${day}`;
+}
+
+
+// ============================================================
+// CREATED AT
+// ============================================================
+
+function formatCreatedAt(
+    value
+) {
+
+    if (!value) {
+
+        return `
+            <div class="text-gray-400">
+                Unknown
+            </div>
+        `;
+    }
+
+
+    const date =
+        new Date(
+            value
+        );
+
+
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return `
+            <div class="text-gray-400">
+                Unknown
+            </div>
+        `;
+    }
+
+
+    const dateText =
+        date.toLocaleDateString(
+            "en-PH",
+            {
+                year:
+                    "numeric",
+
+                month:
+                    "short",
+
+                day:
+                    "numeric"
+            }
+        );
+
+
+    const timeText =
+        date.toLocaleTimeString(
+            "en-PH",
+            {
+                hour:
+                    "numeric",
+
+                minute:
+                    "2-digit"
+            }
+        );
+
+
+    return `
+        <div class="whitespace-nowrap">
+            ${escapeHTML(
+                dateText
+            )}
+        </div>
+
+        <div
+            class="text-[11px] text-gray-400 mt-0.5 whitespace-nowrap"
+        >
+            ${escapeHTML(
+                timeText
+            )}
+        </div>
+    `;
 }
 
 
@@ -2837,31 +4866,66 @@ function formatDisplayDate(
 ) {
 
     if (!iso) {
-        return "N/A";
+        return "";
     }
 
 
-    const [
-        y,
-        m,
-        d
-    ] =
-        iso
-            .split("-")
-            .map(
-                Number
-            );
+    const parts =
+        String(
+            iso
+        )
+            .split("-");
 
 
-    return new Date(
-        y,
-        m - 1,
-        d
-    )
+    if (
+        parts.length !==
+        3
+    ) {
+
+        return iso;
+    }
+
+
+    const year =
+        Number(
+            parts[0]
+        );
+
+
+    const month =
+        Number(
+            parts[1]
+        );
+
+
+    const day =
+        Number(
+            parts[2]
+        );
+
+
+    const date =
+        new Date(
+            year,
+            month - 1,
+            day
+        );
+
+
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return iso;
+    }
+
+
+    return date
         .toLocaleDateString(
-            undefined,
+            "en-PH",
             {
-
                 year:
                     "numeric",
 
@@ -2870,7 +4934,6 @@ function formatDisplayDate(
 
                 day:
                     "numeric"
-
             }
         );
 }
@@ -2889,13 +4952,43 @@ function formatNotificationDate(
     }
 
 
-    return new Date(
-        value
-    )
-        .toLocaleString();
+    const date =
+        new Date(
+            value
+        );
+
+
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return "";
+    }
+
+
+    return date
+        .toLocaleString(
+            "en-PH",
+            {
+                year:
+                    "numeric",
+
+                month:
+                    "short",
+
+                day:
+                    "numeric",
+
+                hour:
+                    "numeric",
+
+                minute:
+                    "2-digit"
+            }
+        );
 }
-
-
 // ============================================================
 // CAPITALIZE
 // ============================================================
@@ -2904,18 +4997,22 @@ function capitalize(
     value
 ) {
 
-    if (!value) {
+    const text =
+        String(
+            value ||
+            ""
+        );
+
+
+    if (!text) {
         return "";
     }
 
 
     return (
-        value
-            .charAt(0)
+        text.charAt(0)
             .toUpperCase() +
-
-        value
-            .slice(1)
+        text.slice(1)
     );
 }
 
@@ -2928,78 +5025,41 @@ function escapeHTML(
     value
 ) {
 
-    if (
-        value === null ||
-        value === undefined
-    ) {
-
-        return "";
-    }
-
-
     return String(
-        value
+        value ??
+        ""
     )
-        .replaceAll(
-            "&",
+        .replace(
+            /&/g,
             "&amp;"
         )
-        .replaceAll(
-            "<",
+        .replace(
+            /</g,
             "&lt;"
         )
-        .replaceAll(
-            ">",
+        .replace(
+            />/g,
             "&gt;"
         )
-        .replaceAll(
-            '"',
+        .replace(
+            /"/g,
             "&quot;"
         )
-        .replaceAll(
-            "'",
+        .replace(
+            /'/g,
             "&#039;"
         );
 }
 
 
 // ============================================================
-// ADDITIONAL EVENT BINDING
+// ADDITIONAL INTERFACE EVENTS
 // ============================================================
 
 function bindEvents() {
 
-    // ---------------------------------------------
-    // Search appointment records
-    // ---------------------------------------------
-
-    $("recordsSearch")
-        ?.addEventListener(
-
-            "input",
-
-            () => {
-
-                renderAppointmentRecords();
-
-            }
-        );
-
-
-    // ---------------------------------------------
-    // Filter appointment records
-    // ---------------------------------------------
-
-    $("recordsStatusFilter")
-        ?.addEventListener(
-
-            "change",
-
-            () => {
-
-                renderAppointmentRecords();
-
-            }
-        );
+    // Most event listeners are already attached
+    // directly to their related controls above.
+    // This function remains here for startup compatibility.
 
 }

@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Desk - ESSU Registrar Portal</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* ==================================================== */
+        /* HELP DESK PAGE LAYOUT — SAME SCROLL BEHAVIOR AS      */
+        /* THE STUDENT DASHBOARD                                */
+        /* ==================================================== */
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        body {
+            min-height: 100vh;
+        }
+
+        .helpdesk-site-header {
+            flex: 0 0 auto;
+            position: relative;
+            z-index: 100;
+        }
+
+        .helpdesk-scroll-shell {
+            position: relative;
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .helpdesk-scroll-container {
+            height: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+
+            /* Hide the browser's native scrollbar completely */
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .helpdesk-scroll-container::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+            display: none;
+        }
+
+        /* Custom scrollbar: bar only, no arrow buttons */
+        .helpdesk-custom-scrollbar {
+            position: absolute;
+            top: 0;
+            right: 2px;
+            bottom: 0;
+            width: 8px;
+            background: #ffffff;
+            z-index: 60;
+            pointer-events: none;
+        }
+
+        .helpdesk-custom-scroll-thumb {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 8px;
+            min-height: 28px;
+            background: #d1d5db;
+            border-radius: 4px;
+            transition: background 0.15s ease;
+        }
+
+        .helpdesk-custom-scroll-thumb:hover {
+            background: #9ca3af;
+        }
+
+    </style>
+</head>
+
+<body class="bg-emerald-950 text-white flex flex-col min-h-full bg-cover bg-center bg-no-repeat bg-fixed" style="background-image: linear-gradient(to bottom, rgba(6, 78, 59, 0.85), rgba(2, 44, 34, 0.95)), url('img/ESSU_thumbnail.png'); font-family: system-ui, -apple-system, sans-serif;">
+
+    <!-- STICKY GOVERNMENT HEADER + MASTHEAD -->
+    <div class="helpdesk-site-header">
+
+    <!-- 1. TOP BAR (GWTD Standard) -->
+    <div class="bg-emerald-950/90 text-white text-xs border-b border-emerald-900 z-30 backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto px-6 py-2 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center space-x-2">
+                <img src="img/rp_n.webp" alt="Republic Seal" class="w-4 h-4 rounded-full object-cover">
+                <span class="font-semibold tracking-wider uppercase">Republic of the Philippines</span>
+                <span class="text-emerald-400">|</span>
+                <span class="text-emerald-200">Eastern Samar State University</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="https://main.essu.edu.ph/index.php?id=4&option=com_sppagebuilder&view=page" target="_blank" rel="noopener noreferrer" class="hover:text-yellow-400 transition">Transparency Seal</a>
+                <a href="https://main.essu.edu.ph/citizen-charter" target="_blank" rel="noopener noreferrer" class="hover:text-yellow-400 transition">Citizen's Charter</a>
+                <a href="helpdesk.html" class="text-yellow-400 font-bold border-b border-yellow-400 pb-0.5">Help Desk</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. MASTHEAD / NAVBAR -->
+    <header class="bg-emerald-900/80 backdrop-blur-md text-white shadow-lg border-b-4 border-yellow-400 z-20">
+        <div class="max-w-7xl mx-auto px-6 py-3.5 flex items-center justify-between">
+            
+            <!-- Left Logo & Title -->
+            <a id="portalReturnLink" href="student.html" class="flex items-center space-x-3">
+                <img src="img/OIP.webp" alt="ESSU Logo" class="w-10 h-10 rounded-full bg-white p-0.5 border border-yellow-400 object-contain shadow">
+                <span class="text-lg font-bold tracking-tight uppercase">ESSU REGISTRAR PORTAL</span>
+            </a>
+
+            <!-- Right Navigation -->
+            <nav class="flex items-center">
+                <a
+                    id="returnDashboardLink"
+                    href="student.html"
+                    class="inline-flex items-center gap-2 px-4 py-2 border border-yellow-400 text-yellow-300 rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-yellow-400 hover:text-emerald-950 transition"
+                >
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span id="returnDashboardText">Back to Dashboard</span>
+                </a>
+            </nav>
+
+        </div>
+    </header>
+
+    </div>
+
+    <!-- ===================================================== -->
+    <!-- SCROLLABLE HELP DESK CONTENT -->
+    <!-- Header and masthead remain fixed above this container -->
+    <!-- ===================================================== -->
+
+    <div class="helpdesk-scroll-shell">
+
+        <div class="helpdesk-scroll-container">
+
+    <!-- 3. HELP DESK CONTENT AREA -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-8 md:py-12 z-10">
+
+        <!-- Header Title Section -->
+        <div class="text-center mb-10">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-900/80 border-2 border-yellow-400 mb-3 shadow-lg">
+                <i class="fa-solid fa-headset text-yellow-400 text-2xl"></i>
+            </div>
+            <h1 class="text-2xl md:text-4xl font-black uppercase tracking-wider text-white drop-shadow">
+                ESSU Help Desk & Support
+            </h1>
+            <p class="text-emerald-200 text-xs md:text-sm mt-2 max-w-xl mx-auto">
+                Find answers to common questions regarding document requests, appointment scheduling, and account registration.
+            </p>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="max-w-2xl mx-auto mb-10">
+            <div class="relative">
+                <input type="text" id="faqSearch" onkeyup="filterFAQs()" placeholder="Search for help topics (e.g., Documents, Appointment, Account)..." 
+                    class="w-full pl-12 pr-4 py-3.5 bg-emerald-900/70 border border-emerald-700 rounded-lg text-white placeholder-emerald-300/70 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 backdrop-blur-md shadow-lg transition">
+                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-yellow-400 text-base"></i>
+            </div>
+        </div>
+
+        <!-- Frequently Asked Questions Accordion Section -->
+        <div class="max-w-4xl mx-auto space-y-4 mb-12">
+            <h2 class="text-lg font-bold text-yellow-400 uppercase tracking-wider mb-4 border-b border-emerald-800 pb-2 flex items-center gap-2">
+                <i class="fa-solid fa-circle-question"></i> Frequently Asked Questions
+            </h2>
+
+            <!-- FAQ Item 1 (Generalized) -->
+            <div class="faq-item bg-emerald-900/60 border border-emerald-800/80 rounded-lg overflow-hidden backdrop-blur-sm transition">
+                <button onclick="toggleAccordion(1)" class="w-full text-left px-5 py-4 flex items-center justify-between font-semibold text-sm md:text-base hover:text-yellow-300 transition">
+                    <span><i class="fa-solid fa-file-lines text-emerald-400 mr-2"></i> How do I request academic documents (TOR, Diploma, Certifications)?</span>
+                    <i id="icon-1" class="fa-solid fa-chevron-down text-yellow-400 text-xs transition-transform duration-200"></i>
+                </button>
+                <div id="content-1" class="hidden px-5 pb-4 text-xs md:text-sm text-emerald-100 border-t border-emerald-800/50 pt-3 leading-relaxed">
+                    To request academic documents, log in to your portal account, go to <strong>"New Request"</strong>, choose your desired document type from the options provided, complete the necessary details, and set your preferred appointment schedule for verification or pickup.
+                </div>
+            </div>
+
+            <!-- FAQ Item 2 -->
+            <div class="faq-item bg-emerald-900/60 border border-emerald-800/80 rounded-lg overflow-hidden backdrop-blur-sm transition">
+                <button onclick="toggleAccordion(2)" class="w-full text-left px-5 py-4 flex items-center justify-between font-semibold text-sm md:text-base hover:text-yellow-300 transition">
+                    <span><i class="fa-solid fa-calendar-check text-emerald-400 mr-2"></i> How do I cancel or reschedule an appointment?</span>
+                    <i id="icon-2" class="fa-solid fa-chevron-down text-yellow-400 text-xs transition-transform duration-200"></i>
+                </button>
+                <div id="content-2" class="hidden px-5 pb-4 text-xs md:text-sm text-emerald-100 border-t border-emerald-800/50 pt-3 leading-relaxed">
+                    You can manage your existing appointments from your Student Dashboard under <strong>"My Appointments"</strong>. Requests for rescheduling or cancellation must be submitted at least 24 hours prior to your scheduled time slot.
+                </div>
+            </div>
+
+            <!-- FAQ Item 3 -->
+            <div class="faq-item bg-emerald-900/60 border border-emerald-800/80 rounded-lg overflow-hidden backdrop-blur-sm transition">
+                <button onclick="toggleAccordion(3)" class="w-full text-left px-5 py-4 flex items-center justify-between font-semibold text-sm md:text-base hover:text-yellow-300 transition">
+                    <span><i class="fa-solid fa-user-lock text-emerald-400 mr-2"></i> What should I do if I forgot my login credentials?</span>
+                    <i id="icon-3" class="fa-solid fa-chevron-down text-yellow-400 text-xs transition-transform duration-200"></i>
+                </button>
+                <div id="content-3" class="hidden px-5 pb-4 text-xs md:text-sm text-emerald-100 border-t border-emerald-800/50 pt-3 leading-relaxed">
+                    On the Login page, click on <strong>"Forgot Password"</strong> and enter your registered email address. You will receive an email containing instructions on how to reset your password.
+                </div>
+            </div>
+
+            <!-- FAQ Item 4 -->
+            <div class="faq-item bg-emerald-900/60 border border-emerald-800/80 rounded-lg overflow-hidden backdrop-blur-sm transition">
+                <button onclick="toggleAccordion(4)" class="w-full text-left px-5 py-4 flex items-center justify-between font-semibold text-sm md:text-base hover:text-yellow-300 transition">
+                    <span><i class="fa-solid fa-id-card text-emerald-400 mr-2"></i> What requirements are needed when picking up documents?</span>
+                    <i id="icon-4" class="fa-solid fa-chevron-down text-yellow-400 text-xs transition-transform duration-200"></i>
+                </button>
+                <div id="content-4" class="hidden px-5 pb-4 text-xs md:text-sm text-emerald-100 border-t border-emerald-800/50 pt-3 leading-relaxed">
+                    Please present a valid ID along with your appointment confirmation slip (digital or printed). If sending a representative, they must present an Authorization Letter, a copy of your valid ID, and their own valid ID.
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Support Form & Office Info Grid -->
+        <div
+            id="contactSupport"
+            class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 scroll-mt-6"
+        >
+            
+            <!-- Contact Form (2 columns) -->
+            <div class="md:col-span-2 bg-emerald-900/70 border border-emerald-800 p-6 rounded-lg backdrop-blur-md shadow-xl">
+                <h2 class="text-base font-bold text-yellow-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-paper-plane"></i> Submit an Inquiry
+                </h2>
+                <form onsubmit="handleSubmit(event)" class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-emerald-200 mb-1">Full Name</label>
+                            <input type="text" required placeholder="e.g. Juan Dela Cruz" class="w-full px-3 py-2 bg-emerald-950/80 border border-emerald-700 rounded text-xs text-white placeholder-emerald-400/50 focus:outline-none focus:ring-1 focus:ring-yellow-400">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-emerald-200 mb-1">Email Address</label>
+                            <input type="email" required placeholder="e.g. student@essu.edu.ph" class="w-full px-3 py-2 bg-emerald-950/80 border border-emerald-700 rounded text-xs text-white placeholder-emerald-400/50 focus:outline-none focus:ring-1 focus:ring-yellow-400">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-emerald-200 mb-1">Subject</label>
+                        <select required class="w-full px-3 py-2 bg-emerald-950/80 border border-emerald-700 rounded text-xs text-white focus:outline-none focus:ring-1 focus:ring-yellow-400">
+                            <option value="" disabled selected>Select Inquiry Subject</option>
+                            <option value="transcript">Document / Record Request</option>
+                            <option value="appointment">Appointment Issue</option>
+                            <option value="account">Account Access / Login</option>
+                            <option value="general">General Inquiry</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-emerald-200 mb-1">Message</label>
+                        <textarea rows="4" required placeholder="Describe your concern in detail..." class="w-full px-3 py-2 bg-emerald-950/80 border border-emerald-700 rounded text-xs text-white placeholder-emerald-400/50 focus:outline-none focus:ring-1 focus:ring-yellow-400"></textarea>
+                    </div>
+                    <button type="submit" class="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs uppercase tracking-wider rounded shadow transition">
+                        Send Ticket
+                    </button>
+                </form>
+            </div>
+
+            <!-- Registrar Office Info Box (1 column) -->
+            <div class="bg-emerald-900/70 border border-emerald-800 p-6 rounded-lg backdrop-blur-md shadow-xl flex flex-col justify-between">
+                <div>
+                    <h2 class="text-base font-bold text-yellow-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-building-columns"></i> Office Hours
+                    </h2>
+                    <div class="space-y-3 text-xs text-emerald-100">
+                        <div>
+                            <p class="font-bold text-white"><i class="fa-regular fa-clock text-yellow-400 mr-1"></i> Monday - Friday</p>
+                            <p class="text-emerald-300 ml-4">8:00 AM - 5:00 PM</p>
+                        </div>
+                        <div>
+                            <p class="font-bold text-white"><i class="fa-solid fa-location-dot text-yellow-400 mr-1"></i> Address</p>
+                            <p class="text-emerald-300 ml-4">Office of the University Registrar<br>ESSU Main Campus, Borongan City</p>
+                        </div>
+                        <div>
+                            <p class="font-bold text-white"><i class="fa-solid fa-envelope text-yellow-400 mr-1"></i> Direct Email</p>
+                            <p class="text-emerald-300 ml-4">registrar@essu.edu.ph</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-emerald-800/80 text-center">
+                    <p class="text-[10px] text-emerald-300">Need immediate assistance during working hours?</p>
+                    <a href="tel:+630000000000" class="inline-block mt-2 px-4 py-1.5 border border-yellow-400 text-yellow-300 rounded font-bold text-xs hover:bg-yellow-400 hover:text-emerald-950 transition">
+                        <i class="fa-solid fa-phone"></i> Call Support
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- 4. STANDARD FOOTER (GWTD Compliant) -->
+    <footer class="bg-emerald-950/90 backdrop-blur-md text-gray-400 text-xs border-t border-emerald-900 py-4 z-20">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-3 text-center md:text-left">
+            <div>
+                <p>
+                    <a href="https://www.gov.ph" target="_blank" class="text-yellow-400 hover:underline font-semibold">Philippine Government Directory</a> | 
+                    <a href="https://www.officialgazette.gov.ph" target="_blank" class="hover:underline">Official Gazette</a>
+                </p>
+                <p class="text-gray-500 text-[11px] mt-0.5">All content is public domain unless otherwise stated.</p>
+            </div>
+            <div class="flex items-center space-x-3">
+                <img src="img/rp_n.webp" alt="Republic Seal" class="w-7 h-7 rounded-full bg-white p-0.5 object-cover">
+                <div>
+                    <p class="font-bold text-white text-[10px]">REPUBLIC OF THE PHILIPPINES</p>
+                    <p class="text-[9px] text-gray-500">Eastern Samar State University System</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+        </div>
+
+        <div
+            class="helpdesk-custom-scrollbar"
+            aria-hidden="true"
+        >
+            <div
+                id="helpdeskCustomScrollThumb"
+                class="helpdesk-custom-scroll-thumb"
+            ></div>
+        </div>
+
+    </div>
+
+    <!-- Interactive JS Scripts -->
+    <script>
+        // Toggle Accordion Function
+        function toggleAccordion(id) {
+            const content = document.getElementById(`content-${id}`);
+            const icon = document.getElementById(`icon-${id}`);
+            
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.classList.add('rotate-180');
+            } else {
+                content.classList.add('hidden');
+                icon.classList.remove('rotate-180');
+            }
+        }
+
+        // Live FAQ Search Filter Function
+        function filterFAQs() {
+            const input = document.getElementById('faqSearch').value.toLowerCase();
+            const faqItems = document.querySelectorAll('.faq-item');
+
+            faqItems.forEach(item => {
+                const text = item.innerText.toLowerCase();
+                if (text.includes(input)) {
+                    item.style.display = "block";
+                } else {
+                    item.style.display = "none";
+                }
+            });
+        }
+
+
+        // Return users to the appropriate portal page.
+        function configurePortalReturn() {
+            const loggedIn =
+                sessionStorage.getItem("loggedIn") === "true";
+
+            const role =
+                sessionStorage.getItem("role");
+
+            const portalReturnLink =
+                document.getElementById("portalReturnLink");
+
+            const returnDashboardLink =
+                document.getElementById("returnDashboardLink");
+
+            const returnDashboardText =
+                document.getElementById("returnDashboardText");
+
+            let destination = "index.html";
+            let label = "Back to Portal";
+
+            if (loggedIn && role === "student") {
+                destination = "student.html";
+                label = "Back to Dashboard";
+            } else if (loggedIn && role === "admin") {
+                destination = "admin.html";
+                label = "Back to Dashboard";
+            }
+
+            if (portalReturnLink) {
+                portalReturnLink.href = destination;
+
+                portalReturnLink.addEventListener(
+                    "click",
+                    function (event) {
+                        event.preventDefault();
+                        window.location.replace(destination);
+                    }
+                );
+            }
+
+            if (returnDashboardLink) {
+                returnDashboardLink.href = destination;
+
+                returnDashboardLink.addEventListener(
+                    "click",
+                    function (event) {
+                        event.preventDefault();
+                        window.location.replace(destination);
+                    }
+                );
+            }
+
+            if (returnDashboardText) {
+                returnDashboardText.textContent = label;
+            }
+        }
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            configurePortalReturn
+        );
+
+
+        // Custom scrollbar used so only the scrollbar bar/thumb is visible.
+        function setupHelpDeskCustomScrollbar() {
+
+            const container =
+                document.querySelector(
+                    ".helpdesk-scroll-container"
+                );
+
+            const thumb =
+                document.getElementById(
+                    "helpdeskCustomScrollThumb"
+                );
+
+            if (
+                !container ||
+                !thumb
+            ) {
+                return;
+            }
+
+
+            function updateCustomScrollbar() {
+
+                const viewportHeight =
+                    container.clientHeight;
+
+                const contentHeight =
+                    container.scrollHeight;
+
+
+                if (
+                    contentHeight <=
+                    viewportHeight
+                ) {
+
+                    thumb.style.display =
+                        "none";
+
+                    return;
+                }
+
+
+                thumb.style.display =
+                    "block";
+
+
+                const thumbHeight =
+                    Math.max(
+                        28,
+                        (
+                            viewportHeight /
+                            contentHeight
+                        ) *
+                        viewportHeight
+                    );
+
+
+                const maxThumbTravel =
+                    viewportHeight -
+                    thumbHeight;
+
+
+                const maxScroll =
+                    contentHeight -
+                    viewportHeight;
+
+
+                const thumbTop =
+                    maxScroll > 0
+                        ? (
+                            container.scrollTop /
+                            maxScroll
+                        ) *
+                        maxThumbTravel
+                        : 0;
+
+
+                thumb.style.height =
+                    `${thumbHeight}px`;
+
+                thumb.style.transform =
+                    `translateY(${thumbTop}px)`;
+            }
+
+
+            container.addEventListener(
+                "scroll",
+                updateCustomScrollbar,
+                {
+                    passive: true
+                }
+            );
+
+
+            window.addEventListener(
+                "resize",
+                updateCustomScrollbar
+            );
+
+
+            updateCustomScrollbar();
+        }
+
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            setupHelpDeskCustomScrollbar
+        );
+
+        // Handle Inquiry Submission
+        function handleSubmit(e) {
+            e.preventDefault();
+            alert("Thank you! Your ticket has been submitted to the ESSU Registrar Help Desk. We will get back to you shortly.");
+            e.target.reset();
+        }
+    </script>
+
+</body>
+</html>

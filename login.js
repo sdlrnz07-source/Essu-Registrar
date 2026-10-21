@@ -146,9 +146,9 @@ document
                 }
 
 
-                // --------------------------------------------
+                // ====================================================
                 // STORE ADMIN SESSION
-                // --------------------------------------------
+                // ====================================================
 
                 sessionStorage.setItem(
                     "loggedIn",
@@ -180,12 +180,27 @@ document
                 );
 
 
-                // --------------------------------------------
-                // REDIRECT ADMIN
-                // --------------------------------------------
+                // Remove old student session values
+                sessionStorage.removeItem(
+                    "studentId"
+                );
 
-                window.location.href =
-                    "admin.html";
+                sessionStorage.removeItem(
+                    "studentNumber"
+                );
+
+                sessionStorage.removeItem(
+                    "userEmail"
+                );
+
+
+                // ====================================================
+                // REDIRECT ADMIN
+                // ====================================================
+
+                window.location.replace(
+                    "admin.html"
+                );
 
 
                 return;
@@ -272,8 +287,9 @@ document
             // REDIRECT STUDENT
             // ====================================================
 
-            window.location.href =
-                "student.html";
+            window.location.replace(
+                "student.html"
+            );
 
 
         } catch (error) {

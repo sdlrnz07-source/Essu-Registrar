@@ -1,341 +1,1434 @@
 <!DOCTYPE html>
+
+
+
 <html lang="en">
+
+
+
+
+
+
 
 <head>
 
+
+
+
+
+
+
     <meta charset="UTF-8" />
 
+
+
+
+
+
+
     <meta
+
+
+
         name="viewport"
+
+
+
         content="width=device-width, initial-scale=1.0"
+
+
+
     />
 
+
+
+
+
+
+
     <title>
+
+
+
         Dashboard - ESSU Registrar Appointment and Scheduling System
+
+
+
     </title>
 
 
+
+
+
+
+
+
+
+
+
     <!-- Tailwind CSS -->
+
+
+
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    />
+
+
+
+
+
+
+
+
+
 
 
     <!-- Existing stylesheet -->
+
+
+
     <link
+
+
+
         rel="stylesheet"
+
+
+
         href="style.css"
+
+
+
     />
+
+
+
+
+
+
+
+
+
 
 
     <style>
 
+
+
+
+
+
+
         /* ==================================================== */
+
+
+
         /* PREVENT FLASH / GLITCH WHILE AUTH LOADS */
+
+
+
         /* ==================================================== */
+
+
+
+
+
+
 
         main,
+
+
+
         header {
+
+
+
             opacity: 0;
+
+
+
             transition: opacity 0.2s ease-in;
+
+
+
         }
+
+
+
+
+
+
 
         body.loaded main,
+
+
+
         body.loaded header {
+
+
+
             opacity: 1;
+
+
+
         }
 
 
+
+
+
+
+
+
+
+
+
         /* ==================================================== */
+
+
+
         /* HEADER */
+
+
+
         /* ==================================================== */
+
+
+
+
+
+
 
         .top-bar {
+
+
+
             background: #0b3d24;
+
+
+
             color: #e9f5ee;
+
+
+
             font-size: 0.85rem;
+
+
+
         }
+
+
+
+
+
+
 
         .top-bar a {
+
+
+
             color: #cdeedd;
+
+
+
         }
 
+
+
+
+
+
+
         .top-bar a:hover {
+
+
+
             color: #ffffff;
+
+
+
         }
+
+
+
+
+
+
+
+
+
 
 
         .main-nav {
+
+
+
             background: #0f4c2e;
+
+
+
             border-bottom: 4px solid #f4c95d;
+
+
+
         }
+
+
+
+
+
+
+
+
+
 
 
         .site-header {
+
+
+
             position: sticky;
+
+
+
             top: 0;
+
+
+
             z-index: 50;
+
+
+
         }
+
+
+
+
+
+
+
+
+
 
 
         .brand-title {
+
+
+
             color: #ffffff;
+
+
+
             letter-spacing: 0.02em;
+
+
+
         }
 
 
+
+
+
+
+
+
+
+
+
         /* ==================================================== */
+
+
+
         /* BUTTONS */
+
+
+
         /* ==================================================== */
+
+
+
+
+
+
 
         .btn-red {
+
+
+
             background: #c1272d;
+
+
+
             color: #ffffff;
+
+
+
             transition: background 0.15s ease;
+
+
+
         }
 
+
+
+
+
+
+
         .btn-red:hover {
+
+
+
             background: #a31f24;
+
+
+
         }
+
+
+
+
+
+
+
+
+
 
 
         .btn-outline-green {
+
+
+
             border: 1px solid #0f4c2e;
+
+
+
             color: #0f4c2e;
+
+
+
             background: transparent;
+
+
+
             transition:
+
+
+
                 background 0.15s ease,
+
+
+
                 color 0.15s ease;
+
+
+
         }
+
+
+
+
+
+
 
         .btn-outline-green:hover {
+
+
+
             background: #0f4c2e;
+
+
+
             color: #ffffff;
+
+
+
         }
 
 
+
+
+
+
+
+
+
+
+
         /* ==================================================== */
+
+
+
         /* PAGE LAYOUT */
+
+
+
         /* ==================================================== */
+
+
+
+
+
+
 
         html,
+
+
+
         body {
+
+
+
             background: #ffffff;
+
+
+
             height: 100vh;
+
+
+
             margin: 0;
+
+
+
             overflow: hidden;
+
+
+
         }
+
+
+
+
+
+
+
+
+
 
 
         .app-container {
+
+
+
             height: calc(100vh - 110px);
+
+
+
             overflow-y: auto;
+
+
+
             overflow-x: hidden;
+
+
+
         }
+
+
+
+
+
+
+
+
+
 
 
         .app-container::-webkit-scrollbar {
+
+
+
             width: 8px;
+
+
+
         }
+
+
+
+
+
+
 
         .app-container::-webkit-scrollbar-track {
+
+
+
             background: #ffffff;
+
+
+
         }
+
+
+
+
+
+
 
         .app-container::-webkit-scrollbar-thumb {
+
+
+
             background: #d1d5db;
+
+
+
             border-radius: 4px;
+
+
+
         }
+
+
+
+
+
+
 
         .app-container::-webkit-scrollbar-thumb:hover {
+
+
+
             background: #9ca3af;
+
+
+
         }
 
 
+
+
+
+
+
+
+
+
+
         /* ==================================================== */
+
+
+
         /* CARD */
+
+
+
         /* ==================================================== */
+
+
+
+
+
+
 
         .card {
+
+
+
             background: #ffffff;
+
+
+
             border: 1px solid #e4e7e6;
+
+
+
             border-radius: 10px;
+
+
+
             box-shadow:
+
+
+
                 0 1px 3px rgba(0, 0, 0, 0.06);
+
+
+
         }
 
 
+
+
+
+
+
+
+
+
+
         /* ==================================================== */
+
+
+
         /* STATUS PILLS */
+
+
+
         /* ==================================================== */
+
+
+
+
+
+
 
         .status-pill {
+
+
+
             font-size: 0.75rem;
+
+
+
             font-weight: 600;
+
+
+
             padding: 0.15rem 0.6rem;
+
+
+
             border-radius: 999px;
+
+
+
             display: inline-block;
+
+
+
         }
+
+
+
+
+
+
+
+
+
 
 
         .status-pending {
+
+
+
             background: #fff4de;
+
+
+
             color: #8a5b00;
+
+
+
         }
+
+
+
+
+
+
+
+
+
 
 
         .status-approved {
+
+
+
             background: #e3f7e9;
+
+
+
             color: #1d7a3c;
+
+
+
         }
+
+
+
+
+
+
+
+
+
 
 
         .status-rejected {
+
+
+
             background: #fde8e8;
+
+
+
             color: #b3261e;
+
+
+
         }
+
+
+
+
+
+
+
+
+
 
 
         .status-cancelled {
+
+
+
             background: #ececec;
+
+
+
             color: #616161;
+
+
+
         }
+
+
+
+
+
+
+
+
+
 
 
         .status-rescheduled {
+
+
+
             background: #f1e8ff;
+
+
+
             color: #6d28d9;
+
+
+
         }
 
 
+
+
+
+
+
+
+
+
+
         /* ==================================================== */
+
+
+
         /* CALENDAR */
+
+
+
         /* ==================================================== */
+
+
+
+
+
+
 
         .cal-day {
+
+
+
             height: 30px;
+
+
+
             display: flex;
+
+
+
             align-items: center;
+
+
+
             justify-content: center;
+
+
+
             border-radius: 6px;
+
+
+
             font-size: 0.8rem;
+
+
+
             cursor: pointer;
+
+
+
             transition:
+
+
+
                 background 0.12s ease,
+
+
+
                 color 0.12s ease;
+
+
+
         }
+
+
+
+
+
+
+
+
+
 
 
         .cal-day:not(.cal-disabled):hover {
+
+
+
             background: #eaf4ee;
+
+
+
         }
+
+
+
+
+
+
+
+
+
 
 
         .cal-day.cal-disabled {
+
+
+
             color: #c7c7c7;
+
+
+
             cursor: not-allowed;
+
+
+
         }
+
+
+
+
+
+
+
+
+
 
 
         .cal-day.cal-selected {
+
+
+
             background: #0f4c2e;
+
+
+
             color: #ffffff;
+
+
+
         }
+
+
+
+
+
+
+
+
+
 
 
         .cal-day.cal-today {
+
+
+
             border: 1px solid #0f4c2e;
+
+
+
             font-weight: 600;
+
+
+
         }
 
 
+
+
+
+
+
+
+
+
+
         /* ==================================================== */
+
+
+
         /* TIME SLOTS */
+
+
+
         /* ==================================================== */
+
+
+
+
+
+
 
         .slot-btn {
+
+
+
             border: 1px solid #d7dedb;
+
+
+
             border-radius: 6px;
+
+
+
             padding: 0.25rem 0;
+
+
+
             font-size: 0.75rem;
+
+
+
             text-align: center;
+
+
+
             cursor: pointer;
+
+
+
             transition:
+
+
+
                 background 0.12s ease,
+
+
+
                 color 0.12s ease,
+
+
+
                 border-color 0.12s ease;
+
+
+
         }
+
+
+
+
+
+
+
+
+
 
 
         .slot-btn:hover:not(.slot-taken) {
+
+
+
             border-color: #0f4c2e;
+
+
+
         }
+
+
+
+
+
+
+
+
+
 
 
         .slot-btn.slot-selected {
+
+
+
             background: #0f4c2e;
+
+
+
             color: #ffffff;
+
+
+
             border-color: #0f4c2e;
+
+
+
         }
+
+
+
+
+
+
+
+
+
 
 
         .slot-btn.slot-taken {
+
+
+
             background: #f3f3f3;
+
+
+
             color: #b7b7b7;
+
+
+
             cursor: not-allowed;
+
+
+
         }
 
 
+
+
+
+
+
+
+
+
+
         /* ==================================================== */
+
+
+
         /* MODAL */
+
+
+
         /* ==================================================== */
+
+
+
+
+
+
 
         .modal-backdrop {
+
+
+
             position: fixed;
+
+
+
             inset: 0;
+
+
+
             background: rgba(11, 61, 36, 0.35);
+
+
+
             display: none;
+
+
+
             align-items: center;
+
+
+
             justify-content: center;
+
+
+
             z-index: 60;
+
+
+
         }
+
+
+
+
+
+
+
+
+
 
 
         .modal-backdrop.open {
+
+
+
             display: flex;
+
+
+
         }
 
 
+
+
+
+
+
+
+
+
+
         /* ==================================================== */
+
+
+
         /* PROFILE / RECORD MODULE */
+
+
+
         /* ==================================================== */
+
+
+
+
+
+
 
         .profile-info-label {
+
+
+
             color: #6b7280;
+
+
+
             font-size: 0.7rem;
+
+
+
             text-transform: uppercase;
+
+
+
             letter-spacing: 0.04em;
+
+
+
             font-weight: 600;
+
+
+
         }
+
+
+
+
+
+
+
+
+
 
 
         .profile-info-value {
+
+
+
             color: #1f2937;
+
+
+
             font-size: 0.875rem;
+
+
+
             font-weight: 600;
+
+
+
             margin-top: 0.15rem;
+
+
+
             word-break: break-word;
+
+
+
         }
 
 
+
+
+
+
+
+
+
+
+
         .record-stat-card {
+
+
+
             background: #ffffff;
+
+
+
             border: 1px solid #e4e7e6;
+
+
+
             border-radius: 10px;
+
+
+
             padding: 0.9rem;
+
+
+
+        }
+
+
+
+
+
+
+
+    
+
+        /* ==================================================== */
+        /* ADDITIONAL STATUS PILLS */
+        /* ==================================================== */
+
+        .status-completed {
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .status-expired {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        /* ==================================================== */
+        /* STUDENT SECONDARY NAVIGATION */
+        /* ==================================================== */
+
+        .student-section-nav {
+            min-height: 46px;
+        }
+
+        .student-nav-link {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            min-height: 46px;
+            color: #6b7280;
+            white-space: nowrap;
+            transition: color 0.15s ease;
+        }
+
+        .student-nav-link:hover {
+            color: #0f4c2e;
+        }
+
+        .student-nav-link::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 2px;
+            background: transparent;
+            border-radius: 999px;
+            transition: background-color 0.15s ease;
+        }
+
+        .student-nav-link.active {
+            color: #0f4c2e;
+            font-weight: 600;
+        }
+
+        .student-nav-link.active::after {
+            background: #0f4c2e;
+        }
+
+        #book,
+        #profileRecords {
+            scroll-margin-top: 24px;
         }
 
     </style>
 
+
+
+
+
+
+
 </head>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -343,263 +1436,980 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
     <!-- ===================================================== -->
+
+
+
     <!-- AUTH LOADING SCREEN -->
+
+
+
     <!-- ===================================================== -->
+
+
+
+
+
+
 
     <div
+
+
+
         id="authLoadingScreen"
+
+
+
         class="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center"
+
+
+
     >
 
+
+
+
+
+
+
         <div
+
+
+
             class="animate-spin rounded-full h-10 w-10 border-b-2 border-[#0f4c2e] mb-3"
+
+
+
         ></div>
 
+
+
+
+
+
+
         <p
+
+
+
             class="text-sm font-semibold text-[#0f4c2e]"
+
+
+
         >
+
+
+
             Loading student dashboard...
+
+
+
         </p>
+
+
+
+
+
+
 
     </div>
 
 
 
-    <!-- ===================================================== -->
-    <!-- HEADER -->
+
+
+
+
+
+
+
+
+
+
+
+
     <!-- ===================================================== -->
 
+
+
+    <!-- HEADER -->
+
+
+
+    <!-- ===================================================== -->
+
+
+
+
+
+
+
     <header
+
+
+
         class="site-header"
+
+
+
         id="siteHeader"
+
+
+
     >
 
 
+
+
+
+
+
+
+
+
+
         <!-- ================================================= -->
+
+
+
         <!-- TOP BAR -->
+
+
+
         <!-- ================================================= -->
+
+
+
+
+
+
 
         <div class="top-bar">
 
+
+
+
+
+
+
             <div
+
+
+
                 class="max-w-7xl mx-auto px-4 py-1.5 flex flex-wrap items-center justify-between gap-2"
+
+
+
             >
+
+
+
+
+
+
+
+
+
 
 
                 <!-- LEFT -->
 
+
+
+
+
+
+
                 <div
+
+
+
                     class="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs sm:text-sm"
+
+
+
                 >
 
+
+
+
+
+
+
                     <img
+
+
+
                         src="img/rp_n.webp"
+
+
+
                         alt="Republic Seal"
+
+
+
                         class="w-4 h-4 rounded-full object-cover"
+
+
+
                     >
+
+
+
+
+
+
+
+
+
 
 
                     <span
+
+
+
                         class="font-semibold"
+
+
+
                     >
+
+
+
                         REPUBLIC OF THE PHILIPPINES
+
+
+
                     </span>
+
+
+
+
+
+
+
+
+
 
 
                     <span>
+
+
+
                         Eastern Samar State University
+
+
+
                     </span>
 
+
+
+
+
+
+
                 </div>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
                 <!-- LINKS -->
 
+
+
+
+
+
+
                 <div
+
+
+
                     class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs sm:text-sm"
+
+
+
                 >
 
-                    <a href="index.html">
-                        Home
-                    </a>
 
-                    <a href="#">
-                        Transparency Seal
-                    </a>
 
-                    <a href="#">
-                        Citizen's Charter
-                    </a>
 
-                    <a href="#">
-                        Help Desk
-                    </a>
+
+
+
+
+
+
+
+
+
+
+                    <a href="https://main.essu.edu.ph/index.php?id=4&option=com_sppagebuilder&view=page" target="_blank" rel="noopener noreferrer">Transparency Seal</a>
+
+
+
+
+
+
+
+                    <a href="https://main.essu.edu.ph/citizen-charter" target="_blank" rel="noopener noreferrer">Citizen's Charter</a>
+
+
+
+
+
+
+
+                    <a href="helpdesk.html" onclick="window.location.replace('helpdesk.html'); return false;">Help Desk</a>
+
+
+
+
+
+
 
                 </div>
 
+
+
+
+
+
+
             </div>
+
+
+
+
+
+
 
         </div>
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
         <!-- ================================================= -->
+
+
+
         <!-- MAIN NAVIGATION -->
+
+
+
         <!-- ================================================= -->
+
+
+
+
+
+
 
         <div class="main-nav">
 
+
+
+
+
+
+
             <div
+
+
+
                 class="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between"
+
+
+
             >
+
+
+
+
+
+
+
+
+
 
 
                 <!-- BRAND -->
 
+
+
+
+
+
+
                 <div
+
+
+
                     class="flex items-center gap-3"
+
+
+
                 >
 
+
+
+
+
+
+
                     <img
+
+
+
                         src="img/OIP.webp"
+
+
+
                         alt="ESSU Seal"
+
+
+
                         class="h-9 w-9 rounded-full"
+
+
+
                         onerror="this.style.display='none'"
+
+
+
                     />
 
 
+
+
+
+
+
+
+
+
+
                     <span
+
+
+
                         class="brand-title text-base sm:text-lg font-extrabold"
+
+
+
                     >
+
+
+
                         ESSU REGISTRAR PORTAL
+
+
+
                     </span>
 
+
+
+
+
+
+
                 </div>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
                 <!-- RIGHT SIDE -->
 
+
+
+
+
+
+
                 <div
+
+
+
                     class="flex items-center gap-3 sm:gap-4"
+
+
+
                 >
+
+
+
+
+
+
+
+
+
 
 
                     <!-- STUDENT GREETING -->
 
+
+
+
+
+
+
                     <span
+
+
+
                         id="studentGreeting"
+
+
+
                         class="text-xs sm:text-sm text-white/90 hidden sm:inline"
+
+
+
                     >
+
+
+
                         Welcome, Student
+
+
+
                     </span>
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
                     <!-- ===================================== -->
-                    <!-- NOTIFICATIONS -->
+
+
+
+                    <!-- NOTIFICATION + MESSAGE CENTER -->
+
+
+
                     <!-- ===================================== -->
 
-                    <div class="relative">
 
 
-                        <button
-                            id="notificationBtn"
-                            type="button"
-                            class="relative text-white hover:text-yellow-300 text-lg"
-                        >
+                    <div
 
-                            🔔
+                        class="flex items-center gap-2"
+
+                    >
 
 
-                            <span
-                                id="notificationBadge"
-                                class="hidden absolute -top-2 -right-2 bg-red-600 text-white text-[9px] min-w-[16px] h-4 px-1 rounded-full flex items-center justify-center font-bold"
+
+                        <!-- UNREAD NOTIFICATIONS -->
+
+                        <div class="relative">
+
+
+
+                            <button
+
+                                id="notificationBtn"
+
+                                type="button"
+
+                                aria-label="Unread notifications"
+
+                                title="Notifications"
+
+                                class="relative w-8 h-8 flex items-center justify-center rounded-md text-white hover:text-yellow-300 hover:bg-white/10 text-lg transition"
+
                             >
-                                0
-                            </span>
-
-                        </button>
+                                <i class="fa-regular fa-bell"></i>
 
 
 
-                        <!-- NOTIFICATION DROPDOWN -->
+                                <span
 
-                        <div
-                            id="notificationDropdown"
-                            class="hidden absolute right-0 mt-3 w-80 sm:w-96 bg-white text-gray-800 rounded-lg shadow-xl border border-gray-200 z-[100] overflow-hidden"
-                        >
+                                    id="notificationBadge"
+
+                                    class="hidden absolute -top-2 -right-2 bg-red-600 text-white text-[9px] min-w-[16px] h-4 px-1 rounded-full flex items-center justify-center font-bold"
+
+                                >
+
+                                    0
+
+                                </span>
+
+                            </button>
+
 
 
                             <div
-                                class="flex items-center justify-between px-4 py-3 border-b bg-gray-50"
+
+                                id="notificationDropdown"
+
+                                class="hidden absolute right-0 mt-3 w-80 sm:w-96 bg-white text-gray-800 rounded-lg shadow-xl border border-gray-200 z-[100] overflow-hidden"
+
                             >
 
-                                <h3
-                                    class="text-sm font-semibold text-[#0f4c2e]"
-                                >
-                                    Notifications
-                                </h3>
 
-
-                                <button
-                                    id="markAllReadBtn"
-                                    type="button"
-                                    class="text-[11px] text-[#0f4c2e] hover:underline"
-                                >
-                                    Mark all as read
-                                </button>
-
-                            </div>
-
-
-
-                            <div
-                                id="notificationList"
-                                class="max-h-80 overflow-y-auto"
-                            >
 
                                 <div
-                                    class="px-4 py-6 text-center text-xs text-gray-400"
+
+                                    class="flex items-center justify-between px-4 py-3 border-b bg-gray-50"
+
                                 >
-                                    Loading notifications...
+
+
+
+                                    <div>
+
+                                        <h3
+
+                                            class="text-sm font-semibold text-[#0f4c2e]"
+
+                                        >
+
+                                            Unread Notifications
+
+                                        </h3>
+
+
+
+                                        <p
+
+                                            class="text-[10px] text-gray-400 mt-0.5"
+
+                                        >
+
+                                            New appointment updates appear here.
+
+                                        </p>
+
+                                    </div>
+
+
+
+                                    <button
+
+                                        id="markAllReadBtn"
+
+                                        type="button"
+
+                                        class="text-[11px] text-[#0f4c2e] hover:underline"
+
+                                    >
+
+                                        Mark all as read
+
+                                    </button>
+
+
+
                                 </div>
+
+
+
+                                <div
+
+                                    id="notificationList"
+
+                                    class="max-h-80 overflow-y-auto"
+
+                                >
+
+
+
+                                    <div
+
+                                        class="px-4 py-6 text-center text-xs text-gray-400"
+
+                                    >
+
+                                        Loading notifications...
+
+                                    </div>
+
+
+
+                                </div>
+
+
 
                             </div>
 
+
+
                         </div>
+
+
+
+                        <!-- MESSAGE HISTORY -->
+
+                        <div class="relative">
+
+
+
+                            <button
+
+                                id="messageBtn"
+
+                                type="button"
+
+                                aria-label="Message history"
+
+                                title="Message history"
+
+                                class="relative w-8 h-8 flex items-center justify-center rounded-md text-white hover:text-yellow-300 hover:bg-white/10 text-lg transition"
+
+                            >
+
+                                <i class="fa-regular fa-envelope"></i>
+
+                            </button>
+
+
+
+                            <div
+
+                                id="messageDropdown"
+
+                                class="hidden absolute right-0 mt-3 w-80 sm:w-96 bg-white text-gray-800 rounded-lg shadow-xl border border-gray-200 z-[100] overflow-hidden"
+
+                            >
+
+
+
+                                <div
+
+                                    class="px-4 py-3 border-b bg-gray-50"
+
+                                >
+
+
+
+                                    <h3
+
+                                        class="text-sm font-semibold text-[#0f4c2e]"
+
+                                    >
+
+                                        Messages
+
+                                    </h3>
+
+
+
+                                    <p
+
+                                        class="text-[10px] text-gray-400 mt-0.5"
+
+                                    >
+
+                                        Your appointment notification history.
+
+                                    </p>
+
+
+
+                                </div>
+
+
+
+                                <div
+
+                                    id="messageList"
+
+                                    class="max-h-80 overflow-y-auto"
+
+                                >
+
+
+
+                                    <div
+
+                                        class="px-4 py-6 text-center text-xs text-gray-400"
+
+                                    >
+
+                                        Loading messages...
+
+                                    </div>
+
+
+
+                                </div>
+
+
+
+                            </div>
+
+
+
+                        </div>
+
+
 
                     </div>
 
 
 
+
+
+
+
                     <!-- CONTACT -->
 
+
+
+
+
+
+
                     <a
-                        href="#"
-                        class="text-xs sm:text-sm text-white/90 hover:text-white hidden sm:inline"
+                        href="helpdesk.html#contactSupport"
+                        aria-label="Contact ESSU Registrar Help Desk"
+                        title="Contact"
+                        class="w-8 h-8 flex items-center justify-center rounded-md text-white hover:text-yellow-300 hover:bg-white/10 transition"
                     >
-                        📞 Contact
+                        <i class="fa-solid fa-phone"></i>
                     </a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <!-- ACCOUNT SETTINGS -->
+
+                    <button
+                        id="accountSettingsBtn"
+                        type="button"
+                        aria-label="Account Settings"
+                        title="Account Settings"
+                        class="w-8 h-8 flex items-center justify-center rounded-md text-white hover:text-yellow-300 hover:bg-white/10 transition"
+                    >
+                        <i class="fa-solid fa-gear"></i>
+                    </button>
+
+
+
+
 
 
 
                     <!-- LOGOUT -->
 
+
+
+
+
+
+
                     <button
                         id="logoutBtn"
-                        class="btn-outline-green rounded px-3 py-1 text-xs sm:text-sm font-semibold bg-white"
+                        type="button"
+                        aria-label="Logout"
+                        title="Logout"
+                        class="w-8 h-8 flex items-center justify-center rounded-md bg-white text-[#0f4c2e] hover:bg-gray-100 transition"
                     >
-                        Logout
+                        <i class="fa-solid fa-right-from-bracket"></i>
                     </button>
+
+
+
+
+
+
 
                 </div>
 
+
+
+
+
+
+
             </div>
 
+
+
+
+
+
+
         </div>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -608,1101 +2418,4670 @@
         <!-- ================================================= -->
 
         <div
-            class="border-b border-gray-200 bg-white"
+            class="student-section-nav border-b border-gray-200 bg-white"
         >
-
             <div
-                class="max-w-7xl mx-auto px-4 flex gap-6 text-xs sm:text-sm font-medium overflow-x-auto"
+                class="max-w-7xl mx-auto px-4 flex gap-7 text-xs sm:text-sm font-medium overflow-x-auto"
             >
-
                 <a
+                    id="bookAppointmentNav"
                     href="#book"
-                    class="py-2.5 border-b-2 border-[#0f4c2e] text-[#0f4c2e] whitespace-nowrap"
+                    class="student-nav-link active"
+                    aria-current="page"
                 >
                     Book Appointment
                 </a>
 
-
                 <a
+                    id="profileRecordsNav"
                     href="#profileRecords"
-                    class="py-2.5 text-gray-500 hover:text-[#0f4c2e] whitespace-nowrap"
+                    class="student-nav-link"
                 >
                     My Profile & Records
                 </a>
-
             </div>
-
         </div>
 
     </header>
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
     <!-- ===================================================== -->
+
+
+
     <!-- SCROLLABLE APP CONTAINER -->
+
+
+
     <!-- ===================================================== -->
+
+
+
+
+
+
 
     <div class="app-container">
 
 
+
+
+
+
+
+
+
+
+
         <main
-            class="max-w-7xl mx-auto px-4 py-4 pb-16"
+
+
+
+            id="studentDashboardTop"
+            class="max-w-7xl mx-auto px-4 pt-5 pb-16"
+
+
+
         >
 
 
-            <!-- ================================================= -->
-            <!-- PAGE TITLE -->
+
+
+
+
+
+
+
+
+
             <!-- ================================================= -->
 
+
+
+            <!-- PAGE TITLE -->
+
+
+
+            <!-- ================================================= -->
+
+
+
+
+
+
+
             <h1
+
+
+
                 class="text-lg font-bold text-[#0f4c2e] mb-0.5"
+
+
+
             >
+
+
+
                 Appointment Dashboard
+
+
+
             </h1>
 
 
+
+
+
+
+
+
+
+
+
             <p
+
+
+
                 class="text-xs text-gray-500 mb-4"
+
+
+
             >
+
+
+
                 Book, view, reschedule, or cancel your Registrar appointments.
+
+
+
             </p>
 
 
 
-            <!-- ================================================= -->
-            <!-- BOOKING MODULE -->
+
+
+
+
+
+
+
+
+
+
+
+
             <!-- ================================================= -->
 
+
+
+            <!-- BOOKING MODULE -->
+
+
+
+            <!-- ================================================= -->
+
+
+
+
+
+
+
             <section
+
+
+
                 id="book"
+
+
+
                 class="grid lg:grid-cols-5 gap-4 items-start mb-6"
+
+
+
             >
 
 
-                <!-- ============================================= -->
-                <!-- CALENDAR -->
+
+
+
+
+
+
+
+
+
                 <!-- ============================================= -->
 
+
+
+                <!-- CALENDAR -->
+
+
+
+                <!-- ============================================= -->
+
+
+
+
+
+
+
                 <div
+
+
+
                     class="lg:col-span-3 card p-3.5"
+
+
+
                 >
 
 
+
+
+
+
+
+
+
+
+
                     <div
+
+
+
                         class="flex items-center justify-between mb-2"
+
+
+
                     >
 
+
+
+
+
+
+
                         <button
+
+
+
                             id="prevMonth"
+
+
+
                             class="px-2 py-0.5 text-xs rounded hover:bg-gray-100"
+
+
+
                         >
+
+
+
                             &larr;
+
+
+
                         </button>
+
+
+
+
+
+
+
+
+
 
 
                         <h2
+
+
+
                             id="calMonthLabel"
+
+
+
                             class="text-xs sm:text-sm font-semibold text-[#0f4c2e]"
+
+
+
                         >
+
+
+
                         </h2>
 
 
+
+
+
+
+
+
+
+
+
                         <button
+
+
+
                             id="nextMonth"
+
+
+
                             class="px-2 py-0.5 text-xs rounded hover:bg-gray-100"
+
+
+
                         >
+
+
+
                             &rarr;
+
+
+
                         </button>
 
+
+
+
+
+
+
                     </div>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
                     <!-- WEEK DAYS -->
 
+
+
+
+
+
+
                     <div
+
+
+
                         class="grid grid-cols-7 gap-1 text-center text-xs text-gray-400 mb-1"
+
+
+
                     >
 
+
+
+
+
+
+
                         <span>Su</span>
+
+
+
                         <span>Mo</span>
+
+
+
                         <span>Tu</span>
+
+
+
                         <span>We</span>
+
+
+
                         <span>Th</span>
+
+
+
                         <span>Fr</span>
+
+
+
                         <span>Sa</span>
 
+
+
+
+
+
+
                     </div>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
                     <!-- CALENDAR GRID -->
 
+
+
+
+
+
+
                     <div
+
+
+
                         id="calGrid"
+
+
+
                         class="grid grid-cols-7 gap-1"
+
+
+
                     ></div>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
                     <!-- TIME SLOTS -->
 
+
+
+
+
+
+
                     <div class="mt-2.5">
 
+
+
+
+
+
+
                         <p
+
+
+
                             class="text-xs font-semibold text-gray-700 mb-1"
+
+
+
                         >
+
+
+
                             Available time slots
+
+
+
                         </p>
+
+
+
+
+
+
+
+
+
 
 
                         <div
+
+
+
                             id="slotGrid"
+
+
+
                             class="grid grid-cols-3 sm:grid-cols-4 gap-1.5"
+
+
+
                         ></div>
 
 
+
+
+
+
+
+
+
+
+
                         <p
+
+
+
                             id="slotHint"
+
+
+
                             class="text-xs text-gray-400 mt-1"
+
+
+
                         >
+
+
+
                             Select a date to see open time slots.
+
+
+
                         </p>
 
+
+
+
+
+
+
                     </div>
+
+
+
+
+
+
 
                 </div>
 
 
 
-                <!-- ============================================= -->
-                <!-- APPOINTMENT DETAILS -->
+
+
+
+
+
+
+
+
+
+
+
+
                 <!-- ============================================= -->
 
+
+
+                <!-- APPOINTMENT DETAILS -->
+
+
+
+                <!-- ============================================= -->
+
+
+
+
+
+
+
                 <div
+
+
+
                     class="lg:col-span-2 card p-3.5"
+
+
+
                 >
 
 
+
+
+
+
+
+
+
+
+
                     <h2
+
+
+
                         class="text-xs sm:text-sm font-semibold text-[#0f4c2e] mb-2.5"
+
+
+
                     >
+
+
+
                         Appointment Details
+
+
+
                     </h2>
 
 
+
+
+
+
+
+
+
+
+
                     <form
+
+
+
                         id="bookingForm"
+
+
+
                         class="space-y-2.5"
+
+
+
                     >
+
+
+
+
+
+
+
+
+
 
 
                         <!-- PURPOSE -->
 
+
+
+
+
+
+
                         <div>
 
+
+
+
+
+
+
                             <label
+
+
+
                                 class="block text-xs font-medium mb-0.5"
+
+
+
                             >
+
+
+
                                 Purpose
+
+
+
                             </label>
 
 
+
+
+
+
+
+
+
+
+
                             <select
+
+
+
                                 id="purpose"
+
+
+
                                 required
+
+
+
                                 class="w-full border border-gray-300 rounded px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-[#0f4c2e]"
+
+
+
                             >
 
+
+
+
+
+
+
                                 <option value="">
+
+
+
                                     Select purpose
+
+
+
                                 </option>
 
+
+
+
+
+
+
                                 <option>
+
+
+
                                     Request for Transcript of Records
+
+
+
                                 </option>
 
+
+
+
+
+
+
                                 <option>
+
+
+
                                     Certification / Good Moral
+
+
+
                                 </option>
 
+
+
+
+
+
+
                                 <option>
+
+
+
                                     Diploma Claiming
+
+
+
                                 </option>
 
+
+
+
+
+
+
                                 <option>
+
+
+
                                     Enrollment Concern
+
+
+
                                 </option>
 
+
+
+
+
+
+
                                 <option>
+
+
+
                                     Other Registrar Transaction
+
+
+
                                 </option>
+
+
+
+
+
+
 
                             </select>
 
+
+
+
+
+
+
                         </div>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
                         <!-- SELECTED DATE -->
 
+
+
+
+
+
+
                         <div>
 
+
+
+
+
+
+
                             <label
+
+
+
                                 class="block text-xs font-medium mb-0.5"
+
+
+
                             >
+
+
+
                                 Selected date
+
+
+
                             </label>
 
 
+
+
+
+
+
+
+
+
+
                             <input
+
+
+
                                 id="selectedDateDisplay"
+
+
+
                                 type="text"
+
+
+
                                 disabled
+
+
+
                                 placeholder="No date selected"
+
+
+
                                 class="w-full border border-gray-300 rounded px-2.5 py-1.5 text-xs bg-gray-50 text-gray-500"
+
+
+
                             />
 
+
+
+
+
+
+
                         </div>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
                         <!-- SELECTED TIME -->
 
+
+
+
+
+
+
                         <div>
 
+
+
+
+
+
+
                             <label
+
+
+
                                 class="block text-xs font-medium mb-0.5"
+
+
+
                             >
+
+
+
                                 Selected time slot
+
+
+
                             </label>
 
 
+
+
+
+
+
+
+
+
+
                             <input
+
+
+
                                 id="selectedSlotDisplay"
+
+
+
                                 type="text"
+
+
+
                                 disabled
+
+
+
                                 placeholder="No time slot selected"
+
+
+
                                 class="w-full border border-gray-300 rounded px-2.5 py-1.5 text-xs bg-gray-50 text-gray-500"
+
+
+
                             />
 
+
+
+
+
+
+
                         </div>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
                         <!-- NOTES -->
 
+
+
+
+
+
+
                         <div>
 
+
+
+
+
+
+
                             <label
+
+
+
                                 class="block text-xs font-medium mb-0.5"
+
+
+
                             >
+
+
+
                                 Notes (optional)
+
+
+
                             </label>
 
 
+
+
+
+
+
+
+
+
+
                             <textarea
+
+
+
                                 id="notes"
+
+
+
                                 rows="2"
+
+
+
                                 class="w-full border border-gray-300 rounded px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-[#0f4c2e]"
+
+
+
                                 placeholder="Anything the Registrar staff should know"
+
+
+
                             ></textarea>
 
+
+
+
+
+
+
                         </div>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
                         <!-- SUBMIT -->
 
+
+
+
+
+
+
                         <button
+
+
+
                             type="submit"
+
+
+
                             class="btn-red w-full rounded py-1.5 font-semibold text-xs"
+
+
+
                         >
+
+
+
                             Confirm Appointment
+
+
+
                         </button>
 
 
+
+
+
+
+
+
+
+
+
                         <p
+
+
+
                             id="bookingMsg"
+
+
+
                             class="text-xs mt-0.5"
+
+
+
                         ></p>
+
+
+
+
+
+
 
                     </form>
 
+
+
+
+
+
+
                 </div>
+
+
+
+
+
+
 
             </section>
 
 
 
-            <!-- ================================================= -->
-            <!-- EXISTING MY APPOINTMENTS -->
+
+
+
+
+
+
+
+
+
+
+
+
             <!-- ================================================= -->
 
+
+
+            <!-- EXISTING MY APPOINTMENTS -->
+
+
+
+            <!-- ================================================= -->
+
+
+
+
+
+
+
             <section
+
+
+
                 id="history"
+
+
+
                 class="mb-6"
+
+
+
             >
 
 
+
+
+
+
+
+
+
+
+
                 <h2
+
+
+
                     class="font-semibold text-[#0f4c2e] text-sm sm:text-base mb-2.5"
+
+
+
                 >
+
+
+
                     My Appointments
+
+
+
                 </h2>
 
 
+
+
+
+
+
+
+
+
+
                 <div
+
+
+
                     class="card overflow-x-auto"
+
+
+
                 >
 
+
+
+
+
+
+
                     <table
+
                         class="w-full text-xs sm:text-sm"
+
                     >
 
+
+
                         <thead
+
                             class="bg-gray-50 text-gray-500 text-left"
+
                         >
+
+
 
                             <tr>
 
-                                <th class="px-3 py-2">
-                                    Date
+
+
+                                <th
+
+                                    class="px-3 py-2 whitespace-nowrap"
+
+                                >
+
+                                    Created At
+
                                 </th>
 
-                                <th class="px-3 py-2">
+
+
+                                <th
+
+                                    class="px-3 py-2 whitespace-nowrap"
+
+                                >
+
+                                    Date Booked
+
+                                </th>
+
+
+
+                                <th
+
+                                    class="px-3 py-2 whitespace-nowrap"
+
+                                >
+
                                     Time
+
                                 </th>
 
-                                <th class="px-3 py-2">
+
+
+                                <th
+
+                                    class="px-3 py-2"
+
+                                >
+
                                     Purpose
+
                                 </th>
 
-                                <th class="px-3 py-2">
+
+
+                                <th
+
+                                    class="px-3 py-2 whitespace-nowrap"
+
+                                >
+
                                     Status
+
                                 </th>
 
-                                <th class="px-3 py-2 text-right">
+
+
+                                <th
+
+                                    class="px-3 py-2 text-right whitespace-nowrap"
+
+                                >
+
                                     Actions
+
                                 </th>
+
+
 
                             </tr>
+
+
 
                         </thead>
 
 
+
                         <tbody
+
                             id="appointmentsBody"
+
                         >
+
+
 
                             <tr>
 
+
+
                                 <td
-                                    colspan="5"
+
+                                    colspan="6"
+
                                     class="px-3 py-4 text-center text-gray-400"
+
                                 >
+
                                     Loading your appointments…
+
                                 </td>
+
+
 
                             </tr>
 
+
+
                         </tbody>
+
+
 
                     </table>
 
+
+
+
+
+
+
                 </div>
+
+
+
+
+
+
 
             </section>
 
 
 
-            <!-- ================================================= -->
-            <!-- PROFILE & RECORDS MANAGEMENT -->
+
+
+
+
+
+
+
+
+
+
+
+
             <!-- ================================================= -->
 
+
+
+            <!-- PROFILE & RECORDS MANAGEMENT -->
+
+
+
+            <!-- ================================================= -->
+
+
+
+
+
+
+
             <section
+
+
+
                 id="profileRecords"
+
+
+
                 class="mb-6"
+
+
+
             >
+
+
+
+
+
+
+
+
+
 
 
                 <!-- SECTION HEADER -->
 
+
+
+
+
+
+
                 <div
+
+
+
                     class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-3"
+
+
+
                 >
+
+
+
+
+
+
 
                     <div>
 
+
+
+
+
+
+
                         <h2
+
+
+
                             class="font-bold text-[#0f4c2e] text-base sm:text-lg"
+
+
+
                         >
+
+
+
                             My Profile & Appointment Records
+
+
+
                         </h2>
 
 
+
+
+
+
+
+
+
+
+
                         <p
+
+
+
                             class="text-xs text-gray-500 mt-0.5"
+
+
+
                         >
+
+
+
                             View your student information and complete Registrar appointment history.
+
+
+
                         </p>
 
+
+
+
+
+
+
                     </div>
+
+
+
+
+
+
 
                 </div>
 
 
 
-                <!-- ================================================= -->
-                <!-- PROFILE CARD -->
+
+
+
+
+
+
+
+
+
+
+
+
                 <!-- ================================================= -->
 
+
+
+                <!-- PROFILE CARD -->
+
+
+
+                <!-- ================================================= -->
+
+
+
+
+
+
+
                 <div
+
+
+
                     class="card overflow-hidden mb-4"
+
+
+
                 >
+
+
+
+
+
+
+
+
+
 
 
                     <!-- PROFILE HEADER -->
 
+
+
+
+
+
+
                     <div
+
+
+
                         class="bg-[#0f4c2e] px-4 sm:px-5 py-4 text-white"
+
+
+
                     >
 
+
+
+
+
+
+
                         <div
+
+
+
                             class="flex flex-col sm:flex-row sm:items-center gap-4"
+
+
+
                         >
+
+
+
+
+
+
+
+
+
 
 
                             <!-- PROFILE AVATAR -->
 
+
+
+
+
+
+
                             <div
+
+
+
                                 class="w-14 h-14 rounded-full bg-white flex items-center justify-center border-2 border-[#f4c95d] flex-shrink-0"
+
+
+
                             >
 
+
+
+
+
+
+
                                 <img
+                                    id="profileAvatar"
                                     src="img/OIP.webp"
-                                    alt="ESSU Seal"
-                                    class="w-11 h-11 rounded-full object-contain"
+                                    alt="Student profile picture"
+                                    class="w-11 h-11 rounded-full object-cover"
+                                    onerror="this.src='img/OIP.webp'"
                                 >
 
+
+
+
+
+
+
                             </div>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
                             <div>
 
+
+
+
+
+
+
                                 <p
+
+
+
                                     class="text-[10px] sm:text-xs text-[#f4c95d] uppercase tracking-wider font-semibold"
+
+
+
                                 >
+
+
+
                                     Student Profile
+
+
+
                                 </p>
+
+
+
+
+
+
+
+
+
 
 
                                 <h3
+
+
+
                                     id="profileFullName"
+
+
+
                                     class="text-base sm:text-lg font-bold mt-0.5"
+
+
+
                                 >
+
+
+
                                     Loading student name...
+
+
+
                                 </h3>
 
 
+
+
+
+
+
+
+
+
+
                                 <p
+
+
+
                                     class="text-xs text-white/80 mt-0.5"
+
+
+
                                 >
+
+
+
                                     Eastern Samar State University
+
+
+
                                 </p>
+
+
+
+
+
+
 
                             </div>
 
+
+
+
+
+
+
                         </div>
 
+
+
+
+
+
+
                     </div>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
                     <!-- PROFILE INFORMATION -->
 
+
+
+
+
+
+
                     <div
+
+
+
                         class="p-4 sm:p-5"
+
+
+
                     >
 
+
+
+
+
+
+
                         <div
+
+
+
                             class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+
+
+
                         >
+
+
+
+
+
+
+
+
+
 
 
                             <!-- STUDENT NUMBER -->
 
+
+
+
+
+
+
                             <div>
 
+
+
+
+
+
+
                                 <p
+
+
+
                                     class="profile-info-label"
+
+
+
                                 >
+
+
+
                                     Student Number
+
+
+
                                 </p>
+
+
+
+
+
+
+
+
+
 
 
                                 <p
+
+
+
                                     id="profileStudentNumber"
+
+
+
                                     class="profile-info-value"
+
+
+
                                 >
+
+
+
                                     Loading...
+
+
+
                                 </p>
+
+
+
+
+
+
 
                             </div>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
                             <!-- EMAIL -->
 
+
+
+
+
+
+
                             <div>
 
+
+
+
+
+
+
                                 <p
+
+
+
                                     class="profile-info-label"
+
+
+
                                 >
+
+
+
                                     Email Address
+
+
+
                                 </p>
+
+
+
+
+
+
+
+
+
 
 
                                 <p
+
+
+
                                     id="profileEmail"
+
+
+
                                     class="profile-info-value"
+
+
+
                                 >
+
+
+
                                     Loading...
+
+
+
                                 </p>
+
+
+
+
+
+
 
                             </div>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
                             <!-- ACCOUNT TYPE -->
 
+
+
+
+
+
+
                             <div>
 
+
+
+
+
+
+
                                 <p
+
+
+
                                     class="profile-info-label"
+
+
+
                                 >
+
+
+
                                     Account Type
+
+
+
                                 </p>
+
+
+
+
+
+
+
+
+
 
 
                                 <p
+
+
+
                                     class="profile-info-value"
+
+
+
                                 >
+
+
+
                                     Student
+
+
+
                                 </p>
+
+
+
+
+
+
 
                             </div>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
                             <!-- ACCOUNT STATUS -->
 
+
+
+
+
+
+
                             <div>
 
+
+
+
+
+
+
                                 <p
+
+
+
                                     class="profile-info-label"
+
+
+
                                 >
+
+
+
                                     Account Status
+
+
+
                                 </p>
 
 
+
+
+
+
+
+
+
+
+
                                 <div
+
+
+
                                     class="mt-1"
+
+
+
                                 >
 
+
+
+
+
+
+
                                     <span
+
+
+
                                         id="profileAccountStatus"
+
+
+
                                         class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-green-100 text-green-700"
+
+
+
                                     >
 
+
+
+
+
+
+
                                         <span
+
+
+
                                             class="w-1.5 h-1.5 bg-green-500 rounded-full"
+
+
+
                                         ></span>
+
+
+
+
+
+
 
                                         Active
 
+
+
+
+
+
+
                                     </span>
+
+
+
+
+
+
 
                                 </div>
 
+
+
+
+
+
+
                             </div>
+
+
+
+
+
+
 
                         </div>
 
+
+
+
+
+
+
                     </div>
+
+
+
+
+
+
 
                 </div>
 
 
 
-                <!-- ================================================= -->
-                <!-- APPOINTMENT RECORD STATISTICS -->
+
+
+
+
+
+
+
+
+
+
+
+
                 <!-- ================================================= -->
 
+
+
+                <!-- APPOINTMENT RECORD STATISTICS -->
+
+
+
+                <!-- ================================================= -->
+
+
+
+
+
+
+
                 <div
+
+
+
                     class="grid grid-cols-2 lg:grid-cols-5 gap-3 mb-4"
+
+
+
                 >
+
+
+
+
+
+
+
+
+
 
 
                     <!-- TOTAL -->
 
+
+
+
+
+
+
                     <div
+
+
+
                         class="record-stat-card"
+
+
+
                     >
 
+
+
+
+
+
+
                         <p
+
+
+
                             class="text-[10px] uppercase tracking-wide font-semibold text-gray-400"
+
+
+
                         >
+
+
+
                             Total Records
+
+
+
                         </p>
 
 
+
+
+
+
+
+
+
+
+
                         <div
+
+
+
                             class="flex items-end justify-between mt-2"
+
+
+
                         >
 
+
+
+
+
+
+
                             <p
+
+
+
                                 id="recordTotal"
-                                class="text-2xl font-bold text-gray-800"
+
+
+
+                                class="text-xl w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center"
+
+
+
                             >
+
+
+
                                 0
+
+
+
                             </p>
 
 
+
+
+
+
+
+
+
+
+
                             <span
+
+
+
                                 class="text-blue-600 text-lg"
+
+
+
                             >
-                                📁
+
+
+
+                                <i class="fa-solid fa-folder-open text-[#0f4c2e]"></i>
+
+
+
                             </span>
+
+
+
+
+
+
 
                         </div>
 
+
+
+
+
+
+
                     </div>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
                     <!-- PENDING -->
 
+
+
+
+
+
+
                     <div
+
+
+
                         class="record-stat-card"
+
+
+
                     >
 
+
+
+
+
+
+
                         <p
+
+
+
                             class="text-[10px] uppercase tracking-wide font-semibold text-gray-400"
+
+
+
                         >
+
+
+
                             Pending
+
+
+
                         </p>
 
 
+
+
+
+
+
+
+
+
+
                         <div
+
+
+
                             class="flex items-end justify-between mt-2"
+
+
+
                         >
 
+
+
+
+
+
+
                             <p
+
+
+
                                 id="recordPending"
-                                class="text-2xl font-bold text-amber-600"
+
+
+
+                                class="text-xl w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center"
+
+
+
                             >
+
+
+
                                 0
+
+
+
                             </p>
 
 
+
+
+
+
+
+
+
+
+
                             <span class="text-lg">
-                                🕒
+
+
+
+                                <i class="fa-regular fa-clock text-[#0f4c2e]"></i>
+
+
+
                             </span>
+
+
+
+
+
+
 
                         </div>
 
+
+
+
+
+
+
                     </div>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
                     <!-- APPROVED -->
 
+
+
+
+
+
+
                     <div
+
+
+
                         class="record-stat-card"
+
+
+
                     >
 
+
+
+
+
+
+
                         <p
+
+
+
                             class="text-[10px] uppercase tracking-wide font-semibold text-gray-400"
+
+
+
                         >
+
+
+
                             Approved
+
+
+
                         </p>
 
 
+
+
+
+
+
+
+
+
+
                         <div
+
+
+
                             class="flex items-end justify-between mt-2"
+
+
+
                         >
 
+
+
+
+
+
+
                             <p
+
+
+
                                 id="recordApproved"
-                                class="text-2xl font-bold text-green-700"
+
+
+
+                                class="text-xl w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center"
+
+
+
                             >
+
+
+
                                 0
+
+
+
                             </p>
 
 
+
+
+
+
+
+
+
+
+
                             <span class="text-lg">
-                                ✅
+
+
+
+                                <i class="fa-solid fa-circle-check text-[#0f4c2e]"></i>
+
+
+
                             </span>
+
+
+
+
+
+
 
                         </div>
 
+
+
+
+
+
+
                     </div>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
                     <!-- RESCHEDULED -->
 
+
+
+
+
+
+
                     <div
+
+
+
                         class="record-stat-card"
+
+
+
                     >
 
+
+
+
+
+
+
                         <p
+
+
+
                             class="text-[10px] uppercase tracking-wide font-semibold text-gray-400"
+
+
+
                         >
+
+
+
                             Rescheduled
+
+
+
                         </p>
 
 
+
+
+
+
+
+
+
+
+
                         <div
+
+
+
                             class="flex items-end justify-between mt-2"
+
+
+
                         >
 
+
+
+
+
+
+
                             <p
+
+
+
                                 id="recordRescheduled"
-                                class="text-2xl font-bold text-purple-700"
+
+
+
+                                class="text-xl w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center"
+
+
+
                             >
+
+
+
                                 0
+
+
+
                             </p>
 
 
+
+
+
+
+
+
+
+
+
                             <span class="text-lg">
-                                📅
+
+
+
+                                <i class="fa-solid fa-calendar-days text-[#0f4c2e]"></i>
+
+
+
                             </span>
+
+
+
+
+
+
 
                         </div>
 
+
+
+
+
+
+
                     </div>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
                     <!-- CLOSED -->
 
+
+
+
+
+
+
                     <div
+
+
+
                         class="record-stat-card col-span-2 lg:col-span-1"
+
+
+
                     >
 
+
+
+
+
+
+
                         <p
+
+
+
                             class="text-[10px] uppercase tracking-wide font-semibold text-gray-400"
+
+
+
                         >
+
+
+
                             Cancelled / Rejected
+
+
+
                         </p>
 
 
+
+
+
+
+
+
+
+
+
                         <div
+
+
+
                             class="flex items-end justify-between mt-2"
+
+
+
                         >
 
+
+
+
+
+
+
                             <p
+
+
+
                                 id="recordClosed"
-                                class="text-2xl font-bold text-red-600"
+
+
+
+                                class="text-xl w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center"
+
+
+
                             >
+
+
+
                                 0
+
+
+
                             </p>
 
 
+
+
+
+
+
+
+
+
+
                             <span class="text-lg">
-                                ⛔
+
+
+
+                                <i class="fa-solid fa-circle-xmark text-[#0f4c2e]"></i>
+
+
+
                             </span>
+
+
+
+
+
+
 
                         </div>
 
+
+
+
+
+
+
                     </div>
+
+
+
+
+
+
 
                 </div>
 
 
 
-                <!-- ================================================= -->
-                <!-- APPOINTMENT RECORDS TABLE -->
+
+
+
+
+
+
+
+
+
+
+
+
                 <!-- ================================================= -->
 
+
+
+                <!-- APPOINTMENT RECORDS TABLE -->
+
+
+
+                <!-- ================================================= -->
+
+
+
+
+
+
+
                 <div
+
+
+
                     class="card overflow-hidden"
+
+
+
                 >
+
+
+
+
+
+
+
+
+
 
 
                     <!-- RECORD TABLE HEADER -->
 
+
+
+
+
+
+
                     <div
+
+
+
                         class="p-4 border-b border-gray-200 bg-gray-50"
+
+
+
                     >
 
+
+
+
+
+
+
                         <div
+
+
+
                             class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3"
+
+
+
                         >
+
+
+
+
+
+
+
+
+
 
 
                             <div>
 
+
+
+
+
+
+
                                 <h3
+
+
+
                                     class="text-sm font-semibold text-[#0f4c2e]"
+
+
+
                                 >
+
+
+
                                     Appointment Records
+
+
+
                                 </h3>
 
 
+
+
+
+
+
+
+
+
+
                                 <p
+
+
+
                                     class="text-[11px] text-gray-500 mt-0.5"
+
+
+
                                 >
+
+
+
                                     Search and review your complete appointment history.
+
+
+
                                 </p>
 
+
+
+
+
+
+
                             </div>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
                             <!-- SEARCH / FILTER -->
 
+
+
+
+
+
+
                             <div
+
+
+
                                 class="flex flex-col sm:flex-row gap-2 w-full lg:w-auto"
+
+
+
                             >
 
 
+
+
+
+
+
+
+
+
+
                                 <div
+
+
+
                                     class="relative w-full sm:w-64"
+
+
+
                                 >
 
+
+
+
+
+
+
                                     <span
+
+
+
                                         class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"
+
+
+
                                     >
-                                        🔎
+
+
+
+                                        <i class="fa-solid fa-magnifying-glass"></i>
+
+
+
                                     </span>
 
 
+
+
+
+
+
+
+
+
+
                                     <input
+
+
+
                                         id="recordsSearch"
+
+
+
                                         type="text"
+
+
+
                                         placeholder="Search purpose or notes..."
+
+
+
                                         class="w-full border border-gray-300 rounded-md pl-8 pr-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-[#0f4c2e]"
+
+
+
                                     >
+
+
+
+
+
+
 
                                 </div>
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
                                 <select
+
+
+
                                     id="recordsStatusFilter"
+
+
+
                                     class="border border-gray-300 rounded-md px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-[#0f4c2e]"
+
+
+
                                 >
 
+
+
+
+
+
+
                                     <option value="all">
+
+
+
                                         All Statuses
+
+
+
                                     </option>
+
+
+
+
+
+
 
                                     <option value="pending">
+
+
+
                                         Pending
+
+
+
                                     </option>
+
+
+
+
+
+
 
                                     <option value="approved">
+
+
+
                                         Approved
+
+
+
                                     </option>
+
+
+
+
+
+
 
                                     <option value="rescheduled">
+
+
+
                                         Rescheduled
+
+
+
                                     </option>
+
+
+
+
+
+
 
                                     <option value="cancelled">
+
+
+
                                         Cancelled
+
+
+
                                     </option>
 
+
+
+
+
+
+
                                     <option value="rejected">
+
+
+
                                         Rejected
+
+
+
                                     </option>
+
+
+
+
+
+
 
                                 </select>
 
+
+
+
+
+
+
                             </div>
+
+
+
+
+
+
 
                         </div>
 
+
+
+
+
+
+
                     </div>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
                     <!-- TABLE -->
 
+
+
+
+
+
+
                     <div
+
+
+
                         class="overflow-x-auto"
+
+
+
                     >
 
+
+
+
+
+
+
                         <table
+
                             class="w-full text-xs sm:text-sm"
+
                         >
 
+
+
                             <thead
+
                                 class="bg-gray-50 text-gray-500 text-left"
+
                             >
+
+
 
                                 <tr>
 
-                                    <th
-                                        class="px-4 py-3 whitespace-nowrap"
-                                    >
-                                        Date
-                                    </th>
+
 
                                     <th
+
                                         class="px-4 py-3 whitespace-nowrap"
+
                                     >
+
+                                        Created At
+
+                                    </th>
+
+
+
+                                    <th
+
+                                        class="px-4 py-3 whitespace-nowrap"
+
+                                    >
+
+                                        Date Booked
+
+                                    </th>
+
+
+
+                                    <th
+
+                                        class="px-4 py-3 whitespace-nowrap"
+
+                                    >
+
                                         Time
+
                                     </th>
 
+
+
                                     <th
+
                                         class="px-4 py-3"
+
                                     >
+
                                         Purpose
+
                                     </th>
 
+
+
                                     <th
+
                                         class="px-4 py-3"
+
                                     >
+
                                         Notes
+
                                     </th>
 
+
+
                                     <th
+
                                         class="px-4 py-3 whitespace-nowrap"
+
                                     >
+
                                         Status
+
                                     </th>
+
+
 
                                 </tr>
+
+
 
                             </thead>
 
 
+
                             <tbody
+
                                 id="recordsBody"
+
                             >
+
+
 
                                 <tr>
 
+
+
                                     <td
-                                        colspan="5"
+
+                                        colspan="6"
+
                                         class="px-4 py-6 text-center text-gray-400"
+
                                     >
+
                                         Loading appointment records...
+
                                     </td>
+
+
 
                                 </tr>
 
+
+
                             </tbody>
+
+
 
                         </table>
 
+
+
+
+
+
+
                     </div>
+
+
+
+
+
+
 
                 </div>
 
+
+
+
+
+
+
             </section>
 
+
+
+
+
+
+
         </main>
+
+
+
+
+
+
 
     </div>
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
     <!-- ===================================================== -->
-    <!-- RESCHEDULE MODAL -->
+    <!-- ACCOUNT SETTINGS MODAL -->
     <!-- ===================================================== -->
 
     <div
+        id="accountSettingsModal"
+        class="fixed inset-0 z-[120] hidden items-center justify-center bg-black/45 px-4 py-6"
+        aria-hidden="true"
+    >
+        <div
+            class="w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="accountSettingsTitle"
+        >
+
+            <!-- HEADER -->
+            <div
+                class="flex items-center justify-between px-5 sm:px-6 py-4 bg-[#0f4c2e] text-white"
+            >
+                <div>
+                    <p
+                        class="text-[10px] uppercase tracking-wider font-semibold text-[#f4c95d]"
+                    >
+                        Student Account
+                    </p>
+
+                    <h2
+                        id="accountSettingsTitle"
+                        class="text-base sm:text-lg font-bold mt-0.5"
+                    >
+                        Account Settings
+                    </h2>
+                </div>
+
+                <button
+                    id="closeAccountSettingsBtn"
+                    type="button"
+                    aria-label="Close Account Settings"
+                    title="Close"
+                    class="w-8 h-8 rounded-md flex items-center justify-center hover:bg-white/10 transition"
+                >
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+
+            <div
+                class="max-h-[78vh] overflow-y-auto p-5 sm:p-6 space-y-6"
+            >
+
+                <!-- ========================================= -->
+                <!-- PROFILE PICTURE -->
+                <!-- ========================================= -->
+
+                <section>
+                    <div class="mb-4">
+                        <h3
+                            class="text-sm font-semibold text-[#0f4c2e]"
+                        >
+                            Profile Picture
+                        </h3>
+
+                        <p
+                            class="text-xs text-gray-500 mt-1"
+                        >
+                            Upload a clear photo for your student profile.
+                        </p>
+                    </div>
+
+
+                    <div
+                        class="flex flex-col sm:flex-row sm:items-center gap-5"
+                    >
+
+                        <div
+                            class="w-24 h-24 rounded-full border-2 border-[#f4c95d] bg-gray-50 overflow-hidden flex items-center justify-center flex-shrink-0"
+                        >
+                            <img
+                                id="accountProfilePreview"
+                                src="img/OIP.webp"
+                                alt="Profile picture preview"
+                                class="w-full h-full object-cover"
+                                onerror="this.src='img/OIP.webp'"
+                            >
+                        </div>
+
+
+                        <div class="flex-1">
+
+                            <label
+                                for="profileImageInput"
+                                class="block text-xs font-medium text-gray-700 mb-1.5"
+                            >
+                                Choose image
+                            </label>
+
+                            <input
+                                id="profileImageInput"
+                                type="file"
+                                accept="image/png,image/jpeg,image/webp"
+                                class="block w-full text-xs text-gray-600 border border-gray-300 rounded-md bg-white file:mr-3 file:border-0 file:bg-gray-100 file:px-3 file:py-2 file:text-xs file:font-semibold file:text-[#0f4c2e] hover:file:bg-gray-200"
+                            >
+
+                            <p
+                                class="text-[10px] text-gray-400 mt-1.5"
+                            >
+                                JPG, PNG, or WEBP. Maximum 5 MB.
+                            </p>
+
+
+                            <div
+                                id="profileImageMessage"
+                                class="hidden mt-3 text-xs rounded-md px-3 py-2"
+                            ></div>
+
+
+                            <div
+                                class="flex flex-wrap gap-2 mt-4"
+                            >
+                                <button
+                                    id="saveProfileImageBtn"
+                                    type="button"
+                                    class="rounded-md bg-[#0f4c2e] text-white px-4 py-2 text-xs font-semibold hover:bg-[#0b3d24] transition"
+                                >
+                                    <i class="fa-solid fa-floppy-disk mr-1.5"></i>
+                                    Save Profile Picture
+                                </button>
+
+                                <button
+                                    id="removeProfileImageBtn"
+                                    type="button"
+                                    class="rounded-md border border-gray-300 text-gray-700 px-4 py-2 text-xs font-semibold hover:bg-gray-50 transition"
+                                >
+                                    <i class="fa-regular fa-trash-can mr-1.5"></i>
+                                    Remove Picture
+                                </button>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </section>
+
+
+                <hr class="border-gray-200">
+
+
+                <!-- ========================================= -->
+                <!-- CHANGE PASSWORD -->
+                <!-- ========================================= -->
+
+                <section>
+                    <div class="mb-4">
+                        <h3
+                            class="text-sm font-semibold text-[#0f4c2e]"
+                        >
+                            Change Password
+                        </h3>
+
+                        <p
+                            class="text-xs text-gray-500 mt-1"
+                        >
+                            Enter your current password before creating a new one.
+                        </p>
+                    </div>
+
+
+                    <div class="space-y-3">
+
+                        <div>
+                            <label
+                                for="currentPassword"
+                                class="block text-xs font-medium text-gray-700 mb-1"
+                            >
+                                Current Password
+                            </label>
+
+                            <div class="relative">
+                                <input
+                                    id="currentPassword"
+                                    type="password"
+                                    autocomplete="current-password"
+                                    class="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 text-xs focus:outline-none focus:ring-2 focus:ring-[#0f4c2e]"
+                                    placeholder="Enter current password"
+                                >
+
+                                <button
+                                    id="toggleCurrentPassword"
+                                    type="button"
+                                    aria-label="Show current password"
+                                    title="Show password"
+                                    class="absolute inset-y-0 right-0 w-9 flex items-center justify-center text-gray-400 hover:text-[#0f4c2e]"
+                                >
+                                    <i class="fa-regular fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+
+                        <div>
+                            <label
+                                for="newPassword"
+                                class="block text-xs font-medium text-gray-700 mb-1"
+                            >
+                                New Password
+                            </label>
+
+                            <div class="relative">
+                                <input
+                                    id="newPassword"
+                                    type="password"
+                                    autocomplete="new-password"
+                                    minlength="8"
+                                    class="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 text-xs focus:outline-none focus:ring-2 focus:ring-[#0f4c2e]"
+                                    placeholder="Enter new password"
+                                >
+
+                                <button
+                                    id="toggleNewPassword"
+                                    type="button"
+                                    aria-label="Show new password"
+                                    title="Show password"
+                                    class="absolute inset-y-0 right-0 w-9 flex items-center justify-center text-gray-400 hover:text-[#0f4c2e]"
+                                >
+                                    <i class="fa-regular fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+
+                        <div>
+                            <label
+                                for="confirmNewPassword"
+                                class="block text-xs font-medium text-gray-700 mb-1"
+                            >
+                                Confirm New Password
+                            </label>
+
+                            <div class="relative">
+                                <input
+                                    id="confirmNewPassword"
+                                    type="password"
+                                    autocomplete="new-password"
+                                    minlength="8"
+                                    class="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 text-xs focus:outline-none focus:ring-2 focus:ring-[#0f4c2e]"
+                                    placeholder="Confirm new password"
+                                >
+
+                                <button
+                                    id="toggleConfirmNewPassword"
+                                    type="button"
+                                    aria-label="Show confirmed password"
+                                    title="Show password"
+                                    class="absolute inset-y-0 right-0 w-9 flex items-center justify-center text-gray-400 hover:text-[#0f4c2e]"
+                                >
+                                    <i class="fa-regular fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+
+                        <div
+                            id="passwordSettingsMessage"
+                            class="hidden text-xs rounded-md px-3 py-2"
+                        ></div>
+
+
+                        <div class="pt-1">
+                            <button
+                                id="updatePasswordBtn"
+                                type="button"
+                                class="rounded-md bg-[#0f4c2e] text-white px-4 py-2 text-xs font-semibold hover:bg-[#0b3d24] transition"
+                            >
+                                <i class="fa-solid fa-key mr-1.5"></i>
+                                Update Password
+                            </button>
+                        </div>
+
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+    <!-- ===================================================== -->
+
+
+
+    <!-- RESCHEDULE MODAL -->
+
+
+
+    <!-- ===================================================== -->
+
+
+
+
+
+
+
+    <div
+
+
+
         id="rescheduleModal"
+
+
+
         class="modal-backdrop"
+
+
+
     >
 
 
+
+
+
+
+
+
+
+
+
         <div
+
+
+
             class="card p-4 w-full max-w-sm mx-4"
+
+
+
         >
 
 
+
+
+
+
+
+
+
+
+
             <h3
+
+
+
                 class="font-semibold text-[#0f4c2e] mb-2.5 text-xs sm:text-sm"
+
+
+
             >
+
+
+
                 Reschedule Appointment
+
+
+
             </h3>
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
             <label
+
+
+
                 class="block text-xs font-medium mb-1"
+
+
+
             >
+
+
+
                 New date
+
+
+
             </label>
 
 
+
+
+
+
+
+
+
+
+
             <input
+
+
+
                 id="rescheduleDate"
+
+
+
                 type="date"
+
+
+
                 class="w-full border border-gray-300 rounded px-2.5 py-1.5 text-xs mb-2"
+
+
+
             />
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
             <label
+
+
+
                 class="block text-xs font-medium mb-1"
+
+
+
             >
+
+
+
                 New time slot
+
+
+
             </label>
 
 
+
+
+
+
+
+
+
+
+
             <select
+
+
+
                 id="rescheduleSlot"
+
+
+
                 class="w-full border border-gray-300 rounded px-2.5 py-1.5 text-xs mb-3"
+
+
+
             ></select>
+
+            <div
+                id="rescheduleMessage"
+                class="hidden text-xs rounded-md px-3 py-2 mb-3"
+            ></div>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
             <div
+
+
+
                 class="flex gap-2"
+
+
+
             >
 
 
+
+
+
+
+
+
+
+
+
                 <button
+
+
+
                     id="rescheduleCancelBtn"
+
+
+
                     class="flex-1 rounded border border-gray-300 py-1.5 text-xs"
+
+
+
                 >
+
+
+
                     Cancel
+
+
+
                 </button>
+
+
+
+
+
+
+
+
+
 
 
                 <button
+
+
+
                     id="rescheduleConfirmBtn"
+
+
+
                     class="flex-1 btn-red rounded py-1.5 text-xs font-semibold"
+
+
+
                 >
+
+
+
                     Save
+
+
+
                 </button>
+
+
+
+
+
+
 
             </div>
 
+
+
+
+
+
+
         </div>
+
+
+
+
+
+
 
     </div>
 
 
 
-    <!-- ===================================================== -->
-    <!-- STUDENT JAVASCRIPT -->
+
+
+
+
+
+
+
+
+
+
+
+
     <!-- ===================================================== -->
 
+
+
+    <!-- STUDENT JAVASCRIPT -->
+
+
+
+    <!-- ===================================================== -->
+
+
+
+
+
+
+
+    <!-- ===================================================== -->
+    <!-- CANCEL APPOINTMENT MODAL -->
+    <!-- ===================================================== -->
+
+    <div
+        id="cancelAppointmentModal"
+        class="modal-backdrop"
+    >
+        <div
+            class="card p-5 w-full max-w-sm mx-4"
+        >
+            <div class="flex items-start gap-3 mb-4">
+                <div
+                    class="w-10 h-10 rounded-full bg-red-50 text-red-600 flex items-center justify-center flex-shrink-0"
+                >
+                    <span class="text-xl font-bold">!</span>
+                </div>
+
+                <div>
+                    <h3 class="font-semibold text-[#0f4c2e] text-sm">
+                        Cancel Appointment
+                    </h3>
+
+                    <p class="text-xs text-gray-500 mt-1">
+                        Are you sure you want to cancel this appointment?
+                        This action cannot be undone.
+                    </p>
+                </div>
+            </div>
+
+            <div
+                id="cancelAppointmentDetails"
+                class="text-xs bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-gray-600 mb-3"
+            ></div>
+
+            <div
+                id="cancelAppointmentError"
+                class="hidden text-xs bg-red-50 text-red-700 border border-red-200 rounded-md px-3 py-2 mb-3"
+            ></div>
+
+            <div class="flex gap-2">
+                <button
+                    id="cancelAppointmentKeepBtn"
+                    type="button"
+                    class="flex-1 rounded border border-gray-300 py-1.5 text-xs"
+                >
+                    Keep Appointment
+                </button>
+
+                <button
+                    id="cancelAppointmentConfirmBtn"
+                    type="button"
+                    class="flex-1 btn-red rounded py-1.5 text-xs font-semibold"
+                >
+                    Cancel Appointment
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- STUDENT SECTION NAVIGATION -->
+    <!-- ===================================================== -->
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const appContainer =
+                document.querySelector(".app-container");
+
+            const bookNav =
+                document.getElementById("bookAppointmentNav");
+
+            const profileNav =
+                document.getElementById("profileRecordsNav");
+
+            const profileSection =
+                document.getElementById("profileRecords");
+
+            function setActiveNav(active) {
+                const bookActive =
+                    active === "book";
+
+                bookNav?.classList.toggle(
+                    "active",
+                    bookActive
+                );
+
+                profileNav?.classList.toggle(
+                    "active",
+                    !bookActive
+                );
+
+                if (bookNav) {
+                    if (bookActive) {
+                        bookNav.setAttribute(
+                            "aria-current",
+                            "page"
+                        );
+                    } else {
+                        bookNav.removeAttribute(
+                            "aria-current"
+                        );
+                    }
+                }
+
+                if (profileNav) {
+                    if (!bookActive) {
+                        profileNav.setAttribute(
+                            "aria-current",
+                            "page"
+                        );
+                    } else {
+                        profileNav.removeAttribute(
+                            "aria-current"
+                        );
+                    }
+                }
+            }
+
+            function scrollDashboardTo(
+                target,
+                updateHash = true
+            ) {
+                if (!appContainer) {
+                    return;
+                }
+
+                if (target === "book") {
+                    appContainer.scrollTo({
+                        top: 0,
+                        behavior: "smooth"
+                    });
+
+                    setActiveNav(
+                        "book"
+                    );
+
+                    if (updateHash) {
+                        history.replaceState(
+                            null,
+                            "",
+                            "#book"
+                        );
+                    }
+
+                    return;
+                }
+
+                if (
+                    target === "profileRecords" &&
+                    profileSection
+                ) {
+                    const targetTop =
+                        profileSection.offsetTop -
+                        24;
+
+                    appContainer.scrollTo({
+                        top: Math.max(
+                            targetTop,
+                            0
+                        ),
+                        behavior: "smooth"
+                    });
+
+                    setActiveNav(
+                        "profile"
+                    );
+
+                    if (updateHash) {
+                        history.replaceState(
+                            null,
+                            "",
+                            "#profileRecords"
+                        );
+                    }
+                }
+            }
+
+            function updateNavFromScroll() {
+                if (
+                    !appContainer ||
+                    !profileSection
+                ) {
+                    return;
+                }
+
+                const containerTop =
+                    appContainer
+                        .getBoundingClientRect()
+                        .top;
+
+                const profileTop =
+                    profileSection
+                        .getBoundingClientRect()
+                        .top;
+
+                const profileReached =
+                    profileTop <=
+                    containerTop + 90;
+
+                setActiveNav(
+                    profileReached
+                        ? "profile"
+                        : "book"
+                );
+            }
+
+            bookNav?.addEventListener(
+                "click",
+                event => {
+                    event.preventDefault();
+                    scrollDashboardTo(
+                        "book"
+                    );
+                }
+            );
+
+            profileNav?.addEventListener(
+                "click",
+                event => {
+                    event.preventDefault();
+                    scrollDashboardTo(
+                        "profileRecords"
+                    );
+                }
+            );
+
+            appContainer?.addEventListener(
+                "scroll",
+                updateNavFromScroll,
+                {
+                    passive: true
+                }
+            );
+
+            if (
+                window.location.hash ===
+                "#profileRecords"
+            ) {
+                setTimeout(
+                    () => {
+                        scrollDashboardTo(
+                            "profileRecords",
+                            false
+                        );
+                    },
+                    0
+                );
+            } else {
+                setActiveNav(
+                    "book"
+                );
+            }
+        });
+    </script>
+
+
     <script
+
+
+
         type="module"
+
+
+
         src="student.js"
+
+
+
     ></script>
 
 
+
+
+
+
+
+
+
+
+
 </body>
+
+
+
+
+
+
 
 </html>

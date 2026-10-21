@@ -7,126 +7,417 @@
     <title>ESSU Registrar Portal - LTMS Style</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 
     <script>
-    // Redirect already logged-in users straight to their dashboard
-    if (sessionStorage.getItem("loggedIn") === "true") {
-        if (sessionStorage.getItem("role") === "admin") {
-            window.location.replace("admin.html");
-        } else if (sessionStorage.getItem("role") === "student") {
-            window.location.replace("student.html");
+        // Redirect already logged-in users straight to their dashboard
+        if (
+            sessionStorage.getItem("loggedIn") === "true"
+        ) {
+
+            if (
+                sessionStorage.getItem("role") === "admin"
+            ) {
+
+                window.location.replace(
+                    "admin.html"
+                );
+
+            } else if (
+                sessionStorage.getItem("role") === "student"
+            ) {
+
+                window.location.replace(
+                    "student.html"
+                );
+            }
         }
-    }
     </script>
+
 </head>
 
-<body class="bg-emerald-950 text-white flex flex-col min-h-screen justify-between bg-cover bg-center bg-no-repeat relative" style="background-image: linear-gradient(to bottom, rgba(6, 78, 59, 0.65), rgba(2, 44, 34, 0.85)), url('img/ESSU_thumbnail.png');">
 
-    <!-- 1. TOP BAR (GWTD Standard) -->
-    <div class="bg-emerald-950/90 text-white text-xs border-b border-emerald-900 z-30 backdrop-blur-sm">
-        <div class="max-w-7xl mx-auto px-6 py-2 flex flex-wrap items-center justify-between gap-4">
-            <div class="flex items-center space-x-2">
-                <img src="img/rp_n.webp" alt="Republic Seal" class="w-4 h-4 rounded-full object-cover">
-                <span class="font-semibold tracking-wider uppercase">Republic of the Philippines</span>
-                <span class="text-emerald-400">|</span>
-                <span class="text-emerald-200">Eastern Samar State University</span>
+<body
+    class="bg-emerald-950 text-white flex flex-col min-h-screen justify-between bg-cover bg-center bg-no-repeat relative"
+    style="background-image: linear-gradient(to bottom, rgba(6, 78, 59, 0.65), rgba(2, 44, 34, 0.85)), url('img/ESSU_thumbnail.png');"
+>
+
+
+    <!-- ====================================================== -->
+    <!-- TOP BAR -->
+    <!-- ====================================================== -->
+
+    <div
+        class="bg-emerald-950/90 text-white text-xs border-b border-emerald-900 z-30 backdrop-blur-sm"
+    >
+
+        <div
+            class="max-w-7xl mx-auto px-6 py-2 flex flex-wrap items-center justify-between gap-4"
+        >
+
+            <!-- LEFT SIDE -->
+
+            <div
+                class="flex items-center space-x-2"
+            >
+
+                <img
+                    src="img/rp_n.webp"
+                    alt="Republic Seal"
+                    class="w-4 h-4 rounded-full object-cover"
+                >
+
+
+                <span
+                    class="font-semibold tracking-wider uppercase"
+                >
+                    Republic of the Philippines
+                </span>
+
+
+                <span
+                    class="text-emerald-400"
+                >
+                    |
+                </span>
+
+
+                <span
+                    class="text-emerald-200"
+                >
+                    Eastern Samar State University
+                </span>
+
             </div>
-            <div class="flex items-center space-x-4">
-                <a href="#" class="hover:text-yellow-400 transition">Transparency Seal</a>
-                <a href="#" class="hover:text-yellow-400 transition">Citizen's Charter</a>
-                <a href="#" class="hover:text-yellow-400 transition">Help Desk</a>
+
+
+            <!-- GOVERNMENT LINKS -->
+
+            <div
+                class="flex items-center space-x-4"
+            >
+
+                <a
+                    href="https://main.essu.edu.ph/index.php?id=4&option=com_sppagebuilder&view=page"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="hover:text-yellow-400 transition"
+                >
+                    Transparency Seal
+                </a>
+
+
+                <a
+                    href="https://main.essu.edu.ph/citizen-charter"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="hover:text-yellow-400 transition"
+                >
+                    Citizen's Charter
+                </a>
+
+
+                <a
+                    href="helpdesk.html"
+                    class="hover:text-yellow-400 transition"
+                >
+                    Help Desk
+                </a>
+
             </div>
+
         </div>
+
     </div>
 
-    <!-- 2. MASTHEAD / NAVBAR -->
-    <header class="bg-emerald-900/80 backdrop-blur-md text-white shadow-lg border-b-4 border-yellow-400 z-20">
-        <div class="max-w-7xl mx-auto px-6 py-3.5 flex items-center justify-between">
-            
-            <!-- Left Logo & Title Updated -->
-            <a href="index.html" class="flex items-center space-x-3">
-                <img src="img/OIP.webp" alt="ESSU Logo" class="w-10 h-10 rounded-full bg-white p-0.5 border border-yellow-400 object-contain shadow">
-                <span class="text-lg font-bold tracking-tight uppercase">ESSU REGISTRAR PORTAL</span>
+
+    <!-- ====================================================== -->
+    <!-- MASTHEAD / NAVBAR -->
+    <!-- ====================================================== -->
+
+    <header
+        class="bg-emerald-900/80 backdrop-blur-md text-white shadow-lg border-b-4 border-yellow-400 z-20"
+    >
+
+        <div
+            class="max-w-7xl mx-auto px-6 py-3.5 flex items-center justify-between"
+        >
+
+
+            <!-- LEFT LOGO & TITLE -->
+
+            <a
+                href="index.html"
+                class="flex items-center space-x-3"
+            >
+
+                <img
+                    src="img/OIP.webp"
+                    alt="ESSU Logo"
+                    class="w-10 h-10 rounded-full bg-white p-0.5 border border-yellow-400 object-contain shadow"
+                >
+
+
+                <span
+                    class="text-lg font-bold tracking-tight uppercase"
+                >
+                    ESSU REGISTRAR PORTAL
+                </span>
+
             </a>
 
-            <!-- Right Nav Items -->
-            <nav class="hidden lg:flex items-center space-x-6 text-xs font-semibold uppercase tracking-wider">
-                <a href="#" class="hover:text-yellow-400 transition flex items-center gap-1">
-                    <i class="fa-solid fa-phone"></i> Contact
+
+            <!-- RIGHT NAV ITEMS -->
+
+            <nav
+                class="hidden lg:flex items-center space-x-6 text-xs font-semibold uppercase tracking-wider"
+            >
+
+                <a
+                    href="helpdesk.html#contactSupport"
+                    class="hover:text-yellow-400 transition flex items-center gap-1"
+                >
+
+                    <i
+                        class="fa-solid fa-phone"
+                    ></i>
+
+                    Contact
+
                 </a>
-                <a href="signup.html" class="hover:text-yellow-400 transition flex items-center gap-1">
-                    <i class="fa-solid fa-user-plus"></i> Register
+
+
+                <a
+                    href="signup.html"
+                    class="hover:text-yellow-400 transition flex items-center gap-1"
+                >
+
+                    <i
+                        class="fa-solid fa-user-plus"
+                    ></i>
+
+                    Register
+
                 </a>
-                <a href="login.html" class="hover:text-yellow-400 transition flex items-center gap-1 text-yellow-300 font-bold">
-                    <i class="fa-solid fa-right-to-bracket"></i> Login
+
+
+                <a
+                    href="login.html"
+                    class="hover:text-yellow-400 transition flex items-center gap-1 text-yellow-300 font-bold"
+                >
+
+                    <i
+                        class="fa-solid fa-right-to-bracket"
+                    ></i>
+
+                    Login
+
                 </a>
+
             </nav>
 
-            <!-- Mobile Quick Buttons -->
-            <div class="flex lg:hidden items-center space-x-2 text-xs font-bold">
-                <a href="signup.html" class="px-3 py-1.5 bg-red-600 rounded text-white hover:bg-red-700 transition">Register</a>
-                <a href="login.html" class="px-3 py-1.5 border border-white rounded text-white hover:bg-white/10 transition">Login</a>
+
+            <!-- MOBILE QUICK BUTTONS -->
+
+            <div
+                class="flex lg:hidden items-center space-x-2 text-xs font-bold"
+            >
+
+                <a
+                    href="signup.html"
+                    class="px-3 py-1.5 bg-red-600 rounded text-white hover:bg-red-700 transition"
+                >
+                    Register
+                </a>
+
+
+                <a
+                    href="login.html"
+                    class="px-3 py-1.5 border border-white rounded text-white hover:bg-white/10 transition"
+                >
+                    Login
+                </a>
+
             </div>
 
         </div>
+
     </header>
 
-    <!-- 3. HERO CONTENT AREA -->
-    <main class="flex-grow flex flex-col items-center justify-center text-center px-4 py-12 z-10">
-        
-        <p class="text-emerald-200 text-sm md:text-lg font-semibold tracking-wide uppercase mb-4 drop-shadow">
+
+    <!-- ====================================================== -->
+    <!-- HERO CONTENT AREA -->
+    <!-- ====================================================== -->
+
+    <main
+        class="flex-grow flex flex-col items-center justify-center text-center px-4 py-12 z-10"
+    >
+
+
+        <p
+            class="text-emerald-200 text-sm md:text-lg font-semibold tracking-wide uppercase mb-4 drop-shadow"
+        >
             Appointment & Scheduling Management System
         </p>
 
-        <!-- Center ESSU Seal Badge -->
-        <div class="mb-6 relative group">
-            <div class="absolute -inset-1 bg-gradient-to-r from-yellow-400 to-emerald-600 rounded-full blur opacity-50 group-hover:opacity-75 transition duration-300"></div>
-            <img src="img/OIP.webp" alt="ESSU Seal" class="relative w-28 h-28 md:w-36 md:h-36 rounded-full bg-white p-2 border-4 border-yellow-400 shadow-2xl object-contain mx-auto">
+
+        <!-- CENTER ESSU SEAL BADGE -->
+
+        <div
+            class="mb-6 relative group"
+        >
+
+            <div
+                class="absolute -inset-1 bg-gradient-to-r from-yellow-400 to-emerald-600 rounded-full blur opacity-50 group-hover:opacity-75 transition duration-300"
+            ></div>
+
+
+            <img
+                src="img/OIP.webp"
+                alt="ESSU Seal"
+                class="relative w-28 h-28 md:w-36 md:h-36 rounded-full bg-white p-2 border-4 border-yellow-400 shadow-2xl object-contain mx-auto"
+            >
+
         </div>
 
-        <!-- Main Title -->
-        <h1 class="text-3xl md:text-5xl lg:text-6xl font-black tracking-wider uppercase text-white drop-shadow-lg">
+
+        <!-- MAIN TITLE -->
+
+        <h1
+            class="text-3xl md:text-5xl lg:text-6xl font-black tracking-wider uppercase text-white drop-shadow-lg"
+        >
             ESSU REGISTRAR PORTAL
         </h1>
 
-        <!-- Subtitle -->
-        <p class="text-gray-100 text-xs md:text-base max-w-2xl mt-4 leading-relaxed px-2 font-medium drop-shadow">
-            A front line university portal showcasing fast, transparent, and efficient public service for a progressive academic community.
+
+        <!-- SUBTITLE -->
+
+        <p
+            class="text-gray-100 text-xs md:text-base max-w-2xl mt-4 leading-relaxed px-2 font-medium drop-shadow"
+        >
+            A front line university portal showcasing fast, transparent,
+            and efficient public service for a progressive academic community.
         </p>
 
-        <!-- Primary Action Buttons -->
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8 w-full max-w-md">
-            <a href="signup.html" class="w-full sm:w-auto px-8 py-3.5 bg-red-600 hover:bg-red-700 text-white font-extrabold text-sm rounded-lg shadow-xl tracking-wider transition duration-200 transform hover:-translate-y-0.5 text-center uppercase">
+
+        <!-- PRIMARY ACTION BUTTONS -->
+
+        <div
+            class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8 w-full max-w-md"
+        >
+
+            <a
+                href="signup.html"
+                class="w-full sm:w-auto px-8 py-3.5 bg-red-600 hover:bg-red-700 text-white font-extrabold text-sm rounded-lg shadow-xl tracking-wider transition duration-200 transform hover:-translate-y-0.5 text-center uppercase"
+            >
                 REGISTER NOW
             </a>
-            <a href="login.html" class="w-full sm:w-auto px-8 py-3.5 bg-transparent hover:bg-white/10 text-white border-2 border-white font-extrabold text-sm rounded-lg shadow-xl tracking-wider transition duration-200 transform hover:-translate-y-0.5 text-center uppercase">
+
+
+            <a
+                href="login.html"
+                class="w-full sm:w-auto px-8 py-3.5 bg-transparent hover:bg-white/10 text-white border-2 border-white font-extrabold text-sm rounded-lg shadow-xl tracking-wider transition duration-200 transform hover:-translate-y-0.5 text-center uppercase"
+            >
                 LOG IN
             </a>
+
         </div>
 
     </main>
 
-    <!-- 4. STANDARD FOOTER (GWTD Compliant) -->
-    <footer class="bg-emerald-950/90 backdrop-blur-md text-gray-400 text-xs border-t border-emerald-900 py-4 z-20">
-        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-3 text-center md:text-left">
+
+    <!-- ====================================================== -->
+    <!-- FOOTER -->
+    <!-- ====================================================== -->
+
+    <footer
+        class="bg-emerald-950/90 backdrop-blur-md text-gray-400 text-xs border-t border-emerald-900 py-4 z-20"
+    >
+
+        <div
+            class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-3 text-center md:text-left"
+        >
+
             <div>
+
                 <p>
-                    <a href="https://www.gov.ph" target="_blank" class="text-yellow-400 hover:underline font-semibold">Philippine Government Directory</a> | 
-                    <a href="https://www.officialgazette.gov.ph" target="_blank" class="hover:underline">Official Gazette</a>
+
+                    <a
+                        href="https://www.gov.ph"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="text-yellow-400 hover:underline font-semibold"
+                    >
+                        Philippine Government Directory
+                    </a>
+
+                    |
+
+                    <a
+                        href="https://www.officialgazette.gov.ph"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="hover:underline"
+                    >
+                        Official Gazette
+                    </a>
+
                 </p>
-                <p class="text-gray-500 text-[11px] mt-0.5">All content is public domain unless otherwise stated.</p>
+
+
+                <p
+                    class="text-gray-500 text-[11px] mt-0.5"
+                >
+                    All content is public domain unless otherwise stated.
+                </p>
+
             </div>
-            <div class="flex items-center space-x-3">
-                <img src="img/rp_n.webp" alt="Republic Seal" class="w-7 h-7 rounded-full bg-white p-0.5 object-cover">
+
+
+            <div
+                class="flex items-center space-x-3"
+            >
+
+                <img
+                    src="img/rp_n.webp"
+                    alt="Republic Seal"
+                    class="w-7 h-7 rounded-full bg-white p-0.5 object-cover"
+                >
+
+
                 <div>
-                    <p class="font-bold text-white text-[10px]">REPUBLIC OF THE PHILIPPINES</p>
-                    <p class="text-[9px] text-gray-500">Eastern Samar State University System</p>
+
+                    <p
+                        class="font-bold text-white text-[10px]"
+                    >
+                        REPUBLIC OF THE PHILIPPINES
+                    </p>
+
+
+                    <p
+                        class="text-[9px] text-gray-500"
+                    >
+                        Eastern Samar State University System
+                    </p>
+
                 </div>
+
             </div>
+
         </div>
+
     </footer>
 
+
 </body>
+
 </html>
